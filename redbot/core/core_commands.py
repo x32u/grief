@@ -110,7 +110,7 @@ if TYPE_CHECKING:
 
 __all__ = ["Core"]
 
-log = logging.getLogger("red")
+log = logging.getLogger("grief")
 
 _ = i18n.Translator("Core", __file__)
 
@@ -397,156 +397,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         """Nothing to delete (Core Config is handled in a bot method)"""
         return
 
-    @commands.command(hidden=True)
-    async def ping(self, ctx: commands.Context):
-        """Pong."""
-        await ctx.send("Pong.")
-
-    @commands.command()
-    async def info(self, ctx: commands.Context):
-        """Shows info about [botname]."""
-        embed_links = await ctx.embed_requested()
-        author_repo = "https://github.com/Twentysix26"
-        red_repo = "https://github.com/Cog-Creators/Red-DiscordBot"
-        contributors_url = red_repo + "/graphs/contributors"
-        red_pypi = "https://pypi.org/project/Red-DiscordBot"
-        support_server_url = "https://discord.gg/red"
-        dpy_repo = "https://github.com/Rapptz/discord.py"
-        python_url = "https://www.python.org/"
-        since = datetime.datetime(2016, 1, 2, 0, 0)
-        days_since = (datetime.datetime.utcnow() - since).days
-
-        app_info = await self.bot.application_info()
-        if app_info.team:
-            owner = app_info.team.name
-        else:
-            owner = app_info.owner
-        custom_info = await self.bot._config.custom_info()
-
-        pypi_version, py_version_req = await fetch_latest_red_version_info()
-        outdated = pypi_version and pypi_version > red_version_info
-
-        if embed_links:
-            dpy_version = "[{}]({})".format(discord.__version__, dpy_repo)
-            python_version = "[{}.{}.{}]({})".format(*sys.version_info[:3], python_url)
-            red_version = "[{}]({})".format(__version__, red_pypi)
-
-            about = _(
-                "This bot is an instance of [Red, an open source Discord bot]({}) "
-                "created by [Twentysix]({}) and [improved by many]({}).\n\n"
-                "Red is backed by a passionate community who contributes and "
-                "creates content for everyone to enjoy. [Join us today]({}) "
-                "and help us improve!\n\n"
-                "(c) Cog Creators"
-            ).format(red_repo, author_repo, contributors_url, support_server_url)
-
-            embed = discord.Embed(color=(await ctx.embed_colour()))
-            embed.add_field(
-                name=_("Instance owned by team") if app_info.team else _("Instance owned by"),
-                value=str(owner),
-            )
-            embed.add_field(name="Python", value=python_version)
-            embed.add_field(name="discord.py", value=dpy_version)
-            embed.add_field(name=_("Red version"), value=red_version)
-            if outdated in (True, None):
-                if outdated is True:
-                    outdated_value = _("Yes, {version} is available.").format(
-                        version=str(pypi_version)
-                    )
-                else:
-                    outdated_value = _("Checking for updates failed.")
-                embed.add_field(name=_("Outdated"), value=outdated_value)
-            if custom_info:
-                embed.add_field(name=_("About this instance"), value=custom_info, inline=False)
-            embed.add_field(name=_("About Red"), value=about, inline=False)
-
-            embed.set_footer(
-                text=_("Bringing joy since 02 Jan 2016 (over {} days ago!)").format(days_since)
-            )
-            await ctx.send(embed=embed)
-        else:
-            python_version = "{}.{}.{}".format(*sys.version_info[:3])
-            dpy_version = "{}".format(discord.__version__)
-            red_version = "{}".format(__version__)
-
-            about = _(
-                "This bot is an instance of Red, an open source Discord bot (1) "
-                "created by Twentysix (2) and improved by many (3).\n\n"
-                "Red is backed by a passionate community who contributes and "
-                "creates content for everyone to enjoy. Join us today (4) "
-                "and help us improve!\n\n"
-                "(c) Cog Creators"
-            )
-            about = box(about)
-
-            if app_info.team:
-                extras = _(
-                    "Instance owned by team: [{owner}]\n"
-                    "Python:                 [{python_version}] (5)\n"
-                    "discord.py:             [{dpy_version}] (6)\n"
-                    "Red version:            [{red_version}] (7)\n"
-                ).format(
-                    owner=owner,
-                    python_version=python_version,
-                    dpy_version=dpy_version,
-                    red_version=red_version,
-                )
-            else:
-                extras = _(
-                    "Instance owned by: [{owner}]\n"
-                    "Python:            [{python_version}] (5)\n"
-                    "discord.py:        [{dpy_version}] (6)\n"
-                    "Red version:       [{red_version}] (7)\n"
-                ).format(
-                    owner=owner,
-                    python_version=python_version,
-                    dpy_version=dpy_version,
-                    red_version=red_version,
-                )
-
-            if outdated in (True, None):
-                if outdated is True:
-                    outdated_value = _("Yes, {version} is available.").format(
-                        version=str(pypi_version)
-                    )
-                else:
-                    outdated_value = _("Checking for updates failed.")
-                extras += _("Outdated:          [{state}]\n").format(state=outdated_value)
-
-            red = (
-                _("**About Red**\n")
-                + about
-                + "\n"
-                + box(extras, lang="ini")
-                + "\n"
-                + _("Bringing joy since 02 Jan 2016 (over {} days ago!)").format(days_since)
-                + "\n\n"
-            )
-
-            await ctx.send(red)
-            if custom_info:
-                custom_info = _("**About this instance**\n") + custom_info + "\n\n"
-                await ctx.send(custom_info)
-            refs = _(
-                "**References**\n"
-                "1. <{}>\n"
-                "2. <{}>\n"
-                "3. <{}>\n"
-                "4. <{}>\n"
-                "5. <{}>\n"
-                "6. <{}>\n"
-                "7. <{}>\n"
-            ).format(
-                red_repo,
-                author_repo,
-                contributors_url,
-                support_server_url,
-                python_url,
-                dpy_repo,
-                red_pypi,
-            )
-            await ctx.send(refs)
-
     @commands.command()
     async def uptime(self, ctx: commands.Context):
         """Shows [botname]'s uptime."""
@@ -558,555 +408,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
                 time_quantity=uptime_str, timestamp=discord.utils.format_dt(uptime, "f")
             )
         )
-
-    @commands.group(cls=commands.commands._AlwaysAvailableGroup)
-    async def mydata(self, ctx: commands.Context):
-        """
-        Commands which interact with the data [botname] has about you.
-
-        More information can be found in the [End User Data Documentation.](https://docs.discord.red/en/stable/red_core_data_statement.html)
-        """
-
-    # 1/10 minutes. It's a static response, but the inability to lock
-    # will annoy people if it's spammable
-    @commands.cooldown(1, 600, commands.BucketType.user)
-    @mydata.command(cls=commands.commands._AlwaysAvailableCommand, name="whatdata")
-    async def mydata_whatdata(self, ctx: commands.Context):
-        """
-        Find out what type of data [botname] stores and why.
-
-        **Example:**
-        - `[p]mydata whatdata`
-        """
-
-        ver = "latest" if red_version_info.dev_release else "stable"
-        link = f"https://docs.discord.red/en/{ver}/red_core_data_statement.html"
-        await ctx.send(
-            _(
-                "This bot stores some data about users as necessary to function. "
-                "This is mostly the ID your user is assigned by Discord, linked to "
-                "a handful of things depending on what you interact with in the bot. "
-                "There are a few commands which store it to keep track of who created "
-                "something. (such as playlists) "
-                "For full details about this as well as more in depth details of what "
-                "is stored and why, see {link}.\n\n"
-                "Additionally, 3rd party addons loaded by the bot's owner may or "
-                "may not store additional things. "
-                "You can use `{prefix}mydata 3rdparty` "
-                "to view the statements provided by each 3rd-party addition."
-            ).format(link=link, prefix=ctx.clean_prefix)
-        )
-
-    # 1/30 minutes. It's not likely to change much and uploads a standalone webpage.
-    @commands.cooldown(1, 1800, commands.BucketType.user)
-    @mydata.command(cls=commands.commands._AlwaysAvailableCommand, name="3rdparty")
-    async def mydata_3rd_party(self, ctx: commands.Context):
-        """View the End User Data statements of each 3rd-party module.
-
-        This will send an attachment with the End User Data statements of all loaded 3rd party cogs.
-
-        **Example:**
-        - `[p]mydata 3rdparty`
-        """
-
-        # Can't check this as a command check, and want to prompt DMs as an option.
-        if not ctx.bot_permissions.attach_files:
-            ctx.command.reset_cooldown(ctx)
-            return await ctx.send(_("I need to be able to attach files (try in DMs?)."))
-
-        statements = {
-            ext_name: getattr(ext, "__red_end_user_data_statement__", None)
-            for ext_name, ext in ctx.bot.extensions.items()
-            if not (ext.__package__ and ext.__package__.startswith("redbot."))
-        }
-
-        if not statements:
-            return await ctx.send(
-                _("This instance does not appear to have any 3rd-party extensions loaded.")
-            )
-
-        parts = []
-
-        formatted_statements = []
-
-        no_statements = []
-
-        for ext_name, statement in sorted(statements.items()):
-            if not statement:
-                no_statements.append(ext_name)
-            else:
-                formatted_statements.append(
-                    f"### {entity_transformer(ext_name)}\n\n{entity_transformer(statement)}"
-                )
-
-        if formatted_statements:
-            parts.append(
-                "## "
-                + _("3rd party End User Data statements")
-                + "\n\n"
-                + _("The following are statements provided by 3rd-party extensions.")
-            )
-            parts.extend(formatted_statements)
-
-        if no_statements:
-            parts.append("## " + _("3rd-party extensions without statements\n"))
-            for ext in no_statements:
-                parts.append(f"\n - {entity_transformer(ext)}")
-
-        generated = markdown.markdown("\n".join(parts), output_format="html")
-
-        html = "\n".join((PRETTY_HTML_HEAD, generated, HTML_CLOSING))
-
-        fp = io.BytesIO(html.encode())
-
-        await ctx.send(
-            _("Here's a generated page with the statements provided by 3rd-party extensions."),
-            file=discord.File(fp, filename="3rd-party.html"),
-        )
-
-    async def get_serious_confirmation(self, ctx: commands.Context, prompt: str) -> bool:
-        confirm_token = "".join(random.choices((*ascii_letters, *digits), k=8))
-
-        await ctx.send(f"{prompt}\n\n{confirm_token}")
-        try:
-            message = await ctx.bot.wait_for(
-                "message",
-                check=lambda m: m.channel.id == ctx.channel.id and m.author.id == ctx.author.id,
-                timeout=30,
-            )
-        except asyncio.TimeoutError:
-            await ctx.send(_("Did not get confirmation, cancelling."))
-        else:
-            if message.content.strip() == confirm_token:
-                return True
-            else:
-                await ctx.send(_("Did not get a matching confirmation, cancelling."))
-
-        return False
-
-    # 1 per day, not stored to config to avoid this being more stored data.
-    # large bots shouldn't be restarting so often that this is an issue,
-    # and small bots that do restart often don't have enough
-    # users for this to be an issue.
-    @commands.cooldown(1, 86400, commands.BucketType.user)
-    @mydata.command(cls=commands.commands._ForgetMeSpecialCommand, name="forgetme")
-    async def mydata_forgetme(self, ctx: commands.Context):
-        """
-        Have [botname] forget what it knows about you.
-
-        This may not remove all data about you, data needed for operation,
-        such as command cooldowns will be kept until no longer necessary.
-
-        Further interactions with [botname] may cause it to learn about you again.
-
-        **Example:**
-        - `[p]mydata forgetme`
-        """
-        if ctx.assume_yes:
-            # lol, no, we're not letting users schedule deletions every day to thrash the bot.
-            ctx.command.reset_cooldown(ctx)  # We will however not let that lock them out either.
-            return await ctx.send(
-                _("This command ({command}) does not support non-interactive usage.").format(
-                    command=ctx.command.qualified_name
-                )
-            )
-
-        if not await self.get_serious_confirmation(
-            ctx,
-            _(
-                "This will cause the bot to get rid of and/or disassociate "
-                "data from you. It will not get rid of operational data such "
-                "as modlog entries, warnings, or mutes. "
-                "If you are sure this is what you want, "
-                "please respond with the following:"
-            ),
-        ):
-            ctx.command.reset_cooldown(ctx)
-            return
-        await ctx.send(_("This may take some time."))
-
-        if await ctx.bot._config.datarequests.user_requests_are_strict():
-            requester = "user_strict"
-        else:
-            requester = "user"
-
-        results = await self.bot.handle_data_deletion_request(
-            requester=requester, user_id=ctx.author.id
-        )
-
-        if results.failed_cogs and results.failed_modules:
-            await ctx.send(
-                _(
-                    "I tried to delete all non-operational data about you "
-                    "(that I know how to delete) "
-                    "{mention}, however the following modules errored: {modules}. "
-                    "Additionally, the following cogs errored: {cogs}.\n"
-                    "Please contact the owner of this bot to address this.\n"
-                    "Note: Outside of these failures, data should have been deleted."
-                ).format(
-                    mention=ctx.author.mention,
-                    cogs=humanize_list(results.failed_cogs),
-                    modules=humanize_list(results.failed_modules),
-                )
-            )
-        elif results.failed_cogs:
-            await ctx.send(
-                _(
-                    "I tried to delete all non-operational data about you "
-                    "(that I know how to delete) "
-                    "{mention}, however the following cogs errored: {cogs}.\n"
-                    "Please contact the owner of this bot to address this.\n"
-                    "Note: Outside of these failures, data should have been deleted."
-                ).format(mention=ctx.author.mention, cogs=humanize_list(results.failed_cogs))
-            )
-        elif results.failed_modules:
-            await ctx.send(
-                _(
-                    "I tried to delete all non-operational data about you "
-                    "(that I know how to delete) "
-                    "{mention}, however the following modules errored: {modules}.\n"
-                    "Please contact the owner of this bot to address this.\n"
-                    "Note: Outside of these failures, data should have been deleted."
-                ).format(mention=ctx.author.mention, modules=humanize_list(results.failed_modules))
-            )
-        else:
-            await ctx.send(
-                _(
-                    "I've deleted any non-operational data about you "
-                    "(that I know how to delete) {mention}"
-                ).format(mention=ctx.author.mention)
-            )
-
-        if results.unhandled:
-            await ctx.send(
-                _("{mention} The following cogs did not handle deletion:\n{cogs}.").format(
-                    mention=ctx.author.mention, cogs=humanize_list(results.unhandled)
-                )
-            )
-
-    # The cooldown of this should be longer once actually implemented
-    # This is a couple hours, and lets people occasionally check status, I guess.
-    @commands.cooldown(1, 7200, commands.BucketType.user)
-    @mydata.command(cls=commands.commands._AlwaysAvailableCommand, name="getmydata")
-    async def mydata_getdata(self, ctx: commands.Context):
-        """[Coming Soon] Get what data [botname] has about you."""
-        await ctx.send(
-            _(
-                "This command doesn't do anything yet, "
-                "but we're working on adding support for this."
-            )
-        )
-
-    @commands.is_owner()
-    @mydata.group(name="ownermanagement")
-    async def mydata_owner_management(self, ctx: commands.Context):
-        """
-        Commands for more complete data handling.
-        """
-
-    @mydata_owner_management.command(name="allowuserdeletions")
-    async def mydata_owner_allow_user_deletions(self, ctx):
-        """
-        Set the bot to allow users to request a data deletion.
-
-        This is on by default.
-        Opposite of `[p]mydata ownermanagement disallowuserdeletions`
-
-        **Example:**
-        - `[p]mydata ownermanagement allowuserdeletions`
-        """
-        await ctx.bot._config.datarequests.allow_user_requests.set(True)
-        await ctx.send(
-            _(
-                "User can delete their own data. "
-                "This will not include operational data such as blocked users."
-            )
-        )
-
-    @mydata_owner_management.command(name="disallowuserdeletions")
-    async def mydata_owner_disallow_user_deletions(self, ctx):
-        """
-        Set the bot to not allow users to request a data deletion.
-
-        Opposite of `[p]mydata ownermanagement allowuserdeletions`
-
-        **Example:**
-        - `[p]mydata ownermanagement disallowuserdeletions`
-        """
-        await ctx.bot._config.datarequests.allow_user_requests.set(False)
-        await ctx.send(_("User can not delete their own data."))
-
-    @mydata_owner_management.command(name="setuserdeletionlevel")
-    async def mydata_owner_user_deletion_level(self, ctx, level: int):
-        """
-        Sets how user deletions are treated.
-
-        **Example:**
-        - `[p]mydata ownermanagement setuserdeletionlevel 1`
-
-        **Arguments:**
-        - `<level>` - The strictness level for user deletion. See Level guide below.
-
-        Level:
-        - `0`: What users can delete is left entirely up to each cog.
-        - `1`: Cogs should delete anything the cog doesn't need about the user.
-        """
-
-        if level == 1:
-            await ctx.bot._config.datarequests.user_requests_are_strict.set(True)
-            await ctx.send(
-                _(
-                    "Cogs will be instructed to remove all non operational "
-                    "data upon a user request."
-                )
-            )
-        elif level == 0:
-            await ctx.bot._config.datarequests.user_requests_are_strict.set(False)
-            await ctx.send(
-                _(
-                    "Cogs will be informed a user has made a data deletion request, "
-                    "and the details of what to delete will be left to the "
-                    "discretion of the cog author."
-                )
-            )
-        else:
-            await ctx.send_help()
-
-    @mydata_owner_management.command(name="processdiscordrequest")
-    async def mydata_discord_deletion_request(self, ctx, user_id: int):
-        """
-        Handle a deletion request from Discord.
-
-        This will cause the bot to get rid of or disassociate all data from the specified user ID.
-        You should not use this unless Discord has specifically requested this with regard to a deleted user.
-        This will remove the user from various anti-abuse measures.
-        If you are processing a manual request from a user, you may want `[p]mydata ownermanagement deleteforuser` instead.
-
-        **Arguments:**
-        - `<user_id>` - The id of the user whose data would be deleted.
-        """
-
-        if not await self.get_serious_confirmation(
-            ctx,
-            _(
-                "This will cause the bot to get rid of or disassociate all data "
-                "from the specified user ID. You should not use this unless "
-                "Discord has specifically requested this with regard to a deleted user. "
-                "This will remove the user from various anti-abuse measures. "
-                "If you are processing a manual request from a user, you may want "
-                "`{prefix}{command_name}` instead."
-                "\n\nIf you are sure this is what you intend to do "
-                "please respond with the following:"
-            ).format(prefix=ctx.clean_prefix, command_name="mydata ownermanagement deleteforuser"),
-        ):
-            return
-        results = await self.bot.handle_data_deletion_request(
-            requester="discord_deleted_user", user_id=user_id
-        )
-
-        if results.failed_cogs and results.failed_modules:
-            await ctx.send(
-                _(
-                    "I tried to delete all data about that user, "
-                    "(that I know how to delete) "
-                    "however the following modules errored: {modules}. "
-                    "Additionally, the following cogs errored: {cogs}\n"
-                    "Please check your logs and contact the creators of "
-                    "these cogs and modules.\n"
-                    "Note: Outside of these failures, data should have been deleted."
-                ).format(
-                    cogs=humanize_list(results.failed_cogs),
-                    modules=humanize_list(results.failed_modules),
-                )
-            )
-        elif results.failed_cogs:
-            await ctx.send(
-                _(
-                    "I tried to delete all data about that user, "
-                    "(that I know how to delete) "
-                    "however the following cogs errored: {cogs}.\n"
-                    "Please check your logs and contact the creators of "
-                    "these cogs and modules.\n"
-                    "Note: Outside of these failures, data should have been deleted."
-                ).format(cogs=humanize_list(results.failed_cogs))
-            )
-        elif results.failed_modules:
-            await ctx.send(
-                _(
-                    "I tried to delete all data about that user, "
-                    "(that I know how to delete) "
-                    "however the following modules errored: {modules}.\n"
-                    "Please check your logs and contact the creators of "
-                    "these cogs and modules.\n"
-                    "Note: Outside of these failures, data should have been deleted."
-                ).format(modules=humanize_list(results.failed_modules))
-            )
-        else:
-            await ctx.send(_("I've deleted all data about that user that I know how to delete."))
-
-        if results.unhandled:
-            await ctx.send(
-                _("{mention} The following cogs did not handle deletion:\n{cogs}.").format(
-                    mention=ctx.author.mention, cogs=humanize_list(results.unhandled)
-                )
-            )
-
-    @mydata_owner_management.command(name="deleteforuser")
-    async def mydata_user_deletion_request_by_owner(self, ctx, user_id: int):
-        """Delete data [botname] has about a user for a user.
-
-        This will cause the bot to get rid of or disassociate a lot of non-operational data from the specified user.
-        Users have access to a different command for this unless they can't interact with the bot at all.
-        This is a mostly safe operation, but you should not use it unless processing a request from this user as it may impact their usage of the bot.
-
-        **Arguments:**
-        - `<user_id>` - The id of the user whose data would be deleted.
-        """
-        if not await self.get_serious_confirmation(
-            ctx,
-            _(
-                "This will cause the bot to get rid of or disassociate "
-                "a lot of non-operational data from the "
-                "specified user. Users have access to "
-                "different command for this unless they can't interact with the bot at all. "
-                "This is a mostly safe operation, but you should not use it "
-                "unless processing a request from this "
-                "user as it may impact their usage of the bot. "
-                "\n\nIf you are sure this is what you intend to do "
-                "please respond with the following:"
-            ),
-        ):
-            return
-
-        if await ctx.bot._config.datarequests.user_requests_are_strict():
-            requester = "user_strict"
-        else:
-            requester = "user"
-
-        results = await self.bot.handle_data_deletion_request(requester=requester, user_id=user_id)
-
-        if results.failed_cogs and results.failed_modules:
-            await ctx.send(
-                _(
-                    "I tried to delete all non-operational data about that user, "
-                    "(that I know how to delete) "
-                    "however the following modules errored: {modules}. "
-                    "Additionally, the following cogs errored: {cogs}\n"
-                    "Please check your logs and contact the creators of "
-                    "these cogs and modules.\n"
-                    "Note: Outside of these failures, data should have been deleted."
-                ).format(
-                    cogs=humanize_list(results.failed_cogs),
-                    modules=humanize_list(results.failed_modules),
-                )
-            )
-        elif results.failed_cogs:
-            await ctx.send(
-                _(
-                    "I tried to delete all non-operational data about that user, "
-                    "(that I know how to delete) "
-                    "however the following cogs errored: {cogs}.\n"
-                    "Please check your logs and contact the creators of "
-                    "these cogs and modules.\n"
-                    "Note: Outside of these failures, data should have been deleted."
-                ).format(cogs=humanize_list(results.failed_cogs))
-            )
-        elif results.failed_modules:
-            await ctx.send(
-                _(
-                    "I tried to delete all non-operational data about that user, "
-                    "(that I know how to delete) "
-                    "however the following modules errored: {modules}.\n"
-                    "Please check your logs and contact the creators of "
-                    "these cogs and modules.\n"
-                    "Note: Outside of these failures, data should have been deleted."
-                ).format(modules=humanize_list(results.failed_modules))
-            )
-        else:
-            await ctx.send(
-                _(
-                    "I've deleted all non-operational data about that user "
-                    "that I know how to delete."
-                )
-            )
-
-        if results.unhandled:
-            await ctx.send(
-                _("{mention} The following cogs did not handle deletion:\n{cogs}.").format(
-                    mention=ctx.author.mention, cogs=humanize_list(results.unhandled)
-                )
-            )
-
-    @mydata_owner_management.command(name="deleteuserasowner")
-    async def mydata_user_deletion_by_owner(self, ctx, user_id: int):
-        """Delete data [botname] has about a user.
-
-        This will cause the bot to get rid of or disassociate a lot of data about the specified user.
-        This may include more than just end user data, including anti abuse records.
-
-        **Arguments:**
-        - `<user_id>` - The id of the user whose data would be deleted.
-        """
-        if not await self.get_serious_confirmation(
-            ctx,
-            _(
-                "This will cause the bot to get rid of or disassociate "
-                "a lot of data about the specified user. "
-                "This may include more than just end user data, including "
-                "anti abuse records."
-                "\n\nIf you are sure this is what you intend to do "
-                "please respond with the following:"
-            ),
-        ):
-            return
-        results = await self.bot.handle_data_deletion_request(requester="owner", user_id=user_id)
-
-        if results.failed_cogs and results.failed_modules:
-            await ctx.send(
-                _(
-                    "I tried to delete all data about that user, "
-                    "(that I know how to delete) "
-                    "however the following modules errored: {modules}. "
-                    "Additionally, the following cogs errored: {cogs}\n"
-                    "Please check your logs and contact the creators of "
-                    "these cogs and modules.\n"
-                    "Note: Outside of these failures, data should have been deleted."
-                ).format(
-                    cogs=humanize_list(results.failed_cogs),
-                    modules=humanize_list(results.failed_modules),
-                )
-            )
-        elif results.failed_cogs:
-            await ctx.send(
-                _(
-                    "I tried to delete all data about that user, "
-                    "(that I know how to delete) "
-                    "however the following cogs errored: {cogs}.\n"
-                    "Please check your logs and contact the creators of "
-                    "these cogs and modules.\n"
-                    "Note: Outside of these failures, data should have been deleted."
-                ).format(cogs=humanize_list(results.failed_cogs))
-            )
-        elif results.failed_modules:
-            await ctx.send(
-                _(
-                    "I tried to delete all data about that user, "
-                    "(that I know how to delete) "
-                    "however the following modules errored: {modules}.\n"
-                    "Please check your logs and contact the creators of "
-                    "these cogs and modules.\n"
-                    "Note: Outside of these failures, data should have been deleted."
-                ).format(modules=humanize_list(results.failed_modules))
-            )
-        else:
-            await ctx.send(_("I've deleted all data about that user that I know how to delete."))
-
-        if results.unhandled:
-            await ctx.send(
-                _("{mention} The following cogs did not handle deletion:\n{cogs}.").format(
-                    mention=ctx.author.mention, cogs=humanize_list(results.unhandled)
-                )
-            )
 
     @commands.group()
     async def embedset(self, ctx: commands.Context):
@@ -1594,18 +895,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def leave(self, ctx: commands.Context, *servers: GuildConverter):
         """
         Leaves servers.
-
-        If no server IDs are passed the local server will be left instead.
-
-        Note: This command is interactive.
-
-        **Examples:**
-        - `[p]leave` - Leave the current server.
-        - `[p]leave "Red - Discord Bot"` - Quotes are necessary when there are spaces in the name.
-        - `[p]leave 133049272517001216 240154543684321280` - Leaves multiple servers, using IDs.
-
-        **Arguments:**
-        - `[servers...]` - The servers to leave. When blank, attempts to leave the current server.
         """
         guilds = servers
         if ctx.guild is None and not guilds:
@@ -1717,7 +1006,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
         if loaded := outcomes["loaded_packages"]:
             loaded_packages = humanize_list([inline(package) for package in loaded])
-            formed = _("Loaded {packs}.").format(packs=loaded_packages)
+            formed = _("<:check:1107472942830456892> grief loaded {packs}.").format(packs=loaded_packages)
             output.append(formed)
 
         if already_loaded := outcomes["alreadyloaded_packages"]:
@@ -1827,22 +1116,22 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
         if unloaded := outcomes["unloaded_packages"]:
             if len(unloaded) == 1:
-                formed = _("The following package was unloaded: {pack}.").format(
+                formed = _("<:check:1107472942830456892> grief unloaded: {pack}.").format(
                     pack=inline(unloaded[0])
                 )
             else:
-                formed = _("The following packages were unloaded: {packs}.").format(
+                formed = _("<:check:1107472942830456892> grief unloaded: {packs}.").format(
                     packs=humanize_list([inline(package) for package in unloaded])
                 )
             output.append(formed)
 
         if failed := outcomes["notloaded_packages"]:
             if len(failed) == 1:
-                formed = _("The following package was not loaded: {pack}.").format(
+                formed = _("<:x_:1107472962333978655> grief didn't have loaded: {pack}.").format(
                     pack=inline(failed[0])
                 )
             else:
-                formed = _("The following packages were not loaded: {packs}.").format(
+                formed = _("<:x_:1107472962333978655> grief didn't have these loaded: {packs}.").format(
                     packs=humanize_list([inline(package) for package in failed])
                 )
             output.append(formed)
@@ -1876,19 +1165,17 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
         if loaded := outcomes["loaded_packages"]:
             loaded_packages = humanize_list([inline(package) for package in loaded])
-            formed = _("Reloaded {packs}.").format(packs=loaded_packages)
+            formed = _("<:grief_check:1107472942830456892> grief reloaded {packs}.").format(packs=loaded_packages)
             output.append(formed)
 
         if failed := outcomes["failed_packages"]:
             if len(failed) == 1:
                 formed = _(
-                    "Failed to reload the following package: {pack}."
-                    "\nCheck your console or logs for details."
+                    "<:x_:1107472962333978655> grief failed to reload the following package: {pack}."
                 ).format(pack=inline(failed[0]))
             else:
                 formed = _(
-                    "Failed to reload the following packages: {packs}"
-                    "\nCheck your console or logs for details."
+                    "<:x_:1107472962333978655> grief failed to reload the following packages: {packs}"
                 ).format(packs=humanize_list([inline(package) for package in failed]))
             output.append(formed)
 
@@ -1922,11 +1209,11 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             reasons = "\n".join([f"`{x}`: {y}" for x, y in failed_with_reason.items()])
             if len(failed_with_reason) == 1:
                 formed = _(
-                    "This package could not be reloaded for the following reason:\n\n{reason}"
+                    "<:x_:1107472962333978655> grief could not reload the packages because:\n\n{reason}"
                 ).format(reason=reasons)
             else:
                 formed = _(
-                    "These packages could not be reloaded for the following reasons:\n\n{reasons}"
+                    "<:x_:1107472962333978655> grief could not reload the package because:\n\n{reasons}"
                 ).format(reasons=reasons)
             output.append(formed)
 
@@ -2329,7 +1616,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
                 msg += diff + command_type.ljust(7) + " | " + name + "\n"
             msg += "\n"
 
-        pages = pagify(msg, delims=["\n\n", "\n"], shorten_by=12)
+        pages = pagify(msg, delims=["\n\n", "\n"])
         pages = [box(page, lang="diff") for page in pages]
         await menu(ctx, pages)
 
@@ -2403,27 +1690,17 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         skin = "\N{EMOJI MODIFIER FITZPATRICK TYPE-3}"
         with contextlib.suppress(discord.HTTPException):
             if not silently:
-                await ctx.send(_("Shutting down... ") + wave + skin)
+                await ctx.send(_("<:check:1107472942830456892> grief is shutting down."))
         await ctx.bot.shutdown()
 
     @commands.command(name="restart")
     @commands.is_owner()
     async def _restart(self, ctx: commands.Context, silently: bool = False):
         """Attempts to restart [botname].
-
-        Makes [botname] quit with exit code 26.
-        The restart is not guaranteed: it must be dealt with by the process manager in use.
-
-        **Examples:**
-        - `[p]restart`
-        - `[p]restart True` - Restarts silently.
-
-        **Arguments:**
-        - `[silently]` - Whether to skip sending the restart message. Defaults to False.
         """
         with contextlib.suppress(discord.HTTPException):
             if not silently:
-                await ctx.send(_("Restarting..."))
+                await ctx.send(_("<:check:1107472942830456892> grief is restarting."))
         await ctx.bot.shutdown(restart=True)
 
     @bank.is_owner_if_bank_global()
@@ -2568,9 +1845,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
                     "This will delete all bank accounts for {scope}.\nIf you're sure, type "
                     "`{prefix}bankset reset yes`"
                 ).format(
-                    scope=self.bot.user.display_name
-                    if await bank.is_global()
-                    else _("this server"),
+                    scope=self.bot.user.name if await bank.is_global() else _("this server"),
                     prefix=ctx.clean_prefix,
                 )
             )
@@ -2578,9 +1853,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             await bank.wipe_bank(guild=ctx.guild)
             await ctx.send(
                 _("All bank accounts for {scope} have been deleted.").format(
-                    scope=self.bot.user.display_name
-                    if await bank.is_global()
-                    else _("this server")
+                    scope=self.bot.user.name if await bank.is_global() else _("this server")
                 )
             )
 
@@ -2669,15 +1942,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         confirmation: bool = False,
     ):
         """Delete the bank account of a specified user.
-
-        Examples:
-        - `[p]bankset prune user @Twentysix` - Did not confirm. Shows the help message.
-        - `[p]bankset prune user @Twentysix yes`
-
-        **Arguments**
-
-        - `<user>` The user to delete the bank of. Takes mentions, names, and user ids.
-        - `<confirmation>` This will default to false unless specified.
         """
         try:
             name = member_or_id.display_name
@@ -2811,42 +2075,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def _set_bot(self, ctx: commands.Context):
         """Commands for changing [botname]'s metadata."""
 
-    @commands.is_owner()
-    @_set_bot.command(name="description")
-    async def _set_bot_description(self, ctx: commands.Context, *, description: str = ""):
-        """
-        Sets the bot's description.
-
-        Use without a description to reset.
-        This is shown in a few locations, including the help menu.
-
-        The maximum description length is 250 characters to ensure it displays properly.
-
-        The default is "Red V3".
-
-        **Examples:**
-        - `[p]set bot description` - Resets the description to the default setting.
-        - `[p]set bot description MyBot: A Red V3 Bot`
-
-        **Arguments:**
-        - `[description]` - The description to use for this bot. Leave blank to reset to the default.
-        """
-        if not description:
-            await ctx.bot._config.description.clear()
-            ctx.bot.description = "Red V3"
-            await ctx.send(_("Description reset."))
-        elif len(description) > 250:  # While the limit is 256, we bold it adding characters.
-            await ctx.send(
-                _(
-                    "This description is too long to properly display. "
-                    "Please try again with below 250 characters."
-                )
-            )
-        else:
-            await ctx.bot._config.description.set(description)
-            ctx.bot.description = description
-            await ctx.tick()
-
     @_set_bot.group(name="avatar", invoke_without_command=True)
     @commands.is_owner()
     async def _set_bot_avatar(self, ctx: commands.Context, url: str = None):
@@ -2909,62 +2137,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             await ctx.bot.user.edit(avatar=None)
         await ctx.send(_("Avatar removed."))
 
-    @_set_bot.command(name="username", aliases=["name"])
-    @commands.is_owner()
-    async def _set_bot_username(self, ctx: commands.Context, *, username: str):
-        """Sets [botname]'s username.
-
-        Maximum length for a username is 32 characters.
-
-        Note: The username of a verified bot cannot be manually changed.
-            Please contact Discord support to change it.
-
-        **Example:**
-        - `[p]set bot username BaguetteBot`
-
-        **Arguments:**
-        - `<username>` - The username to give the bot.
-        """
-        try:
-            if self.bot.user.public_flags.verified_bot:
-                await ctx.send(
-                    _(
-                        "The username of a verified bot cannot be manually changed."
-                        " Please contact Discord support to change it."
-                    )
-                )
-                return
-            if len(username) > 32:
-                await ctx.send(_("Failed to change name. Must be 32 characters or fewer."))
-                return
-            async with ctx.typing():
-                await asyncio.wait_for(self._name(name=username), timeout=30)
-        except asyncio.TimeoutError:
-            await ctx.send(
-                _(
-                    "Changing the username timed out. "
-                    "Remember that you can only do it up to 2 times an hour."
-                    " Use nicknames if you need frequent changes: {command}"
-                ).format(command=inline(f"{ctx.clean_prefix}set bot nickname"))
-            )
-        except discord.HTTPException as e:
-            if e.code == 50035:
-                error_string = e.text.split("\n")[1]  # Remove the "Invalid Form body"
-                await ctx.send(
-                    _(
-                        "Failed to change the username. "
-                        "Discord returned the following error:\n"
-                        "{error_message}"
-                    ).format(error_message=inline(error_string))
-                )
-            else:
-                log.error(
-                    "Unexpected error occurred when trying to change the username.", exc_info=e
-                )
-                await ctx.send(_("Unexpected error occurred when trying to change the username."))
-        else:
-            await ctx.send(_("Done."))
-
     @_set_bot.command(name="nickname")
     @commands.admin_or_permissions(manage_nicknames=True)
     @commands.guild_only()
@@ -2989,281 +2161,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         else:
             await ctx.send(_("Done."))
 
-    @_set_bot.command(name="custominfo")
-    @commands.is_owner()
-    async def _set_bot_custominfo(self, ctx: commands.Context, *, text: str = None):
-        """Customizes a section of `[p]info`.
-
-        The maximum amount of allowed characters is 1024.
-        Supports markdown, links and "mentions".
-
-        Link example: `[My link](https://example.com)`
-
-        **Examples:**
-        - `[p]set bot custominfo >>> I can use **markdown** such as quotes, ||spoilers|| and multiple lines.`
-        - `[p]set bot custominfo Join my [support server](discord.gg/discord)!`
-        - `[p]set bot custominfo` - Removes custom info text.
-
-        **Arguments:**
-        - `[text]` - The custom info text.
-        """
-        if not text:
-            await ctx.bot._config.custom_info.clear()
-            await ctx.send(_("The custom text has been cleared."))
-            return
-        if len(text) <= 1024:
-            await ctx.bot._config.custom_info.set(text)
-            await ctx.send(_("The custom text has been set."))
-            await ctx.invoke(self.info)
-        else:
-            await ctx.send(_("Text must be fewer than 1024 characters long."))
-
     # -- End Bot Metadata Commands -- ###
-    # -- Bot Status Commands -- ###
-
-    @_set.group(name="status")
-    @commands.bot_in_a_guild()
-    @commands.is_owner()
-    async def _set_status(self, ctx: commands.Context):
-        """Commands for setting [botname]'s status."""
-
-    @_set_status.command(
-        name="streaming", aliases=["stream", "twitch"], usage="[(<streamer> <stream_title>)]"
-    )
-    @commands.bot_in_a_guild()
-    @commands.is_owner()
-    async def _set_status_stream(
-        self,
-        ctx: commands.Context,
-        streamer: commands.Range[str, 1, 489] = None,
-        *,
-        stream_title: commands.Range[str, 1, 128] = None,
-    ):
-        """Sets [botname]'s streaming status to a twitch stream.
-
-        This will appear as `Streaming <stream_title>` or `LIVE ON TWITCH` depending on the context.
-        It will also include a `Watch` button with a twitch.tv url for the provided streamer.
-
-        Maximum length for a stream title is 128 characters.
-
-        Leaving both streamer and stream_title empty will clear it.
-
-        **Examples:**
-        - `[p]set status stream` - Clears the activity status.
-        - `[p]set status stream 26 Twentysix is streaming` - Sets the stream to `https://www.twitch.tv/26`.
-        - `[p]set status stream https://twitch.tv/26 Twentysix is streaming` - Sets the URL manually.
-
-        **Arguments:**
-        - `<streamer>` - The twitch streamer to provide a link to. This can be their twitch name or the entire URL.
-        - `<stream_title>` - The text to follow `Streaming` in the status."""
-        status = ctx.bot.guilds[0].me.status if len(ctx.bot.guilds) > 0 else None
-
-        if stream_title:
-            stream_title = stream_title.strip()
-            if "twitch.tv/" not in streamer:
-                streamer = "https://www.twitch.tv/" + streamer
-            activity = discord.Streaming(url=streamer, name=stream_title)
-            await ctx.bot.change_presence(status=status, activity=activity)
-        elif streamer is not None:
-            await ctx.send_help()
-            return
-        else:
-            await ctx.bot.change_presence(activity=None, status=status)
-        await ctx.send(_("Done."))
-
-    @_set_status.command(name="playing", aliases=["game"])
-    @commands.bot_in_a_guild()
-    @commands.is_owner()
-    async def _set_status_game(
-        self, ctx: commands.Context, *, game: commands.Range[str, 1, 128] = None
-    ):
-        """Sets [botname]'s playing status.
-
-        This will appear as `Playing <game>` or `PLAYING A GAME: <game>` depending on the context.
-
-        Maximum length for a playing status is 128 characters.
-
-        **Examples:**
-        - `[p]set status playing` - Clears the activity status.
-        - `[p]set status playing the keyboard`
-
-        **Arguments:**
-        - `[game]` - The text to follow `Playing`. Leave blank to clear the current activity status.
-        """
-
-        if game:
-            game = discord.Game(name=game)
-        else:
-            game = None
-        status = ctx.bot.guilds[0].me.status if len(ctx.bot.guilds) > 0 else discord.Status.online
-        await ctx.bot.change_presence(status=status, activity=game)
-        if game:
-            await ctx.send(_("Status set to `Playing {game.name}`.").format(game=game))
-        else:
-            await ctx.send(_("Game cleared."))
-
-    @_set_status.command(name="listening")
-    @commands.bot_in_a_guild()
-    @commands.is_owner()
-    async def _set_status_listening(
-        self, ctx: commands.Context, *, listening: commands.Range[str, 1, 128] = None
-    ):
-        """Sets [botname]'s listening status.
-
-        This will appear as `Listening to <listening>`.
-
-        Maximum length for a listening status is 128 characters.
-
-        **Examples:**
-        - `[p]set status listening` - Clears the activity status.
-        - `[p]set status listening jams`
-
-        **Arguments:**
-        - `[listening]` - The text to follow `Listening to`. Leave blank to clear the current activity status.
-        """
-
-        status = ctx.bot.guilds[0].me.status if len(ctx.bot.guilds) > 0 else discord.Status.online
-        if listening:
-            activity = discord.Activity(name=listening, type=discord.ActivityType.listening)
-        else:
-            activity = None
-        await ctx.bot.change_presence(status=status, activity=activity)
-        if activity:
-            await ctx.send(
-                _("Status set to `Listening to {listening}`.").format(listening=listening)
-            )
-        else:
-            await ctx.send(_("Listening cleared."))
-
-    @_set_status.command(name="watching")
-    @commands.bot_in_a_guild()
-    @commands.is_owner()
-    async def _set_status_watching(
-        self, ctx: commands.Context, *, watching: commands.Range[str, 1, 128] = None
-    ):
-        """Sets [botname]'s watching status.
-
-        This will appear as `Watching <watching>`.
-
-        Maximum length for a watching status is 128 characters.
-
-        **Examples:**
-        - `[p]set status watching` - Clears the activity status.
-        - `[p]set status watching [p]help`
-
-        **Arguments:**
-        - `[watching]` - The text to follow `Watching`. Leave blank to clear the current activity status.
-        """
-
-        status = ctx.bot.guilds[0].me.status if len(ctx.bot.guilds) > 0 else discord.Status.online
-        if watching:
-            activity = discord.Activity(name=watching, type=discord.ActivityType.watching)
-        else:
-            activity = None
-        await ctx.bot.change_presence(status=status, activity=activity)
-        if activity:
-            await ctx.send(_("Status set to `Watching {watching}`.").format(watching=watching))
-        else:
-            await ctx.send(_("Watching cleared."))
-
-    @_set_status.command(name="competing")
-    @commands.bot_in_a_guild()
-    @commands.is_owner()
-    async def _set_status_competing(
-        self, ctx: commands.Context, *, competing: commands.Range[str, 1, 128] = None
-    ):
-        """Sets [botname]'s competing status.
-
-        This will appear as `Competing in <competing>`.
-
-        Maximum length for a competing status is 128 characters.
-
-        **Examples:**
-        - `[p]set status competing` - Clears the activity status.
-        - `[p]set status competing London 2012 Olympic Games`
-
-        **Arguments:**
-        - `[competing]` - The text to follow `Competing in`. Leave blank to clear the current activity status.
-        """
-
-        status = ctx.bot.guilds[0].me.status if len(ctx.bot.guilds) > 0 else discord.Status.online
-        if competing:
-            activity = discord.Activity(name=competing, type=discord.ActivityType.competing)
-        else:
-            activity = None
-        await ctx.bot.change_presence(status=status, activity=activity)
-        if activity:
-            await ctx.send(
-                _("Status set to `Competing in {competing}`.").format(competing=competing)
-            )
-        else:
-            await ctx.send(_("Competing cleared."))
-
-    @_set_status.command(name="custom")
-    @commands.bot_in_a_guild()
-    @commands.is_owner()
-    async def _set_status_custom(
-        self, ctx: commands.Context, *, text: commands.Range[str, 1, 128] = None
-    ):
-        """Sets [botname]'s custom status.
-
-        This will appear as `<text>`.
-
-        Maximum length for a custom status is 128 characters.
-
-        **Examples:**
-        - `[p]set status custom` - Clears the activity status.
-        - `[p]set status custom Running cogs...`
-
-        **Arguments:**
-        - `[text]` - The custom status text. Leave blank to clear the current activity status.
-        """
-
-        status = ctx.bot.guilds[0].me.status if len(ctx.bot.guilds) > 0 else discord.Status.online
-        if text:
-            activity = discord.CustomActivity(name=text)
-        else:
-            activity = None
-        await ctx.bot.change_presence(status=status, activity=activity)
-        if activity:
-            await ctx.send(_("Custom status set to `{text}`.").format(text=text))
-        else:
-            await ctx.send(_("Custom status cleared."))
-
-    async def _set_my_status(self, ctx: commands.Context, status: discord.Status):
-        game = ctx.bot.guilds[0].me.activity if len(ctx.bot.guilds) > 0 else None
-        await ctx.bot.change_presence(status=status, activity=game)
-        return await ctx.send(_("Status changed to {}.").format(status))
-
-    @_set_status.command(name="online")
-    @commands.bot_in_a_guild()
-    @commands.is_owner()
-    async def _set_status_online(self, ctx: commands.Context):
-        """Set [botname]'s status to online."""
-        await self._set_my_status(ctx, discord.Status.online)
-
-    @_set_status.command(name="dnd", aliases=["donotdisturb", "busy"])
-    @commands.bot_in_a_guild()
-    @commands.is_owner()
-    async def _set_status_dnd(self, ctx: commands.Context):
-        """Set [botname]'s status to do not disturb."""
-        await self._set_my_status(ctx, discord.Status.do_not_disturb)
-
-    @_set_status.command(name="idle", aliases=["away", "afk"])
-    @commands.bot_in_a_guild()
-    @commands.is_owner()
-    async def _set_status_idle(self, ctx: commands.Context):
-        """Set [botname]'s status to idle."""
-        await self._set_my_status(ctx, discord.Status.idle)
-
-    @_set_status.command(name="invisible", aliases=["offline"])
-    @commands.bot_in_a_guild()
-    @commands.is_owner()
-    async def _set_status_invisible(self, ctx: commands.Context):
-        """Set [botname]'s status to invisible."""
-        await self._set_my_status(ctx, discord.Status.invisible)
-
-    # -- End Bot Status Commands -- ###
     # -- Bot Roles Commands -- ###
 
     @_set.group(name="roles")
@@ -3380,8 +2278,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         """
         Changes [botname]'s locale in this server.
 
-        Go to [Red's Crowdin page](https://translate.discord.red) to see locales that are available with translations.
-
         Use "default" to return to the bot's default set language.
 
         If you want to change bot's global locale, see `[p]set locale global` command.
@@ -3408,8 +2304,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         Changes [botname]'s default locale.
 
         This will be used when a server has not set a locale, or in DMs.
-
-        Go to [Red's Crowdin page](https://translate.discord.red) to see locales that are available with translations.
 
         To reset to English, use "en-US".
 
@@ -3444,8 +2338,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def _set_locale_local(self, ctx: commands.Context, language_code: str):
         """
         Changes [botname]'s locale in this server.
-
-        Go to [Red's Crowdin page](https://translate.discord.red) to see locales that are available with translations.
 
         Use "default" to return to the bot's default set language.
 
@@ -3625,11 +2517,13 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         - `<service>` - The service you're adding tokens to.
         - `<tokens>` - Pairs of token keys and values. The key and value should be separated by one of ` `, `,`, or `;`.
         """
-        if service is None or tokens is None:
-            view = SetApiView(default_service=service)
-            msg = await ctx.send(_("Click the button below to set your keys."), view=view)
-            await view.wait()
-            await msg.edit(content=_("This API keys setup message has expired."), view=None)
+        if service is None:  # Handled in order of missing operations
+            await ctx.send(_("Click the button below to set your keys."), view=SetApiView())
+        elif tokens is None:
+            await ctx.send(
+                _("Click the button below to set your keys."),
+                view=SetApiView(default_service=service),
+            )
         else:
             if ctx.bot_permissions.manage_messages:
                 await ctx.message.delete()
@@ -3690,140 +2584,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         else:
             await ctx.send(_("None of the services you provided had any keys set."))
 
-    # -- End Set Api Commands -- ###
-    # -- Set Ownernotifications Commands -- ###
-
-    @commands.is_owner()
-    @_set.group(name="ownernotifications")
-    async def _set_ownernotifications(self, ctx: commands.Context):
-        """
-        Commands for configuring owner notifications.
-
-        Owner notifications include usage of `[p]contact` and available Red updates.
-        """
-        pass
-
-    @_set_ownernotifications.command(name="optin")
-    async def _set_ownernotifications_optin(self, ctx: commands.Context):
-        """
-        Opt-in on receiving owner notifications.
-
-        This is the default state.
-
-        Note: This will only resume sending owner notifications to your DMs.
-            Additional owners and destinations will not be affected.
-
-        **Example:**
-        - `[p]set ownernotifications optin`
-        """
-        async with ctx.bot._config.owner_opt_out_list() as opt_outs:
-            if ctx.author.id in opt_outs:
-                opt_outs.remove(ctx.author.id)
-
-        await ctx.tick()
-
-    @_set_ownernotifications.command(name="optout")
-    async def _set_ownernotifications_optout(self, ctx: commands.Context):
-        """
-        Opt-out of receiving owner notifications.
-
-        Note: This will only stop sending owner notifications to your DMs.
-            Additional owners and destinations will still receive notifications.
-
-        **Example:**
-        - `[p]set ownernotifications optout`
-        """
-        async with ctx.bot._config.owner_opt_out_list() as opt_outs:
-            if ctx.author.id not in opt_outs:
-                opt_outs.append(ctx.author.id)
-
-        await ctx.tick()
-
-    @_set_ownernotifications.command(name="adddestination")
-    async def _set_ownernotifications_adddestination(
-        self,
-        ctx: commands.Context,
-        *,
-        channel: Union[discord.TextChannel, discord.VoiceChannel, discord.StageChannel],
-    ):
-        """
-        Adds a destination text channel to receive owner notifications.
-
-        **Examples:**
-        - `[p]set ownernotifications adddestination #owner-notifications`
-        - `[p]set ownernotifications adddestination 168091848718417920` - Accepts channel IDs.
-
-        **Arguments:**
-        - `<channel>` - The channel to send owner notifications to.
-        """
-        async with ctx.bot._config.extra_owner_destinations() as extras:
-            if channel.id not in extras:
-                extras.append(channel.id)
-
-        await ctx.tick()
-
-    @_set_ownernotifications.command(
-        name="removedestination", aliases=["remdestination", "deletedestination", "deldestination"]
-    )
-    async def _set_ownernotifications_removedestination(
-        self,
-        ctx: commands.Context,
-        *,
-        channel: Union[discord.TextChannel, discord.VoiceChannel, discord.StageChannel, int],
-    ):
-        """
-        Removes a destination text channel from receiving owner notifications.
-
-        **Examples:**
-        - `[p]set ownernotifications removedestination #owner-notifications`
-        - `[p]set ownernotifications deletedestination 168091848718417920` - Accepts channel IDs.
-
-        **Arguments:**
-        - `<channel>` - The channel to stop sending owner notifications to.
-        """
-
-        try:
-            channel_id = channel.id
-        except AttributeError:
-            channel_id = channel
-
-        async with ctx.bot._config.extra_owner_destinations() as extras:
-            if channel_id in extras:
-                extras.remove(channel_id)
-
-        await ctx.tick()
-
-    @_set_ownernotifications.command(name="listdestinations")
-    async def _set_ownernotifications_listdestinations(self, ctx: commands.Context):
-        """
-        Lists the configured extra destinations for owner notifications.
-
-        **Example:**
-        - `[p]set ownernotifications listdestinations`
-        """
-
-        channel_ids = await ctx.bot._config.extra_owner_destinations()
-
-        if not channel_ids:
-            await ctx.send(_("There are no extra channels being sent to."))
-            return
-
-        data = []
-
-        for channel_id in channel_ids:
-            channel = ctx.bot.get_channel(channel_id)
-            if channel:
-                # This includes the channel name in case the user can't see the channel.
-                data.append(f"{channel.mention} {channel} ({channel.id})")
-            else:
-                data.append(_("Unknown channel with id: {id}").format(id=channel_id))
-
-        output = "\n".join(data)
-        for page in pagify(output):
-            await ctx.send(page)
-
-    # -- End Set Ownernotifications Commands -- ###
-
+    # -- End Set Api Commands -- ##
     @_set.command(name="showsettings")
     async def _set_showsettings(self, ctx: commands.Context, server: discord.Guild = None):
         """
@@ -3880,7 +2641,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             "Global regional format: {regional_format}\n"
             "Default embed colour: {colour}"
         ).format(
-            bot_name=ctx.bot.user.display_name,
+            bot_name=ctx.bot.user.name,
             prefixes=prefix_string,
             guild_settings=guild_settings,
             locale=locale,
@@ -3930,27 +2691,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
                 )
             else:
                 await ctx.send(_("I will not delete command messages."))
-
-    @_set.command(name="usebotcolour", aliases=["usebotcolor"])
-    @commands.guildowner()
-    @commands.guild_only()
-    async def _set_usebotcolour(self, ctx: commands.Context):
-        """
-        Toggle whether to use the bot owner-configured colour for embeds.
-
-        Default is to use the bot's configured colour.
-        Otherwise, the colour used will be the colour of the bot's top role.
-
-        **Example:**
-        - `[p]set usebotcolour`
-        """
-        current_setting = await ctx.bot._config.guild(ctx.guild).use_bot_color()
-        await ctx.bot._config.guild(ctx.guild).use_bot_color.set(not current_setting)
-        await ctx.send(
-            _("The bot {} use its configured color for embeds.").format(
-                _("will not") if not current_setting else _("will")
-            )
-        )
 
     @_set.command(name="serverfuzzy")
     @commands.guildowner()
@@ -4087,17 +2827,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         Warning: This will override global prefixes, the bot will not respond to any global prefixes in this server.
             This is not additive. It will replace all current server prefixes.
             A prefix cannot have more than 25 characters.
-
-        **Examples:**
-        - `[p]set serverprefix !`
-        - `[p]set serverprefix "! "` - Quotes are needed to use spaces in prefixes.
-        - `[p]set serverprefix "@[botname] "` - This uses a mention as the prefix.
-        - `[p]set serverprefix ! ? .` - Sets multiple prefixes.
-        - `[p]set serverprefix "Red - Discord Bot" ?` - Sets the prefix for a specific server. Quotes are needed to use spaces in the server name.
-
-        **Arguments:**
-        - `[server]` - The server to set the prefix for. Defaults to current server.
-        - `[prefixes...]` - The prefixes the bot will respond to on this server. Leave blank to clear server prefixes.
         """
         if server is None:
             server = ctx.guild
@@ -4527,176 +3256,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         await ctx.bot._config.help.react_timeout.set(seconds)
         await ctx.send(_("Done. The reaction timeout has been set to {} seconds.").format(seconds))
 
-    @helpset.command(name="tagline")
-    async def helpset_tagline(self, ctx: commands.Context, *, tagline: str = None):
-        """
-        Set the tagline to be used.
-
-        The maximum tagline length is 2048 characters.
-        This setting only applies to embedded help. If no tagline is specified, the default will be used instead.
-
-        **Examples:**
-        - `[p]helpset tagline Thanks for using the bot!`
-        - `[p]helpset tagline` - Resets the tagline to the default.
-
-        **Arguments:**
-        - `[tagline]` - The tagline to appear at the bottom of help embeds. Leave blank to reset.
-        """
-        if tagline is None:
-            await ctx.bot._config.help.tagline.set("")
-            return await ctx.send(_("The tagline has been reset."))
-
-        if len(tagline) > 2048:
-            await ctx.send(
-                _(
-                    "Your tagline is too long! Please shorten it to be "
-                    "no more than 2048 characters long."
-                )
-            )
-            return
-
-        await ctx.bot._config.help.tagline.set(tagline)
-        await ctx.send(_("The tagline has been set."))
-
-    @commands.command(cooldown_after_parsing=True)
-    @commands.cooldown(1, 60, commands.BucketType.user)
-    async def contact(self, ctx: commands.Context, *, message: str):
-        """Sends a message to the owner.
-
-        This is limited to one message every 60 seconds per person.
-
-        **Example:**
-        - `[p]contact Help! The bot has become sentient!`
-
-        **Arguments:**
-        - `[message]` - The message to send to the owner.
-        """
-        guild = ctx.message.guild
-        author = ctx.message.author
-        footer = _("User ID: {}").format(author.id)
-
-        if ctx.guild is None:
-            source = _("through DM")
-        else:
-            source = _("from {}").format(guild)
-            footer += _(" | Server ID: {}").format(guild.id)
-
-        prefixes = await ctx.bot.get_valid_prefixes()
-        prefix = re.sub(rf"<@!?{ctx.me.id}>", f"@{ctx.me.name}".replace("\\", r"\\"), prefixes[0])
-
-        content = _("Use `{}dm {} <text>` to reply to this user").format(prefix, author.id)
-
-        description = _("Sent by {} {}").format(author, source)
-
-        destinations = await ctx.bot.get_owner_notification_destinations()
-
-        if not destinations:
-            await ctx.send(_("I've been configured not to send this anywhere."))
-            return
-
-        successful = False
-
-        for destination in destinations:
-            is_dm = isinstance(destination, discord.User)
-            if not is_dm and not destination.permissions_for(destination.guild.me).send_messages:
-                continue
-
-            if await ctx.bot.embed_requested(destination, command=ctx.command):
-                color = await ctx.bot.get_embed_color(destination)
-
-                e = discord.Embed(colour=color, description=message)
-                e.set_author(name=description, icon_url=author.display_avatar)
-                e.set_footer(text=f"{footer}\n{content}")
-
-                try:
-                    await destination.send(embed=e)
-                except discord.Forbidden:
-                    log.exception(f"Contact failed to {destination}({destination.id})")
-                    # Should this automatically opt them out?
-                except discord.HTTPException:
-                    log.exception(
-                        f"An unexpected error happened while attempting to"
-                        f" send contact to {destination}({destination.id})"
-                    )
-                else:
-                    successful = True
-            else:
-                msg_text = "{}\nMessage:\n\n{}\n{}".format(description, message, footer)
-
-                try:
-                    await destination.send("{}\n{}".format(content, box(msg_text)))
-                except discord.Forbidden:
-                    log.exception(f"Contact failed to {destination}({destination.id})")
-                    # Should this automatically opt them out?
-                except discord.HTTPException:
-                    log.exception(
-                        f"An unexpected error happened while attempting to"
-                        f" send contact to {destination}({destination.id})"
-                    )
-                else:
-                    successful = True
-
-        if successful:
-            await ctx.send(_("Your message has been sent."))
-        else:
-            await ctx.send(_("I'm unable to deliver your message. Sorry."))
-
-    @commands.command()
-    @commands.is_owner()
-    async def dm(self, ctx: commands.Context, user_id: int, *, message: str):
-        """Sends a DM to a user.
-
-        This command needs a user ID to work.
-
-        To get a user ID, go to Discord's settings and open the 'Appearance' tab.
-        Enable 'Developer Mode', then right click a user and click on 'Copy ID'.
-
-        **Example:**
-        - `[p]dm 262626262626262626 Do you like me? Yes / No`
-
-        **Arguments:**
-        - `[message]` - The message to dm to the user.
-        """
-        destination = self.bot.get_user(user_id)
-        if destination is None or destination.bot:
-            await ctx.send(
-                _(
-                    "Invalid ID, user not found, or user is a bot. "
-                    "You can only send messages to people I share "
-                    "a server with."
-                )
-            )
-            return
-
-        prefixes = await ctx.bot.get_valid_prefixes()
-        prefix = re.sub(rf"<@!?{ctx.me.id}>", f"@{ctx.me.name}".replace("\\", r"\\"), prefixes[0])
-        description = _("Owner of {}").format(ctx.bot.user)
-        content = _("You can reply to this message with {}contact").format(prefix)
-        if await ctx.embed_requested():
-            e = discord.Embed(colour=await ctx.embed_colour(), description=message)
-
-            e.set_footer(text=content)
-            e.set_author(name=description, icon_url=ctx.bot.user.display_avatar)
-
-            try:
-                await destination.send(embed=e)
-            except discord.HTTPException:
-                await ctx.send(
-                    _("Sorry, I couldn't deliver your message to {}").format(destination)
-                )
-            else:
-                await ctx.send(_("Message delivered to {}").format(destination))
-        else:
-            response = "{}\nMessage:\n\n{}".format(description, message)
-            try:
-                await destination.send("{}\n{}".format(box(response), content))
-            except discord.HTTPException:
-                await ctx.send(
-                    _("Sorry, I couldn't deliver your message to {}").format(destination)
-                )
-            else:
-                await ctx.send(_("Message delivered to {}").format(destination))
-
     @commands.command(hidden=True)
     @commands.is_owner()
     async def datapath(self, ctx: commands.Context):
@@ -4797,13 +3356,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def allowlist_add(self, ctx: commands.Context, *users: Union[discord.Member, int]):
         """
         Adds users to the allowlist.
-
-        **Examples:**
-        - `[p]allowlist add @26 @Will` - Adds two users to the allowlist.
-        - `[p]allowlist add 262626262626262626` - Adds a user by ID.
-
-        **Arguments:**
-        - `<users...>` - The user or users to add to the allowlist.
         """
         await self.bot.add_to_whitelist(users)
         if len(users) > 1:
@@ -4841,15 +3393,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def allowlist_remove(self, ctx: commands.Context, *users: Union[discord.Member, int]):
         """
         Removes users from the allowlist.
-
-        The allowlist will be disabled if all users are removed.
-
-        **Examples:**
-        - `[p]allowlist remove @26 @Will` - Removes two users from the allowlist.
-        - `[p]allowlist remove 262626262626262626` - Removes a user by ID.
-
-        **Arguments:**
-        - `<users...>` - The user or users to remove from the allowlist.
         """
         await self.bot.remove_from_whitelist(users)
         if len(users) > 1:
@@ -4884,13 +3427,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def blocklist_add(self, ctx: commands.Context, *users: Union[discord.Member, int]):
         """
         Adds users to the blocklist.
-
-        **Examples:**
-        - `[p]blocklist add @26 @Will` - Adds two users to the blocklist.
-        - `[p]blocklist add 262626262626262626` - Blocks a user by ID.
-
-        **Arguments:**
-        - `<users...>` - The user or users to add to the blocklist.
         """
         for user in users:
             if isinstance(user, int):
@@ -4937,13 +3473,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def blocklist_remove(self, ctx: commands.Context, *users: Union[discord.Member, int]):
         """
         Removes users from the blocklist.
-
-        **Examples:**
-        - `[p]blocklist remove @26 @Will` - Removes two users from the blocklist.
-        - `[p]blocklist remove 262626262626262626` - Removes a user by ID.
-
-        **Arguments:**
-        - `<users...>` - The user or users to remove from the blocklist.
         """
         await self.bot.remove_from_blacklist(users)
         if len(users) > 1:
@@ -4968,10 +3497,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def localallowlist(self, ctx: commands.Context):
         """
         Commands to manage the server specific allowlist.
-
-        Warning: When the allowlist is in use, the bot will ignore commands from everyone not on the list in the server.
-
-        Use `[p]localallowlist clear` to disable the allowlist
         """
         pass
 
@@ -4981,14 +3506,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     ):
         """
         Adds a user or role to the server allowlist.
-
-        **Examples:**
-        - `[p]localallowlist add @26 @Will` - Adds two users to the local allowlist.
-        - `[p]localallowlist add 262626262626262626` - Allows a user by ID.
-        - `[p]localallowlist add "Super Admins"` - Allows a role with a space in the name without mentioning.
-
-        **Arguments:**
-        - `<users_or_roles...>` - The users or roles to remove from the local allowlist.
         """
         names = [getattr(u_or_r, "name", u_or_r) for u_or_r in users_or_roles]
         uids = {getattr(u_or_r, "id", u_or_r) for u_or_r in users_or_roles}
@@ -5043,16 +3560,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     ):
         """
         Removes user or role from the allowlist.
-
-        The local allowlist will be disabled if all users are removed.
-
-        **Examples:**
-        - `[p]localallowlist remove @26 @Will` - Removes two users from the local allowlist.
-        - `[p]localallowlist remove 262626262626262626` - Removes a user by ID.
-        - `[p]localallowlist remove "Super Admins"` - Removes a role with a space in the name without mentioning.
-
-        **Arguments:**
-        - `<users_or_roles...>` - The users or roles to remove from the local allowlist.
         """
         names = [getattr(u_or_r, "name", u_or_r) for u_or_r in users_or_roles]
         uids = {getattr(u_or_r, "id", u_or_r) for u_or_r in users_or_roles}
@@ -5078,11 +3585,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def localallowlist_clear(self, ctx: commands.Context):
         """
         Clears the allowlist.
-
-        This disables the local allowlist and clears all entries.
-
-        **Example:**
-        - `[p]localallowlist clear`
         """
         await self.bot.clear_whitelist(ctx.guild)
         await ctx.send(_("Server allowlist has been cleared."))
@@ -5103,15 +3605,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         self, ctx: commands.Context, *users_or_roles: Union[discord.Member, discord.Role, int]
     ):
         """
-        Adds a user or role to the local blocklist.
-
-        **Examples:**
-        - `[p]localblocklist add @26 @Will` - Adds two users to the local blocklist.
-        - `[p]localblocklist add 262626262626262626` - Blocks a user by ID.
-        - `[p]localblocklist add "Bad Apples"` - Blocks a role with a space in the name without mentioning.
-
-        **Arguments:**
-        - `<users_or_roles...>` - The users or roles to add to the local blocklist.
         """
         for user_or_role in users_or_roles:
             uid = discord.Object(id=getattr(user_or_role, "id", user_or_role))
@@ -5163,14 +3656,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     ):
         """
         Removes user or role from local blocklist.
-
-        **Examples:**
-        - `[p]localblocklist remove @26 @Will` - Removes two users from the local blocklist.
-        - `[p]localblocklist remove 262626262626262626` - Unblocks a user by ID.
-        - `[p]localblocklist remove "Bad Apples"` - Unblocks a role with a space in the name without mentioning.
-
-        **Arguments:**
-        - `<users_or_roles...>` - The users or roles to remove from the local blocklist.
         """
         await self.bot.remove_from_blacklist(users_or_roles, guild=ctx.guild)
 
@@ -5183,11 +3668,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def localblocklist_clear(self, ctx: commands.Context):
         """
         Clears the server blocklist.
-
-        This disables the server blocklist and clears all entries.
-
-        **Example:**
-        - `[p]blocklist clear`
         """
         await self.bot.clear_blacklist(ctx.guild)
         await ctx.send(_("Server blocklist has been cleared."))
@@ -5632,13 +4112,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     ):
         """
         Remove a user or role from being immune to automated moderation actions.
-
-        **Examples:**
-        - `[p]autoimmune remove @Twentysix` - Removes a user.
-        - `[p]autoimmune remove @Mods` - Removes a role.
-
-        **Arguments:**
-        - `<user_or_role>` - The user or role to remove immunity from.
         """
         async with ctx.bot._config.guild(ctx.guild).autoimmune_ids() as ai_ids:
             if user_or_role.id not in ai_ids:
@@ -5652,13 +4125,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     ):
         """
         Checks if a user or role would be considered immune from automated actions.
-
-        **Examples:**
-        - `[p]autoimmune isimmune @Twentysix`
-        - `[p]autoimmune isimmune @Mods`
-
-        **Arguments:**
-        - `<user_or_role>` - The user or role to check the immunity of.
         """
 
         if await ctx.bot.is_automod_immune(user_or_role):
@@ -5725,19 +4191,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     ):
         """
         Ignore commands in the channel, thread, or category.
-
-        Defaults to the current thread or channel.
-
-        Note: Owners, Admins, and those with Manage Channel permissions override ignored channels.
-
-        **Examples:**
-        - `[p]ignore channel #general` - Ignores commands in the #general channel.
-        - `[p]ignore channel` - Ignores commands in the current channel.
-        - `[p]ignore channel "General Channels"` - Use quotes for categories with spaces.
-        - `[p]ignore channel 356236713347252226` - Also accepts IDs.
-
-        **Arguments:**
-        - `<channel>` - The channel to ignore. This can also be a thread or category channel.
         """
         if not await self.bot._ignored_cache.get_ignored_channel(channel):
             await self.bot._ignored_cache.set_ignored_channel(channel, True)
@@ -5784,17 +4237,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     ):
         """
         Remove a channel, thread, or category from the ignore list.
-
-        Defaults to the current thread or channel.
-
-        **Examples:**
-        - `[p]unignore channel #general` - Unignores commands in the #general channel.
-        - `[p]unignore channel` - Unignores commands in the current channel.
-        - `[p]unignore channel "General Channels"` - Use quotes for categories with spaces.
-        - `[p]unignore channel 356236713347252226` - Also accepts IDs. Use this method to unignore categories.
-
-        **Arguments:**
-        - `<channel>` - The channel to unignore. This can also be a thread or category channel.
         """
         if await self.bot._ignored_cache.get_ignored_channel(channel):
             await self.bot._ignored_cache.set_ignored_channel(channel, False)
@@ -5857,26 +4299,3 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             "Threads (excluding archived):{threads}"
         ).format(categories=cat_str, channels=chan_str, threads=thread_str)
         return msg
-
-    # Removing this command from forks is a violation of the GPLv3 under which it is licensed.
-    # Otherwise interfering with the ability for this command to be accessible is also a violation.
-    @commands.cooldown(1, 180, lambda ctx: (ctx.message.channel.id, ctx.message.author.id))
-    @commands.command(
-        cls=commands.commands._AlwaysAvailableCommand,
-        name="licenseinfo",
-        aliases=["licenceinfo"],
-        i18n=_,
-    )
-    async def license_info_command(self, ctx):
-        """
-        Get info about Red's licenses.
-        """
-
-        message = (
-            "This bot is an instance of Red-DiscordBot (hereinafter referred to as Red).\n"
-            "Red is a free and open source application made available to the public and "
-            "licensed under the GNU GPLv3. The full text of this license is available to you at "
-            "<https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/LICENSE>."
-        )
-        await ctx.send(message)
-        # We need a link which contains a thank you to other projects which we use at some point.

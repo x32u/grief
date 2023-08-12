@@ -69,9 +69,9 @@ CUSTOM_GROUPS = "CUSTOM_GROUPS"
 COMMAND_SCOPE = "COMMAND"
 SHARED_API_TOKENS = "SHARED_API_TOKENS"
 
-log = logging.getLogger("red")
+log = logging.getLogger("grief")
 
-__all__ = ("Red",)
+__all__ = ("grief",)
 
 NotMessage = namedtuple("NotMessage", "guild")
 
@@ -132,7 +132,7 @@ class Red(
             help__tagline="",
             help__use_tick=False,
             help__react_timeout=30,
-            description="Red V3",
+            description="grief",
             invite_public=False,
             invite_perm=0,
             invite_commands_scope=False,
@@ -1794,8 +1794,6 @@ class Red(
         Checks if the user, message, context, or role should be considered immune from automated
         moderation actions.
 
-        Bot users are considered immune.
-
         This will return ``False`` in direct messages.
 
         Parameters
@@ -1814,22 +1812,22 @@ class Red(
             return False
 
         if isinstance(to_check, discord.Role):
-            ids_to_check = {to_check.id}
+            ids_to_check = [to_check.id]
         else:
             author = getattr(to_check, "author", to_check)
-            if author.bot:
-                return True
-            ids_to_check = set()
             try:
-                ids_to_check = {r.id for r in author.roles}
+                ids_to_check = [r.id for r in author.roles]
             except AttributeError:
-                # cheaper than isinstance(author, discord.User)
-                pass
-            ids_to_check.add(author.id)
+                # webhook messages are a user not member,
+                # cheaper than isinstance
+                if author.bot and author.discriminator == "0000":
+                    return True  # webhooks require significant permissions to enable.
+            else:
+                ids_to_check.append(author.id)
 
         immune_ids = await self._config.guild(guild).autoimmune_ids()
 
-        return not ids_to_check.isdisjoint(immune_ids)
+        return any(i in immune_ids for i in ids_to_check)
 
     @staticmethod
     async def send_filtered(
