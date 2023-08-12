@@ -19,7 +19,7 @@ from redbot.core.utils.mod import get_audit_reason
 from .abc import MixinMeta
 from .utils import is_allowed_by_hierarchy
 
-log = logging.getLogger("red.mod")
+log = logging.getLogger("grief.mod")
 _ = i18n.Translator("Mod", __file__)
 
 
@@ -124,7 +124,7 @@ class KickBanMixin(MixinMeta):
             if author == user:
                 return (
                     False,
-                    _("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}"),
+                    _("You cannot ban yourself."),
                 )
             elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
                 return (
@@ -177,37 +177,32 @@ class KickBanMixin(MixinMeta):
 
         if removed_temp:
             log.info(
-                "%s (%s) upgraded the tempban for %s to a permaban.", author, author.id, user.id
+                "{}({}) upgraded the tempban for {} to a permaban.".format(
+                    author.name, author.id, user.id
+                )
             )
             success_message = _(
                 "User with ID {user_id} was upgraded from a temporary to a permanent ban."
             ).format(user_id=user.id)
         else:
-            user_handle = str(user) if isinstance(user, discord.abc.User) else "Unknown"
+            username = user.name if hasattr(user, "name") else "Unknown"
             try:
                 await guild.ban(user, reason=audit_reason, delete_message_seconds=days * 86400)
                 log.info(
-                    "%s (%s) %sned %s (%s), deleting %s days worth of messages.",
-                    author,
-                    author.id,
-                    ban_type,
-                    user_handle,
-                    user.id,
-                    days,
+                    "{}({}) {}ned {}({}), deleting {} days worth of messages.".format(
+                        author.name, author.id, ban_type, username, user.id, str(days)
+                    )
                 )
-                success_message = _("Done. That felt good.")
+                success_message = _("User has been banned.")
             except discord.Forbidden:
                 return False, _("I'm not allowed to do that.")
             except discord.NotFound:
                 return False, _("User with ID {user_id} not found").format(user_id=user.id)
             except Exception:
                 log.exception(
-                    "%s (%s) attempted to %s %s (%s), but an error occurred.",
-                    author,
-                    author.id,
-                    ban_type,
-                    user_handle,
-                    user.id,
+                    "{}({}) attempted to {} {}({}), but an error occurred.".format(
+                        author.name, author.id, ban_type, username, user.id
+                    )
                 )
                 return False, _("An unexpected error occurred.")
 
@@ -290,23 +285,13 @@ class KickBanMixin(MixinMeta):
     async def kick(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
         """
         Kick a user.
-
-        Examples:
-           - `[p]kick 428675506947227648 wanted to be kicked.`
-            This will kick the user with ID 428675506947227648 from the server.
-           - `[p]kick @Twentysix wanted to be kicked.`
-            This will kick Twentysix from the server.
-
-        If a reason is specified, it will be the reason that shows up
-        in the audit log.
         """
         author = ctx.author
         guild = ctx.guild
 
         if author == member:
             await ctx.send(
-                _("I cannot let you do that. Self-harm is bad {emoji}").format(
-                    emoji="\N{PENSIVE FACE}"
+                _(_("You cannot kick yourself.")
                 )
             )
             return
@@ -338,16 +323,14 @@ class KickBanMixin(MixinMeta):
                 await member.send(embed=em)
         try:
             await guild.kick(member, reason=audit_reason)
-            log.info("%s (%s) kicked %s (%s)", author, author.id, member, member.id)
+            log.info("{}({}) kicked {}({})".format(author.name, author.id, member.name, member.id))
         except discord.errors.Forbidden:
             await ctx.send(_("I'm not allowed to do that."))
         except Exception:
             log.exception(
-                "%s (%s) attempted to kick %s (%s), but an error occurred.",
-                author,
-                author.id,
-                member,
-                member.id,
+                "{}({}) attempted to kick {}({}), but an error occurred.".format(
+                    author.name, author.id, member.name, member.id
+                )
             )
         else:
             await modlog.create_case(
@@ -361,7 +344,7 @@ class KickBanMixin(MixinMeta):
                 until=None,
                 channel=None,
             )
-            await ctx.send(_("Done. That felt good."))
+            await ctx.send(_("User has been kicked."))
 
     @commands.command()
     @commands.guild_only()
@@ -376,18 +359,6 @@ class KickBanMixin(MixinMeta):
         reason: str = None,
     ):
         """Ban a user from this server and optionally delete days of messages.
-
-        `days` is the amount of days of messages to cleanup on ban.
-
-        Examples:
-           - `[p]ban 428675506947227648 7 Continued to spam after told to stop.`
-            This will ban the user with ID 428675506947227648 and it will delete 7 days worth of messages.
-           - `[p]ban @Twentysix 7 Continued to spam after told to stop.`
-            This will ban Twentysix and it will delete 7 days worth of messages.
-
-        A user ID should be provided if the user is not a member of this server.
-        If days is not a number, it's treated as the first word of the reason.
-        Minimum 0 days, maximum 7. If not specified, the defaultdays setting will be used instead.
         """
         guild = ctx.guild
         if days is None:
@@ -538,10 +509,9 @@ class KickBanMixin(MixinMeta):
                     tempbans.remove(user_id)
                     upgrades.append(str(user_id))
                     log.info(
-                        "%s (%s) upgraded the tempban for %s to a permaban.",
-                        author,
-                        author.id,
-                        user_id,
+                        "{}({}) upgraded the tempban for {} to a permaban.".format(
+                            author.name, author.id, user_id
+                        )
                     )
                     banned.append(user_id)
                 else:
@@ -549,7 +519,7 @@ class KickBanMixin(MixinMeta):
                         await guild.ban(
                             user, reason=audit_reason, delete_message_seconds=days * 86400
                         )
-                        log.info("%s (%s) hackbanned %s", author, author.id, user_id)
+                        log.info("{}({}) hackbanned {}".format(author.name, author.id, user_id))
                     except discord.NotFound:
                         errors[user_id] = _("User with ID {user_id} not found").format(
                             user_id=user_id
@@ -590,24 +560,13 @@ class KickBanMixin(MixinMeta):
         reason: str = None,
     ):
         """Temporarily ban a user from this server.
-
-        `duration` is the amount of time the user should be banned for.
-        `days` is the amount of days of messages to cleanup on tempban.
-
-        Examples:
-           - `[p]tempban @Twentysix Because I say so`
-            This will ban Twentysix for the default amount of time set by an administrator.
-           - `[p]tempban @Twentysix 15m You need a timeout`
-            This will ban Twentysix for 15 minutes.
-           - `[p]tempban 428675506947227648 1d2h15m 5 Evil person`
-            This will ban the user with ID 428675506947227648 for 1 day 2 hours 15 minutes and will delete the last 5 days of their messages.
         """
         guild = ctx.guild
         author = ctx.author
 
         if author == member:
             await ctx.send(
-                _("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}")
+                _("You cannot ban yourself.")
             )
             return
         elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, member):
@@ -673,7 +632,7 @@ class KickBanMixin(MixinMeta):
                 reason,
                 unban_time,
             )
-            await ctx.send(_("Done. Enough chaos for now."))
+            await ctx.send(_("User has been temp-banned."))
 
     @commands.command()
     @commands.guild_only()
@@ -686,9 +645,7 @@ class KickBanMixin(MixinMeta):
 
         if author == member:
             await ctx.send(
-                _("I cannot let you do that. Self-harm is bad {emoji}").format(
-                    emoji="\N{PENSIVE FACE}"
-                )
+                __("You cannot ban yourself.")
             )
             return
         elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, member):
@@ -724,32 +681,24 @@ class KickBanMixin(MixinMeta):
             return
         except discord.HTTPException:
             log.exception(
-                "%s (%s) attempted to softban %s (%s), but an error occurred trying to ban them.",
-                author,
-                author.id,
-                member,
-                member.id,
+                "{}({}) attempted to softban {}({}), but an error occurred trying to ban them.".format(
+                    author.name, author.id, member.name, member.id
+                )
             )
             return
         try:
             await guild.unban(member)
         except discord.HTTPException:
             log.exception(
-                "%s (%s) attempted to softban %s (%s),"
-                " but an error occurred trying to unban them.",
-                author,
-                author.id,
-                member,
-                member.id,
+                "{}({}) attempted to softban {}({}), but an error occurred trying to unban them.".format(
+                    author.name, author.id, member.name, member.id
+                )
             )
             return
         else:
             log.info(
-                "%s (%s) softbanned %s (%s), deleting 1 day worth of messages.",
-                author,
-                author.id,
-                member,
-                member.id,
+                "{}({}) softbanned {}({}), deleting 1 day worth "
+                "of messages.".format(author.name, author.id, member.name, member.id)
             )
             await modlog.create_case(
                 self.bot,
@@ -762,7 +711,7 @@ class KickBanMixin(MixinMeta):
                 until=None,
                 channel=None,
             )
-            await ctx.send(_("Done. Enough chaos."))
+            await ctx.send(_("User has been soft-banned."))
 
     @commands.command()
     @commands.guild_only()
