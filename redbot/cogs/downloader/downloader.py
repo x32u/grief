@@ -98,19 +98,14 @@ class Downloader(commands.Cog):
 
     def create_init_task(self):
         def _done_callback(task: asyncio.Task) -> None:
-            try:
-                exc = task.exception()
-            except asyncio.CancelledError:
-                pass
-            else:
-                if exc is None:
-                    return
+            exc = task.exception()
+            if exc is not None:
                 log.error(
                     "An unexpected error occurred during Downloader's initialization.",
                     exc_info=exc,
                 )
-            self._ready_raised = True
-            self._ready.set()
+                self._ready_raised = True
+                self._ready.set()
 
         self._init_task = asyncio.create_task(self.initialize())
         self._init_task.add_done_callback(_done_callback)
@@ -592,9 +587,7 @@ class Downloader(commands.Cog):
                 )
             )
         else:
-            await ctx.send(_("Repo `{name}` successfully added.").format(name=name))
-            if repo.install_msg:
-                await ctx.send(repo.install_msg.replace("[p]", ctx.clean_prefix))
+            await ctx.send(_("<:check:1107472942830456892> grief successfully added repo `{name}`.").format(name=name))
 
     @repo.command(name="delete", aliases=["remove", "del"], require_var_positional=True)
     async def _repo_del(self, ctx: commands.Context, *repos: Repo) -> None:
@@ -616,7 +609,7 @@ class Downloader(commands.Cog):
             (
                 _("Successfully deleted repos: ")
                 if len(repos) > 1
-                else _("Successfully deleted the repo: ")
+                else _("<:check:1107472942830456892> grief successfully deleted the repo: ")
             )
             + humanize_list([inline(i.name) for i in set(repos)])
         )
@@ -627,12 +620,12 @@ class Downloader(commands.Cog):
         repos = self._repo_manager.repos
         sorted_repos = sorted(repos, key=lambda r: str.lower(r.name))
         if len(repos) == 0:
-            joined = _("There are no repos installed.")
+            joined = _("grief has no repos installed.")
         else:
             if len(repos) > 1:
-                joined = _("# Installed Repos\n")
+                joined = _("# grief has these repos installed:\n")
             else:
-                joined = _("# Installed Repo\n")
+                joined = _("# grief has these repos installed:\n")
             for repo in sorted_repos:
                 joined += "+ {}: {}\n".format(repo.name, repo.short or "")
 
@@ -866,9 +859,9 @@ class Downloader(commands.Cog):
                 libnames = [inline(lib.name) for lib in failed_libs]
                 message = (
                     (
-                        _("\nFailed to install shared libraries for `{repo.name}` repo: ")
+                        _("\n<:x_:1107472962333978655> grief failed to install shared libraries for `{repo.name}` repo: ")
                         if len(libnames) > 1
-                        else _("\nFailed to install shared library for `{repo.name}` repo: ")
+                        else _("\n<:x_:1107472962333978655> grief failed to install shared library for `{repo.name}` repo: ")
                     ).format(repo=repo)
                     + humanize_list(libnames)
                     + message
@@ -877,9 +870,9 @@ class Downloader(commands.Cog):
                 cognames = [inline(cog.name) for cog in failed_cogs]
                 message = (
                     (
-                        _("\nFailed to install cogs: ")
+                        _("\n<:x_:1107472962333978655> grief failed to install cogs: ")
                         if len(failed_cogs) > 1
-                        else _("\nFailed to install the cog: ")
+                        else _("\n<:x_:1107472962333978655> grief failed to install the cog: ")
                     )
                     + humanize_list(cognames)
                     + message
@@ -888,9 +881,9 @@ class Downloader(commands.Cog):
                 cognames = [inline(cog.name) for cog in installed_cogs]
                 message = (
                     (
-                        _("Successfully installed cogs: ")
+                        _("<:check:1107472942830456892> grief successfully installed cogs: ")
                         if len(installed_cogs) > 1
-                        else _("Successfully installed the cog: ")
+                        else _("<:check:1107472942830456892> grief successfully installed the cog: ")
                     )
                     + humanize_list(cognames)
                     + (
@@ -911,10 +904,7 @@ class Downloader(commands.Cog):
                     + message
                 )
         # "---" added to separate cog install messages from Downloader's message
-        await self.send_pagified(ctx, f"{message}{deprecation_notice}\n---")
-        for cog in installed_cogs:
-            if cog.install_msg:
-                await ctx.send(cog.install_msg.replace("[p]", ctx.clean_prefix))
+        await self.send_pagified(ctx, f"{message}{deprecation_notice}\n")
 
     @cog.command(name="uninstall", require_var_positional=True)
     async def _cog_uninstall(self, ctx: commands.Context, *cogs: InstalledCog) -> None:
@@ -951,9 +941,9 @@ class Downloader(commands.Cog):
             message = ""
             if uninstalled_cogs:
                 message += (
-                    _("Successfully uninstalled cogs: ")
+                    _("<:check:1107472942830456892> grief successfully uninstalled the cogs: ")
                     if len(uninstalled_cogs) > 1
-                    else _("Successfully uninstalled the cog: ")
+                    else _("<:check:1107472942830456892> grief successfully uninstalled the cog: ")
                 ) + humanize_list(uninstalled_cogs)
             if failed_cogs:
                 if len(failed_cogs) > 1:
@@ -1731,6 +1721,8 @@ class Downloader(commands.Cog):
         return splitted[0]
 
     @commands.command()
+    @commands.is_owner()
+    @commands.guild_only()
     async def findcog(self, ctx: commands.Context, command_name: str) -> None:
         """Find which cog a command comes from.
 

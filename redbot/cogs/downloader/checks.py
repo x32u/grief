@@ -15,16 +15,10 @@ async def do_install_agreement(ctx: commands.Context) -> bool:
     if downloader is None or downloader.already_agreed:
         return True
 
-    confirmation_message = "I agree"
+    confirmation_message = "yes"
     await ctx.send(
         _(
-            "You're about to add a 3rd party repository. The creator of Red"
-            " and its community have no responsibility for any potential "
-            "damage that the content of 3rd party repositories might cause."
-            "\n\nBy typing '{confirmation_message}' you declare that you have read and"
-            " fully understand the above message. This message won't be "
-            "shown again until the next reboot.\n\nYou have **30** seconds"
-            " to reply to this message."
+            "are you sure you would like to add the repo?"
         ).format(confirmation_message=bold(confirmation_message))
     )
 
