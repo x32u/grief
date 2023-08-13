@@ -344,7 +344,7 @@ class KickBanMixin(MixinMeta):
                 until=None,
                 channel=None,
             )
-            await ctx.send(_("User has been kicked."))
+            await ctx.tick()
 
     @commands.command()
     @commands.guild_only()
