@@ -370,7 +370,7 @@ class KickBanMixin(MixinMeta):
             user=user, ctx=ctx, days=days, reason=reason, create_modlog_case=True
         )
 
-        await ctx.send(message)
+        await ctx.tick()
 
     @commands.command(aliases=["hackban"], usage="<user_ids...> [days] [reason]")
     @commands.guild_only()
@@ -632,7 +632,7 @@ class KickBanMixin(MixinMeta):
                 reason,
                 unban_time,
             )
-            await ctx.send(_("User has been temp-banned."))
+            await ctx.tick()
 
     @commands.command()
     @commands.guild_only()
@@ -711,7 +711,7 @@ class KickBanMixin(MixinMeta):
                 until=None,
                 channel=None,
             )
-            await ctx.send(_("User has been soft-banned."))
+            await ctx.tick()
 
     @commands.command()
     @commands.guild_only()
@@ -758,7 +758,7 @@ class KickBanMixin(MixinMeta):
                 until=None,
                 channel=case_channel,
             )
-            await ctx.send(_("User has been kicked from the voice channel."))
+            await ctx.tick()
 
     @commands.command()
     @commands.guild_only()
@@ -801,7 +801,7 @@ class KickBanMixin(MixinMeta):
             until=None,
             channel=None,
         )
-        await ctx.send(_("User is now allowed to speak and listen in voice channels."))
+        await ctx.tick()
 
     @commands.command()
     @commands.guild_only()
@@ -842,7 +842,7 @@ class KickBanMixin(MixinMeta):
             until=None,
             channel=None,
         )
-        await ctx.send(_("User has been banned from speaking or listening in voice channels."))
+        await ctx.tick()
 
     @commands.command()
     @commands.guild_only()
@@ -882,7 +882,7 @@ class KickBanMixin(MixinMeta):
                 until=None,
                 channel=None,
             )
-            await ctx.send(_("Unbanned that user from this server."))
+            await ctx.tick()
 
         if await self.config.guild(guild).reinvite_on_unban():
             user = ctx.bot.get_user(user_id)
