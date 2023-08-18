@@ -1165,8 +1165,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
         if loaded := outcomes["loaded_packages"]:
             loaded_packages = humanize_list([inline(package) for package in loaded])
-            formed = _("<:grief_check:1107472942830456892> grief reloaded {packs}.").format(packs=loaded_packages)
-            output.append(formed)
+            await ctx.tick()
 
         if failed := outcomes["failed_packages"]:
             if len(failed) == 1:
