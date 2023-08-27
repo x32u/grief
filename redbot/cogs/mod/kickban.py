@@ -344,6 +344,7 @@ class KickBanMixin(MixinMeta):
                 until=None,
                 channel=None,
             )
+            await ctx.send(_("I cannot do that due to Discord hierarchy rules."))
             await ctx.tick()
 
     @commands.command()
