@@ -118,13 +118,6 @@ def init_events(bot, cli_flags):
         if not guilds:
             rich_console.print(
                 f"Looking for a quick guide on setting up Red? Checkout {Text('https://start.discord.red', style='link https://start.discord.red}')}"
-            )
-        if rich_outdated_message:
-            rich_console.print(rich_outdated_message)
-
-        bot._red_ready.set()
-        if outdated_red_message:
-            await send_to_owners_with_prefix_replaced(bot, outdated_red_message)
 
     @bot.event
     async def on_command_completion(ctx: commands.Context):
