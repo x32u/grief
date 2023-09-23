@@ -51,57 +51,6 @@ ______         _           ______ _                       _  ______       _
 
 _ = Translator(__name__, __file__)
 
-red_dist = importlib.metadata.distribution("Red-DiscordBot")
-installed_extras = red_dist.metadata.get_all("Provides-Extra")
-installed_extras.remove("dev")
-installed_extras.remove("all")
-distributions = {}
-    for req_str in red_dist.requires:
-        req = Requirement(req_str)
-        if req.marker is None or req.marker.evaluate():
-            continue
-        for extra in reversed(installed_extras):
-            if not req.marker.evaluate({"extra": extra}):
-                continue
-
-            # Check that the requirement is met.
-            # This is a bit simplified for our purposes and does not check
-            # whether the requirements of our requirements are met as well.
-            # This could potentially be an issue if we'll ever depend on
-            # a dependency's extra in our extra when we already depend on that
-            # in our base dependencies. However, considering that right now, all
-            # our dependencies are also fully pinned, this should not ever matter.
-            if req.name in distributions:
-                dist = distributions[req.name]
-            else:
-                try:
-                    dist = importlib.metadata.distribution(req.name)
-                except importlib.metadata.PackageNotFoundError:
-                    dist = None
-                distributions[req.name] = dist
-            if dist is None or not req.specifier.contains(dist.version, prereleases=True):
-                installed_extras.remove(extra)
-
-    if installed_extras:
-        package_extras = f"[{','.join(installed_extras)}]"
-    else:
-        package_extras = ""
-
-    extra_update += _(
-        "\n\nTo update your bot, first shutdown your bot"
-        " then open a window of {console} (Not as admin) and run the following:"
-        "{command_1}\n"
-        "Once you've started up your bot again, we recommend that"
-        " you update any installed 3rd-party cogs with this command in Discord:"
-        "{command_2}"
-    ).format(
-        console=_("Command Prompt") if platform.system() == "Windows" else _("Terminal"),
-        command_1=f'```"{sys.executable}" -m pip install -U "Red-DiscordBot{package_extras}"```',
-        command_2=f"```[p]cog update```",
-    )
-    outdated_red_message += extra_update
-    return outdated_red_message, rich_outdated_message
-
 
 def init_events(bot, cli_flags):
     @bot.event
