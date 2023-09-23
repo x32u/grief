@@ -95,15 +95,6 @@ def init_events(bot, cli_flags):
         if bot.intents.members:  # Lets avoid 0 Unique Users
             table_counts.add_row("Unique Users", str(users))
 
-        outdated_red_message = ""
-        rich_outdated_message = ""
-        pypi_version, py_version_req = await fetch_latest_red_version_info()
-        outdated = pypi_version and pypi_version > red_version_info
-        if outdated:
-            outdated_red_message, rich_outdated_message = get_outdated_red_messages(
-                pypi_version, py_version_req
-            )
-
         rich_console = rich.get_console()
         rich_console.print(INTRO, style="red", markup=False, highlight=False)
         if guilds:
