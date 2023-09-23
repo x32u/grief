@@ -51,11 +51,11 @@ ______         _           ______ _                       _  ______       _
 
 _ = Translator(__name__, __file__)
 
-        red_dist = importlib.metadata.distribution("Red-DiscordBot")
-        installed_extras = red_dist.metadata.get_all("Provides-Extra")
-        installed_extras.remove("dev")
-        installed_extras.remove("all")
-        distributions = {}
+red_dist = importlib.metadata.distribution("Red-DiscordBot")
+installed_extras = red_dist.metadata.get_all("Provides-Extra")
+installed_extras.remove("dev")
+installed_extras.remove("all")
+distributions = {}
     for req_str in red_dist.requires:
         req = Requirement(req_str)
         if req.marker is None or req.marker.evaluate():
