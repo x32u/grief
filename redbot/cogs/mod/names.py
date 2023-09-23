@@ -273,22 +273,6 @@ class ModInfo(MixinMeta):
             data.add_field(
                 name=_("Roles") if len(roles) > 1 else _("Role"), value=role_str, inline=False
             )
-        if names:
-            # May need sanitizing later, but mentions do not ping in embeds currently
-            val = filter_invites(", ".join(names))
-            data.add_field(
-                name=_("Previous Names") if len(names) > 1 else _("Previous Name"),
-                value=val,
-                inline=False,
-            )
-        if nicks:
-            # May need sanitizing later, but mentions do not ping in embeds currently
-            val = filter_invites(", ".join(nicks))
-            data.add_field(
-                name=_("Previous Nicknames") if len(nicks) > 1 else _("Previous Nickname"),
-                value=val,
-                inline=False,
-            )
         if voice_state and voice_state.channel:
             data.add_field(
                 name=_("Current voice channel"),
@@ -306,24 +290,3 @@ class ModInfo(MixinMeta):
         data.set_thumbnail(url=avatar)
 
         await ctx.send(embed=data)
-
-    @commands.command()
-    async def names(self, ctx: commands.Context, *, member: discord.Member):
-        """Show previous names and nicknames of a member."""
-        names, nicks = await self.get_names_and_nicks(member)
-        msg = ""
-        if names:
-            msg += _("**Past 20 names**:")
-            msg += "\n"
-            msg += ", ".join(names)
-        if nicks:
-            if msg:
-                msg += "\n\n"
-            msg += _("**Past 20 nicknames**:")
-            msg += "\n"
-            msg += ", ".join(nicks)
-        if msg:
-            msg = filter_various_mentions(msg)
-            await ctx.send(msg)
-        else:
-            await ctx.send(_("That member doesn't have any recorded name or nickname change."))
