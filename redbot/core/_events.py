@@ -118,6 +118,7 @@ def init_events(bot, cli_flags):
         if not guilds:
             rich_console.print(
                 f"Looking for a quick guide on setting up Red? Checkout {Text('https://start.discord.red', style='link https://start.discord.red}')}"
+            )
 
     @bot.event
     async def on_command_completion(ctx: commands.Context):
