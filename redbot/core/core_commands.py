@@ -2152,6 +2152,251 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             await ctx.send(_("Done."))
 
     # -- End Bot Metadata Commands -- ###
+    # -- Bot Status Commands -- ###
+
+    @_set.group(name="status")
+    @commands.bot_in_a_guild()
+    @commands.is_owner()
+    async def _set_status(self, ctx: commands.Context):
+        """Commands for setting [botname]'s status."""
+
+    @_set_status.command(
+        name="streaming", aliases=["stream", "twitch"], usage="[(<streamer> <stream_title>)]"
+    )
+    @commands.bot_in_a_guild()
+    @commands.is_owner()
+    async def _set_status_stream(
+        self,
+        ctx: commands.Context,
+        streamer: commands.Range[str, 1, 489] = None,
+        *,
+        stream_title: commands.Range[str, 1, 128] = None,
+    ):
+        """Sets [botname]'s streaming status to a twitch stream.
+
+        This will appear as `Streaming <stream_title>` or `LIVE ON TWITCH` depending on the context.
+        It will also include a `Watch` button with a twitch.tv url for the provided streamer.
+
+        Maximum length for a stream title is 128 characters.
+
+        Leaving both streamer and stream_title empty will clear it.
+
+        **Examples:**
+        - `[p]set status stream` - Clears the activity status.
+        - `[p]set status stream 26 Twentysix is streaming` - Sets the stream to `https://www.twitch.tv/26`.
+        - `[p]set status stream https://twitch.tv/26 Twentysix is streaming` - Sets the URL manually.
+
+        **Arguments:**
+        - `<streamer>` - The twitch streamer to provide a link to. This can be their twitch name or the entire URL.
+        - `<stream_title>` - The text to follow `Streaming` in the status."""
+        status = ctx.bot.guilds[0].me.status if len(ctx.bot.guilds) > 0 else None
+
+        if stream_title:
+            stream_title = stream_title.strip()
+            if "twitch.tv/" not in streamer:
+                streamer = "https://www.twitch.tv/" + streamer
+            activity = discord.Streaming(url=streamer, name=stream_title)
+            await ctx.bot.change_presence(status=status, activity=activity)
+        elif streamer is not None:
+            await ctx.send_help()
+            return
+        else:
+            await ctx.bot.change_presence(activity=None, status=status)
+        await ctx.send(_("Done."))
+
+    @_set_status.command(name="playing", aliases=["game"])
+    @commands.bot_in_a_guild()
+    @commands.is_owner()
+    async def _set_status_game(
+        self, ctx: commands.Context, *, game: commands.Range[str, 1, 128] = None
+    ):
+        """Sets [botname]'s playing status.
+
+        This will appear as `Playing <game>` or `PLAYING A GAME: <game>` depending on the context.
+
+        Maximum length for a playing status is 128 characters.
+
+        **Examples:**
+        - `[p]set status playing` - Clears the activity status.
+        - `[p]set status playing the keyboard`
+
+        **Arguments:**
+        - `[game]` - The text to follow `Playing`. Leave blank to clear the current activity status.
+        """
+
+        if game:
+            game = discord.Game(name=game)
+        else:
+            game = None
+        status = ctx.bot.guilds[0].me.status if len(ctx.bot.guilds) > 0 else discord.Status.online
+        await ctx.bot.change_presence(status=status, activity=game)
+        if game:
+            await ctx.send(_("Status set to `Playing {game.name}`.").format(game=game))
+        else:
+            await ctx.send(_("Game cleared."))
+
+    @_set_status.command(name="listening")
+    @commands.bot_in_a_guild()
+    @commands.is_owner()
+    async def _set_status_listening(
+        self, ctx: commands.Context, *, listening: commands.Range[str, 1, 128] = None
+    ):
+        """Sets [botname]'s listening status.
+
+        This will appear as `Listening to <listening>`.
+
+        Maximum length for a listening status is 128 characters.
+
+        **Examples:**
+        - `[p]set status listening` - Clears the activity status.
+        - `[p]set status listening jams`
+
+        **Arguments:**
+        - `[listening]` - The text to follow `Listening to`. Leave blank to clear the current activity status.
+        """
+
+        status = ctx.bot.guilds[0].me.status if len(ctx.bot.guilds) > 0 else discord.Status.online
+        if listening:
+            activity = discord.Activity(name=listening, type=discord.ActivityType.listening)
+        else:
+            activity = None
+        await ctx.bot.change_presence(status=status, activity=activity)
+        if activity:
+            await ctx.send(
+                _("Status set to `Listening to {listening}`.").format(listening=listening)
+            )
+        else:
+            await ctx.send(_("Listening cleared."))
+
+    @_set_status.command(name="watching")
+    @commands.bot_in_a_guild()
+    @commands.is_owner()
+    async def _set_status_watching(
+        self, ctx: commands.Context, *, watching: commands.Range[str, 1, 128] = None
+    ):
+        """Sets [botname]'s watching status.
+
+        This will appear as `Watching <watching>`.
+
+        Maximum length for a watching status is 128 characters.
+
+        **Examples:**
+        - `[p]set status watching` - Clears the activity status.
+        - `[p]set status watching [p]help`
+
+        **Arguments:**
+        - `[watching]` - The text to follow `Watching`. Leave blank to clear the current activity status.
+        """
+
+        status = ctx.bot.guilds[0].me.status if len(ctx.bot.guilds) > 0 else discord.Status.online
+        if watching:
+            activity = discord.Activity(name=watching, type=discord.ActivityType.watching)
+        else:
+            activity = None
+        await ctx.bot.change_presence(status=status, activity=activity)
+        if activity:
+            await ctx.send(_("Status set to `Watching {watching}`.").format(watching=watching))
+        else:
+            await ctx.send(_("Watching cleared."))
+
+    @_set_status.command(name="competing")
+    @commands.bot_in_a_guild()
+    @commands.is_owner()
+    async def _set_status_competing(
+        self, ctx: commands.Context, *, competing: commands.Range[str, 1, 128] = None
+    ):
+        """Sets [botname]'s competing status.
+
+        This will appear as `Competing in <competing>`.
+
+        Maximum length for a competing status is 128 characters.
+
+        **Examples:**
+        - `[p]set status competing` - Clears the activity status.
+        - `[p]set status competing London 2012 Olympic Games`
+
+        **Arguments:**
+        - `[competing]` - The text to follow `Competing in`. Leave blank to clear the current activity status.
+        """
+
+        status = ctx.bot.guilds[0].me.status if len(ctx.bot.guilds) > 0 else discord.Status.online
+        if competing:
+            activity = discord.Activity(name=competing, type=discord.ActivityType.competing)
+        else:
+            activity = None
+        await ctx.bot.change_presence(status=status, activity=activity)
+        if activity:
+            await ctx.send(
+                _("Status set to `Competing in {competing}`.").format(competing=competing)
+            )
+        else:
+            await ctx.send(_("Competing cleared."))
+
+    @_set_status.command(name="custom")
+    @commands.bot_in_a_guild()
+    @commands.is_owner()
+    async def _set_status_custom(
+        self, ctx: commands.Context, *, text: commands.Range[str, 1, 128] = None
+    ):
+        """Sets [botname]'s custom status.
+
+        This will appear as `<text>`.
+
+        Maximum length for a custom status is 128 characters.
+
+        **Examples:**
+        - `[p]set status custom` - Clears the activity status.
+        - `[p]set status custom Running cogs...`
+
+        **Arguments:**
+        - `[text]` - The custom status text. Leave blank to clear the current activity status.
+        """
+
+        status = ctx.bot.guilds[0].me.status if len(ctx.bot.guilds) > 0 else discord.Status.online
+        if text:
+            activity = discord.CustomActivity(name=text)
+        else:
+            activity = None
+        await ctx.bot.change_presence(status=status, activity=activity)
+        if activity:
+            await ctx.send(_("Custom status set to `{text}`.").format(text=text))
+        else:
+            await ctx.send(_("Custom status cleared."))
+
+    async def _set_my_status(self, ctx: commands.Context, status: discord.Status):
+        game = ctx.bot.guilds[0].me.activity if len(ctx.bot.guilds) > 0 else None
+        await ctx.bot.change_presence(status=status, activity=game)
+        return await ctx.send(_("Status changed to {}.").format(status))
+
+    @_set_status.command(name="online")
+    @commands.bot_in_a_guild()
+    @commands.is_owner()
+    async def _set_status_online(self, ctx: commands.Context):
+        """Set [botname]'s status to online."""
+        await self._set_my_status(ctx, discord.Status.online)
+
+    @_set_status.command(name="dnd", aliases=["donotdisturb", "busy"])
+    @commands.bot_in_a_guild()
+    @commands.is_owner()
+    async def _set_status_dnd(self, ctx: commands.Context):
+        """Set [botname]'s status to do not disturb."""
+        await self._set_my_status(ctx, discord.Status.do_not_disturb)
+
+    @_set_status.command(name="idle", aliases=["away", "afk"])
+    @commands.bot_in_a_guild()
+    @commands.is_owner()
+    async def _set_status_idle(self, ctx: commands.Context):
+        """Set [botname]'s status to idle."""
+        await self._set_my_status(ctx, discord.Status.idle)
+
+    @_set_status.command(name="invisible", aliases=["offline"])
+    @commands.bot_in_a_guild()
+    @commands.is_owner()
+    async def _set_status_invisible(self, ctx: commands.Context):
+        """Set [botname]'s status to invisible."""
+        await self._set_my_status(ctx, discord.Status.invisible)
+
+    # -- End Bot Status Commands -- ###
     # -- Bot Roles Commands -- ###
 
     @_set.group(name="roles")
