@@ -182,7 +182,7 @@ class Events(MixinMeta):
             track_all_names = await self.config.track_all_names()
             if not track_all_names:
                 return
-            async with self.config.user(before).past_display_names() as name_list:
+            async with self.config.user(before).display_names() as name_list:
                 self._update_past_names(before.display_name, name_list)
 
     @commands.Cog.listener()
