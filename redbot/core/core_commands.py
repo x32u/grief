@@ -390,7 +390,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     """
     The Core cog has many commands related to core functions.
 
-    These commands come loaded with every Red bot, and cover some of the most basic usage of the bot.
+    These commands come loaded with every grief bot, and cover some of the most basic usage of the bot.
     """
 
     async def red_delete_data_for_user(self, **kwargs):
