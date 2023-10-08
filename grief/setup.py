@@ -1,4 +1,4 @@
-from redbot import _early_init
+from grief import _early_init
 
 # this needs to be called as early as possible
 _early_init()
@@ -25,7 +25,7 @@ from grief.core._cli import ExitCodes
 from grief.core.data_manager import appdir, config_dir, config_file
 from grief.core._drivers import BackendType, IdentifierData
 
-conversion_log = logging.getLogger("red.converter")
+conversion_log = logging.getLogger("grief.converter")
 
 try:
     config_dir.mkdir(parents=True, exist_ok=True)
