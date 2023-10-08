@@ -7,17 +7,17 @@ import discord
 import lavalink
 from red_commons.logging import getLogger
 
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils.chat_formatting import box, humanize_number, pagify
-from redbot.core.utils.menus import menu, start_adding_reactions
-from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
+from grief.core import commands
+from grief.core.i18n import Translator
+from grief.core.utils.chat_formatting import box, humanize_number, pagify
+from grief.core.utils.menus import menu, start_adding_reactions
+from grief.core.utils.predicates import MessagePredicate, ReactionPredicate
 
 from ...equalizer import Equalizer
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass
 
-log = getLogger("red.cogs.Audio.cog.Commands.equalizer")
+log = getLogger("grief.Audio.cog.Commands.equalizer")
 _ = Translator("Audio", Path(__file__))
 
 

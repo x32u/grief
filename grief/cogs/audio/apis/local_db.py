@@ -9,12 +9,12 @@ from typing import TYPE_CHECKING, Callable, List, MutableMapping, Optional, Tupl
 
 from red_commons.logging import getLogger
 
-from redbot.core import Config
-from redbot.core.bot import Red
-from redbot.core.commands import Cog
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.dbtools import APSWConnectionWrapper
+from grief.core import Config
+from grief.core.bot import Red
+from grief.core.commands import Cog
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
+from grief.core.utils.dbtools import APSWConnectionWrapper
 
 from ..sql_statements import (
     LAVALINK_CREATE_INDEX,

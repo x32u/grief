@@ -19,8 +19,8 @@ import yaml
 from discord.backoff import ExponentialBackoff
 from red_commons.logging import getLogger
 
-from redbot.core import data_manager, Config
-from redbot.core.i18n import Translator
+from grief.core import data_manager, Config
+from grief.core.i18n import Translator
 
 from .errors import (
     LavalinkDownloadFailed,

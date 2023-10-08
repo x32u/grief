@@ -7,10 +7,10 @@ from typing import Final, MutableMapping, Optional, Pattern, Tuple, Union
 
 import discord
 
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
 
 from .apis.api_utils import standardize_scope
 from .apis.playlist_interface import get_all_playlist_converter

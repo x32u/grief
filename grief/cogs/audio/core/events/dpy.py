@@ -10,23 +10,23 @@ from typing import Final, Pattern
 
 import discord
 import lavalink
-from red_commons.logging import getLogger
+from grief_commons.logging import getLogger
 
 from aiohttp import ClientConnectorError
 from discord.ext.commands import CheckFailure
 from lavalink import NodeNotFound, PlayerNotFound
 
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils import can_user_send_messages_in
-from redbot.core.utils.antispam import AntiSpam
-from redbot.core.utils.chat_formatting import box, humanize_list, underline, bold
+from grief.core import commands
+from grief.core.i18n import Translator
+from grief.core.utils import can_user_send_messages_in
+from grief.core.utils.antispam import AntiSpam
+from grief.core.utils.chat_formatting import box, humanize_list, underline, bold
 
 from ...errors import TrackEnqueueError, AudioError
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass
 
-log = getLogger("red.cogs.Audio.cog.Events.dpy")
+log = getLogger("grief.Audio.cog.Events.dpy")
 _T = Translator("Audio", Path(__file__))
 _ = lambda s: s
 RE_CONVERSION: Final[Pattern] = re.compile('Converting to "(.*)" failed for parameter "(.*)".')

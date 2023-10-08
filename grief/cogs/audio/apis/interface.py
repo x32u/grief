@@ -15,12 +15,12 @@ import lavalink
 from red_commons.logging import getLogger
 
 from lavalink.rest_api import LoadResult, LoadType
-from redbot.core import Config, commands
-from redbot.core.bot import Red
-from redbot.core.commands import Cog, Context
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.dbtools import APSWConnectionWrapper
+from grief.core import Config, commands
+from grief.core.bot import Red
+from grief.core.commands import Cog, Context
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
+from grief.core.utils.dbtools import APSWConnectionWrapper
 
 from ..audio_dataclasses import Query
 from ..errors import DatabaseError, SpotifyFetchError, TrackEnqueueError, YouTubeApiError

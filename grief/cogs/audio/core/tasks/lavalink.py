@@ -4,13 +4,13 @@ from pathlib import Path
 import lavalink
 from red_commons.logging import getLogger
 
-from redbot.core import data_manager
-from redbot.core.i18n import Translator
+from grief.core import data_manager
+from grief.core.i18n import Translator
 from ...manager import ServerManager
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass
 
-log = getLogger("red.cogs.Audio.cog.Tasks.lavalink")
+log = getLogger("grief.Audio.cog.Tasks.lavalink")
 _ = Translator("Audio", Path(__file__))
 
 

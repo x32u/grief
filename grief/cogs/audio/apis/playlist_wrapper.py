@@ -7,11 +7,11 @@ from typing import List, MutableMapping, Optional
 
 from red_commons.logging import getLogger
 
-from redbot.core import Config
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.dbtools import APSWConnectionWrapper
+from grief.core import Config
+from grief.core.bot import Red
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
+from grief.core.utils.dbtools import APSWConnectionWrapper
 
 from ..sql_statements import (
     HANDLE_DISCORD_DATA_DELETION_QUERY,

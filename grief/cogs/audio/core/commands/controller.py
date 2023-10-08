@@ -10,12 +10,12 @@ import lavalink
 from lavalink import NodeNotFound
 from red_commons.logging import getLogger
 
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import humanize_number
-from redbot.core.utils.menus import start_adding_reactions
-from redbot.core.utils.predicates import ReactionPredicate
+from grief.core import commands
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import humanize_number
+from grief.core.utils.menus import start_adding_reactions
+from grief.core.utils.predicates import ReactionPredicate
 
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass

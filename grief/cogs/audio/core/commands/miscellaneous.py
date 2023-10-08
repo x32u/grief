@@ -8,16 +8,16 @@ import discord
 import lavalink
 from red_commons.logging import getLogger
 
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import humanize_number, pagify
-from redbot.core.utils.menus import menu
+from grief.core import commands
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import humanize_number, pagify
+from grief.core.utils.menus import menu
 
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass
 
-log = getLogger("red.cogs.Audio.cog.Commands.miscellaneous")
+log = getLogger("grief.Audio.cog.Commands.miscellaneous")
 _ = Translator("Audio", Path(__file__))
 
 

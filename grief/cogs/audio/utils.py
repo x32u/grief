@@ -14,11 +14,11 @@ import discord
 import psutil
 from red_commons.logging import getLogger
 
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.i18n import Translator
 
-log = getLogger("red.cogs.Audio.task.callback")
+log = getLogger("grief.Audio.task.callback")
 _ = Translator("Audio", Path(__file__))
 
 

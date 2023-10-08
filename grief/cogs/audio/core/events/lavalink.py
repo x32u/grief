@@ -9,13 +9,13 @@ import lavalink
 from discord.backoff import ExponentialBackoff
 from red_commons.logging import getLogger
 
-from redbot.core.i18n import Translator, set_contextual_locales_from_guild
+from grief.core.i18n import Translator, set_contextual_locales_from_guild
 from ...errors import DatabaseError, TrackEnqueueError
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass
 
-log = getLogger("red.cogs.Audio.cog.Events.lavalink")
-ws_audio_log = getLogger("red.Audio.WS.Audio")
+log = getLogger("grief.Audio.cog.Events.lavalink")
+ws_audio_log = getLogger("grief.Audio.WS.Audio")
 
 _ = Translator("Audio", Path(__file__))
 

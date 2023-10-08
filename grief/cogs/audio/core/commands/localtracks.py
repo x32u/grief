@@ -6,15 +6,15 @@ from typing import MutableMapping
 import discord
 from red_commons.logging import getLogger
 
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils.menus import close_menu, menu, next_page, prev_page
+from grief.core import commands
+from grief.core.i18n import Translator
+from grief.core.utils.menus import close_menu, menu, next_page, prev_page
 
 from ...audio_dataclasses import LocalPath, Query
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass
 
-log = getLogger("red.cogs.Audio.cog.Commands.local_track")
+log = getLogger("grief.cogs.Audio.cog.Commands.local_track")
 _ = Translator("Audio", Path(__file__))
 
 

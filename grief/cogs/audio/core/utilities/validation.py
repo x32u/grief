@@ -4,10 +4,10 @@ from typing import Final, List, Optional, Pattern, Set, Union
 from urllib.parse import urlparse
 
 import discord
-from red_commons.logging import getLogger
+from grief_commons.logging import getLogger
 
-from redbot.core import Config
-from redbot.core.commands import Context
+from grief.core import Config
+from grief.core.commands import Context
 
 from ...audio_dataclasses import Query
 from ..abc import MixinMeta

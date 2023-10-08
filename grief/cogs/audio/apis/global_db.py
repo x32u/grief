@@ -10,10 +10,10 @@ import aiohttp
 from lavalink.rest_api import LoadResult
 from red_commons.logging import getLogger
 
-from redbot.core import Config
-from redbot.core.bot import Red
-from redbot.core.commands import Cog
-from redbot.core.i18n import Translator
+from grief.core import Config
+from grief.core.bot import Red
+from grief.core.commands import Cog
+from grief.core.i18n import Translator
 
 from ..audio_dataclasses import Query
 
@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
 _API_URL = "https://api.redbot.app/"
 _ = Translator("Audio", Path(__file__))
-log = getLogger("red.cogs.Audio.api.GlobalDB")
+log = getLogger("grief.Audio.api.GlobalDB")
 
 
 class GlobalCacheWrapper:

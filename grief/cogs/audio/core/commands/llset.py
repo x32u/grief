@@ -7,10 +7,10 @@ import lavalink
 import yaml
 from red_commons.logging import getLogger
 
-from redbot.core import commands
-from redbot.core.data_manager import cog_data_path
-from redbot.core.i18n import Translator
-from redbot.core.utils.chat_formatting import box, inline
+from grief.core import commands
+from grief.core.data_manager import cog_data_path
+from grief.core.i18n import Translator
+from grief.core.utils.chat_formatting import box, inline
 
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass
@@ -25,7 +25,7 @@ from ...utils import (
     get_max_allocation_size,
 )
 
-log = getLogger("red.cogs.Audio.cog.Commands.lavalink_setup")
+log = getLogger("grief.Audio.cog.Commands.lavalink_setup")
 _ = Translator("Audio", Path(__file__))
 
 

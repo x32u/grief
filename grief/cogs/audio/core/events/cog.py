@@ -9,15 +9,15 @@ import discord
 import lavalink
 from red_commons.logging import getLogger
 
-from redbot.core import commands
-from redbot.core.i18n import Translator
+from grief.core import commands
+from grief.core.i18n import Translator
 
 from ...apis.playlist_interface import Playlist, delete_playlist, get_playlist
 from ...utils import PlaylistScope
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass
 
-log = getLogger("red.cogs.Audio.cog.Events.audio")
+log = getLogger("grief.Audio.cog.Events.audio")
 _ = Translator("Audio", Path(__file__))
 
 

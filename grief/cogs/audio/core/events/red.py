@@ -4,12 +4,12 @@ from typing import Literal, Mapping
 
 from red_commons.logging import getLogger
 
-from redbot.core import commands
-from redbot.core.i18n import Translator
+from grief.core import commands
+from grief.core.i18n import Translator
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass
 
-log = getLogger("red.cogs.Audio.cog.Events.red")
+log = getLogger("grief.Audio.cog.Events.red")
 _ = Translator("Audio", Path(__file__))
 
 

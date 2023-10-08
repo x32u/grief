@@ -8,10 +8,10 @@ import lavalink
 from lavalink import NodeNotFound, PlayerNotFound
 from red_commons.logging import getLogger
 
-from redbot.core.data_manager import cog_data_path
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.dbtools import APSWConnectionWrapper
+from grief.core.data_manager import cog_data_path
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
+from grief.core.utils.dbtools import APSWConnectionWrapper
 
 from ...apis.interface import AudioAPIInterface
 from ...apis.playlist_wrapper import PlaylistWrapper
@@ -19,7 +19,7 @@ from ...errors import DatabaseError, TrackEnqueueError
 from ..abc import MixinMeta
 from ..cog_utils import _SCHEMA_VERSION, CompositeMetaClass
 
-log = getLogger("red.cogs.Audio.cog.Tasks.startup")
+log = getLogger("grief.Audio.cog.Tasks.startup")
 _ = Translator("Audio", Path(__file__))
 
 

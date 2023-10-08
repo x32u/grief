@@ -10,22 +10,22 @@ import lavalink
 from lavalink import NodeNotFound, PlayerNotFound
 from red_commons.logging import getLogger
 
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.menus import (
+from grief.core import commands
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
+from grief.core.utils.menus import (
     close_menu,
     menu,
     next_page,
     prev_page,
     start_adding_reactions,
 )
-from redbot.core.utils.predicates import ReactionPredicate
+from grief.core.utils.predicates import ReactionPredicate
 
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass
 
-log = getLogger("red.cogs.Audio.cog.Commands.queue")
+log = getLogger("grief.Audio.cog.Commands.queue")
 _ = Translator("Audio", Path(__file__))
 
 

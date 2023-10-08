@@ -7,14 +7,14 @@ from typing import List, Optional
 
 import discord
 import lavalink
-from red_commons.logging import getLogger
+from grief_commons.logging import getLogger
 
 from lavalink import NodeNotFound
 
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import box, escape
+from grief.core import commands
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import box, escape
 
 from ...audio_dataclasses import LocalPath, Query
 from ..abc import MixinMeta

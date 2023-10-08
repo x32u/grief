@@ -6,10 +6,10 @@ from typing import List
 import discord
 import lavalink
 from lavalink import NodeNotFound, PlayerNotFound
-from red_commons.logging import getLogger
+from grief_commons.logging import getLogger
 
-from redbot.core import commands
-from redbot.core.utils.chat_formatting import box
+from grief.core import commands
+from grief.core.utils.chat_formatting import box
 
 from ...equalizer import Equalizer
 from ..abc import MixinMeta

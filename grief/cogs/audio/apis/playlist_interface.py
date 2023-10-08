@@ -6,10 +6,10 @@ import discord
 import lavalink
 from red_commons.logging import getLogger
 
-from redbot.core import Config, commands
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
+from grief.core import Config, commands
+from grief.core.bot import Red
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
 
 from ..errors import NotAllowed
 from ..utils import PlaylistScope

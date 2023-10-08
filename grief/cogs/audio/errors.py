@@ -2,7 +2,7 @@ from pathlib import Path
 
 import aiohttp
 
-from redbot.core.i18n import Translator
+from grief.core.i18n import Translator
 
 _ = Translator("Audio", Path(__file__))
 

@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING, Mapping, Optional, Union
 import aiohttp
 from red_commons.logging import getLogger
 
-from redbot.core import Config
-from redbot.core.bot import Red
-from redbot.core.commands import Cog
-from redbot.core.i18n import Translator
+from grief.core import Config
+from grief.core.bot import Red
+from grief.core.commands import Cog
+from grief.core.i18n import Translator
 
 from ..errors import YouTubeApiError
 

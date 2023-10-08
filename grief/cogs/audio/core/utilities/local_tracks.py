@@ -5,12 +5,12 @@ from typing import List, Union
 
 import discord
 import lavalink
-from red_commons.logging import getLogger
+from grief_commons.logging import getLogger
 
 import rapidfuzz
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
+from grief.core import commands
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
 
 from ...audio_dataclasses import LocalPath, Query
 from ...errors import TrackEnqueueError

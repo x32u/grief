@@ -10,12 +10,12 @@ import discord
 import lavalink
 from red_commons.logging import getLogger
 
-from redbot.core import bank, commands
-from redbot.core.data_manager import cog_data_path
-from redbot.core.i18n import Translator
-from redbot.core.utils.chat_formatting import box, humanize_number
-from redbot.core.utils.menus import menu, start_adding_reactions
-from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
+from grief.core import bank, commands
+from grief.core.data_manager import cog_data_path
+from grief.core.i18n import Translator
+from grief.core.utils.chat_formatting import box, humanize_number
+from grief.core.utils.menus import menu, start_adding_reactions
+from grief.core.utils.predicates import MessagePredicate, ReactionPredicate
 
 from ...audio_dataclasses import LocalPath
 from ...converters import ScopeParser

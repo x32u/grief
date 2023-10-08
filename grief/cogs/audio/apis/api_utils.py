@@ -9,9 +9,9 @@ import discord
 import lavalink
 from red_commons.logging import getLogger
 
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator
-from redbot.core.utils.chat_formatting import humanize_list
+from grief.core.bot import Red
+from grief.core.i18n import Translator
+from grief.core.utils.chat_formatting import humanize_list
 
 from ..errors import InvalidPlaylistScope, MissingAuthor, MissingGuild
 from ..utils import PlaylistScope

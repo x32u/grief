@@ -11,11 +11,11 @@ from red_commons.logging import getLogger
 
 from lavalink import NodeNotFound
 
-from redbot.core import commands
-from redbot.core.commands import UserInputOptional
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.menus import close_menu, menu, next_page, prev_page
+from grief.core import commands
+from grief.core.commands import UserInputOptional
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
+from grief.core.utils.menus import close_menu, menu, next_page, prev_page
 
 from ...audio_dataclasses import _PARTIALLY_SUPPORTED_MUSIC_EXT, Query
 from ...errors import (
@@ -27,7 +27,7 @@ from ...errors import (
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass
 
-log = getLogger("red.cogs.Audio.cog.Commands.player")
+log = getLogger("grief.Audio.cog.Commands.player")
 _ = Translator("Audio", Path(__file__))
 
 

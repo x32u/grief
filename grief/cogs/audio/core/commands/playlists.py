@@ -13,14 +13,14 @@ import discord
 import lavalink
 from red_commons.logging import getLogger
 
-from redbot.core import commands
-from redbot.core.commands import UserInputOptional
-from redbot.core.data_manager import cog_data_path
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import bold, pagify
-from redbot.core.utils.menus import menu
-from redbot.core.utils.predicates import MessagePredicate
+from grief.core import commands
+from grief.core.commands import UserInputOptional
+from grief.core.data_manager import cog_data_path
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import bold, pagify
+from grief.core.utils.menus import menu
+from grief.core.utils.predicates import MessagePredicate
 
 from ...apis.api_utils import FakePlaylist
 from ...apis.playlist_interface import Playlist, create_playlist, delete_playlist, get_all_playlist
@@ -31,7 +31,7 @@ from ...utils import PlaylistScope
 from ..abc import MixinMeta
 from ..cog_utils import CompositeMetaClass, LazyGreedyConverter, PlaylistConverter
 
-log = getLogger("red.cogs.Audio.cog.Commands.playlist")
+log = getLogger("grief.Audio.cog.Commands.playlist")
 _ = Translator("Audio", Path(__file__))
 
 
