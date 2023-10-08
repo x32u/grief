@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Tuple, Union, cast
 
 from .log import log
-from .info_schemas import INSTALLABLE_SCHEMA, update_mixin
 from .json_mixins import RepoJSONMixin
 
 from redbot.core import VersionInfo
@@ -134,14 +133,6 @@ class Installable(RepoJSONMixin):
             log.exception("Error occurred when copying path: %s", self._location)
             return False
         return True
-
-    def _read_info_file(self) -> None:
-        super()._read_info_file()
-
-        update_mixin(self, INSTALLABLE_SCHEMA)
-        if self.type == InstallableType.SHARED_LIBRARY:
-            self.hidden = True
-
 
 class InstalledModule(Installable):
     """Base class for installed modules,
