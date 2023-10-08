@@ -116,9 +116,13 @@ class Cleanup(commands.Cog):
         return message
 
     @commands.group()
-    async def purge(self, ctx: commands.Context):
-        """Base command for deleting messages."""
-        pass
+    async def purge(self, ctx, number = None):
+        if number == None:
+            embed = discord.Embed(description=f"You haven't made a number input.", color=0x313338)
+            await ctx.send(embed=embed)
+            return
+        number = int(number)
+        await ctx.channel.purge(limit=number)
 
     @purge.command()
     @commands.guild_only()
@@ -400,33 +404,6 @@ class Cleanup(commands.Cog):
 
         await mass_purge(to_delete, channel, reason=reason)
 
-    @purge.command()
-    @commands.guild_only()
-    @commands.mod_or_permissions(manage_messages=True)
-    @commands.bot_has_permissions(manage_messages=True)
-    async def messages(
-        self, ctx: commands.Context, number: positive_int, delete_pinned: bool = False
-    ):
-        """Delete the last X messages in the current channel.
-
-        Example:
-        - `[p]cleanup messages 26`
-
-        **Arguments:**
-
-        - `<number>` The max number of messages to cleanup. Must be a positive integer.
-        - `<delete_pinned>` Whether to delete pinned messages or not. Defaults to False
-        """
-
-        channel = ctx.channel
-        author = ctx.author
-
-        to_delete = await self.get_messages_for_deletion(
-            channel=channel, number=number, before=ctx.message, delete_pinned=delete_pinned
-        )
-        to_delete.append(ctx.message)
-
-        await mass_purge(to_delete, channel)
 
     @purge.command(name="bot")
     @commands.guild_only()
