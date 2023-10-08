@@ -23,23 +23,16 @@ import discord
 import rich
 
 import redbot.logging
-from redbot import __version__
-from redbot.core.bot import Red, ExitCodes, _NoOwnerSet
-from redbot.core._cli import interactive_config, confirm, parse_cli_flags
-from redbot.setup import get_data_dir, get_name, save_config
-from redbot.core import data_manager, _drivers
-from redbot.core._debuginfo import DebugInfo
-from redbot.core._sharedlibdeprecation import SharedLibImportWarner
+from grief import __version__
+from grief.core.bot import Red, ExitCodes, _NoOwnerSet
+from grief.core._cli import interactive_config, confirm, parse_cli_flags
+from grief.setup import get_data_dir, get_name, save_config
+from grief.core import data_manager, _drivers
+from grief.core._debuginfo import DebugInfo
+from grief.core._sharedlibdeprecation import SharedLibImportWarner
 
 
 log = logging.getLogger("grief.main")
-
-#
-#               Red - Discord Bot v3
-#
-#         Made by Twentysix, improved by many
-#
-
 
 def _get_instance_names():
     with data_manager.config_file.open(encoding="utf-8") as fs:
