@@ -116,7 +116,7 @@ def standardize_scope(scope: str) -> str:
 
 
 def prepare_config_scope(
-    bot: Red,
+    bot: grief,
     scope,
     author: Union[discord.abc.User, int] = None,
     guild: Union[discord.Guild, int] = None,
