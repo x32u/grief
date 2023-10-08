@@ -1,4 +1,4 @@
-from grief.core.bot import Red
+from grief.core.bot import grief
 
 from .core import Audio
 
