@@ -317,6 +317,24 @@ class CoreLogic:
 
         return await self._load(pkg_names)
 
+        
+    async def _name(self, name: Optional[str] = None) -> str:
+        """
+        Gets or sets the bot's username.
+        Parameters
+        ----------
+        name : str
+            If passed, the bot will change it's username.
+        Returns
+        -------
+        str
+            The current (or new) username of the bot.
+        """
+        if name is not None:
+            return (await self.bot.user.edit(username=name)).name
+
+        return self.bot.user.name
+    
     async def _prefixes(self, prefixes: Optional[Sequence[str]] = None) -> List[str]:
         """
         Gets or sets the bot's global prefixes.
