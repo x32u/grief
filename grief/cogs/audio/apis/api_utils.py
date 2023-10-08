@@ -9,7 +9,7 @@ import discord
 import lavalink
 from red_commons.logging import getLogger
 
-from grief.core.bot import Red
+from grief.core import Red
 from grief.core.i18n import Translator
 from grief.core.utils.chat_formatting import humanize_list
 
