@@ -317,25 +317,6 @@ class CoreLogic:
 
         return await self._load(pkg_names)
 
-    async def _name(self, name: Optional[str] = None) -> str:
-        """
-        Gets or sets the bot's username.
-
-        Parameters
-        ----------
-        name : str
-            If passed, the bot will change it's username.
-
-        Returns
-        -------
-        str
-            The current (or new) username of the bot.
-        """
-        if name is not None:
-            return (await self.bot.user.edit(username=name)).name
-
-        return self.bot.user.name
-
     async def _prefixes(self, prefixes: Optional[Sequence[str]] = None) -> List[str]:
         """
         Gets or sets the bot's global prefixes.
@@ -354,18 +335,6 @@ class CoreLogic:
             await self.bot.set_prefixes(guild=None, prefixes=prefixes)
             return prefixes
         return await self.bot._prefix_cache.get_prefixes(guild=None)
-
-    @classmethod
-    async def _version_info(cls) -> Dict[str, str]:
-        """
-        Version information for Red and discord.py
-
-        Returns
-        -------
-        dict
-            `redbot` and `discordpy` keys containing version information for both.
-        """
-        return {"redbot": __version__, "discordpy": discord.__version__}
 
     async def _invite_url(self) -> str:
         """
@@ -399,7 +368,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
     @commands.command()
     async def uptime(self, ctx: commands.Context):
-        """Shows [botname]'s uptime."""
+        """Shows grief's uptime."""
         delta = datetime.datetime.utcnow() - self.bot.uptime
         uptime = self.bot.uptime.replace(tzinfo=datetime.timezone.utc)
         uptime_str = humanize_timedelta(timedelta=delta) or _("Less than one second.")
@@ -407,337 +376,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             _("I have been up for: **{time_quantity}** (since {timestamp})").format(
                 time_quantity=uptime_str, timestamp=discord.utils.format_dt(uptime, "f")
             )
-        )
-
-    @commands.group()
-    async def embedset(self, ctx: commands.Context):
-        """
-        Commands for toggling embeds on or off.
-
-        This setting determines whether or not to use embeds as a response to a command (for commands that support it).
-        The default is to use embeds.
-
-        The embed settings are checked until the first True/False in this order:
-
-        - In guild context:
-          1. Channel override - `[p]embedset channel`
-          2. Server command override - `[p]embedset command server`
-          3. Server override - `[p]embedset server`
-          4. Global command override - `[p]embedset command global`
-          5. Global setting  -`[p]embedset global`
-
-        - In DM context:
-          1. User override - `[p]embedset user`
-          2. Global command override - `[p]embedset command global`
-          3. Global setting - `[p]embedset global`
-        """
-
-    @embedset.command(name="showsettings")
-    async def embedset_showsettings(
-        self, ctx: commands.Context, command: CommandConverter = None
-    ) -> None:
-        """
-        Show the current embed settings.
-
-        Provide a command name to check for command specific embed settings.
-
-        **Examples:**
-        - `[p]embedset showsettings` - Shows embed settings.
-        - `[p]embedset showsettings info` - Also shows embed settings for the 'info' command.
-        - `[p]embedset showsettings "ignore list"` - Checking subcommands requires quotes.
-
-        **Arguments:**
-        - `[command]` - Checks this command for command specific embed settings.
-        """
-        # qualified name might be different if alias was passed to this command
-        command_name = command and command.qualified_name
-
-        text = _("Embed settings:\n\n")
-        global_default = await self.bot._config.embeds()
-        text += _("Global default: {value}\n").format(value=global_default)
-
-        if command_name is not None:
-            scope = self.bot._config.custom("COMMAND", command_name, 0)
-            global_command_setting = await scope.embeds()
-            text += _("Global command setting for {command} command: {value}\n").format(
-                command=inline(command_name), value=global_command_setting
-            )
-
-        if ctx.guild:
-            guild_setting = await self.bot._config.guild(ctx.guild).embeds()
-            text += _("Guild setting: {value}\n").format(value=guild_setting)
-
-            if command_name is not None:
-                scope = self.bot._config.custom("COMMAND", command_name, ctx.guild.id)
-                command_setting = await scope.embeds()
-                text += _("Server command setting for {command} command: {value}\n").format(
-                    command=inline(command_name), value=command_setting
-                )
-
-        if ctx.channel:
-            channel_setting = await self.bot._config.channel(ctx.channel).embeds()
-            text += _("Channel setting: {value}\n").format(value=channel_setting)
-
-        user_setting = await self.bot._config.user(ctx.author).embeds()
-        text += _("User setting: {value}").format(value=user_setting)
-        await ctx.send(box(text))
-
-    @embedset.command(name="global")
-    @commands.is_owner()
-    async def embedset_global(self, ctx: commands.Context):
-        """
-        Toggle the global embed setting.
-
-        This is used as a fallback if the user or guild hasn't set a preference.
-        The default is to use embeds.
-
-        To see full evaluation order of embed settings, run `[p]help embedset`.
-
-        **Example:**
-        - `[p]embedset global`
-        """
-        current = await self.bot._config.embeds()
-        if current:
-            await self.bot._config.embeds.set(False)
-            await ctx.send(_("Embeds are now disabled by default."))
-        else:
-            await self.bot._config.embeds.clear()
-            await ctx.send(_("Embeds are now enabled by default."))
-
-    @embedset.command(name="server", aliases=["guild"])
-    @commands.guildowner_or_permissions(administrator=True)
-    @commands.guild_only()
-    async def embedset_guild(self, ctx: commands.Context, enabled: bool = None):
-        """
-        Set the server's embed setting.
-
-        If set, this is used instead of the global default to determine whether or not to use embeds.
-        This is used for all commands done in a server.
-
-        If enabled is left blank, the setting will be unset and the global default will be used instead.
-
-        To see full evaluation order of embed settings, run `[p]help embedset`.
-
-        **Examples:**
-        - `[p]embedset server False` - Disables embeds on this server.
-        - `[p]embedset server` - Resets value to use global default.
-
-        **Arguments:**
-        - `[enabled]` - Whether to use embeds on this server. Leave blank to reset to default.
-        """
-        if enabled is None:
-            await self.bot._config.guild(ctx.guild).embeds.clear()
-            await ctx.send(_("Embeds will now fall back to the global setting."))
-            return
-
-        await self.bot._config.guild(ctx.guild).embeds.set(enabled)
-        await ctx.send(
-            _("Embeds are now enabled for this guild.")
-            if enabled
-            else _("Embeds are now disabled for this guild.")
-        )
-
-    @commands.guildowner_or_permissions(administrator=True)
-    @embedset.group(name="command", invoke_without_command=True)
-    async def embedset_command(
-        self, ctx: commands.Context, command: CommandConverter, enabled: bool = None
-    ) -> None:
-        """
-        Sets a command's embed setting.
-
-        If you're the bot owner, this will try to change the command's embed setting globally by default.
-        Otherwise, this will try to change embed settings on the current server.
-
-        If enabled is left blank, the setting will be unset.
-
-        To see full evaluation order of embed settings, run `[p]help embedset`.
-
-        **Examples:**
-        - `[p]embedset command info` - Clears command specific embed settings for 'info'.
-        - `[p]embedset command info False` - Disables embeds for 'info'.
-        - `[p]embedset command "ignore list" True` - Quotes are needed for subcommands.
-
-        **Arguments:**
-        - `[enabled]` - Whether to use embeds for this command. Leave blank to reset to default.
-        """
-        # Select the scope based on the author's privileges
-        if await ctx.bot.is_owner(ctx.author):
-            await self.embedset_command_global(ctx, command, enabled)
-        else:
-            await self.embedset_command_guild(ctx, command, enabled)
-
-    def _check_if_command_requires_embed_links(self, command_obj: commands.Command) -> None:
-        for command in itertools.chain((command_obj,), command_obj.parents):
-            if command.requires.bot_perms.embed_links:
-                # a slight abuse of this exception to save myself two lines later...
-                raise commands.UserFeedbackCheckFailure(
-                    _(
-                        "The passed command requires Embed Links permission"
-                        " and therefore cannot be set to not use embeds."
-                    )
-                )
-
-    @commands.is_owner()
-    @embedset_command.command(name="global")
-    async def embedset_command_global(
-        self, ctx: commands.Context, command: CommandConverter, enabled: bool = None
-    ):
-        """
-        Sets a command's embed setting globally.
-
-        If set, this is used instead of the global default to determine whether or not to use embeds.
-
-        If enabled is left blank, the setting will be unset.
-
-        To see full evaluation order of embed settings, run `[p]help embedset`.
-
-        **Examples:**
-        - `[p]embedset command global info` - Clears command specific embed settings for 'info'.
-        - `[p]embedset command global info False` - Disables embeds for 'info'.
-        - `[p]embedset command global "ignore list" True` - Quotes are needed for subcommands.
-
-        **Arguments:**
-        - `[enabled]` - Whether to use embeds for this command. Leave blank to reset to default.
-        """
-        self._check_if_command_requires_embed_links(command)
-        # qualified name might be different if alias was passed to this command
-        command_name = command.qualified_name
-
-        if enabled is None:
-            await self.bot._config.custom("COMMAND", command_name, 0).embeds.clear()
-            await ctx.send(_("Embeds will now fall back to the global setting."))
-            return
-
-        await self.bot._config.custom("COMMAND", command_name, 0).embeds.set(enabled)
-        if enabled:
-            await ctx.send(
-                _("Embeds are now enabled for {command_name} command.").format(
-                    command_name=inline(command_name)
-                )
-            )
-        else:
-            await ctx.send(
-                _("Embeds are now disabled for {command_name} command.").format(
-                    command_name=inline(command_name)
-                )
-            )
-
-    @commands.guild_only()
-    @embedset_command.command(name="server", aliases=["guild"])
-    async def embedset_command_guild(
-        self, ctx: commands.GuildContext, command: CommandConverter, enabled: bool = None
-    ):
-        """
-        Sets a command's embed setting for the current server.
-
-        If set, this is used instead of the server default to determine whether or not to use embeds.
-
-        If enabled is left blank, the setting will be unset and the server default will be used instead.
-
-        To see full evaluation order of embed settings, run `[p]help embedset`.
-
-        **Examples:**
-        - `[p]embedset command server info` - Clears command specific embed settings for 'info'.
-        - `[p]embedset command server info False` - Disables embeds for 'info'.
-        - `[p]embedset command server "ignore list" True` - Quotes are needed for subcommands.
-
-        **Arguments:**
-        - `[enabled]` - Whether to use embeds for this command. Leave blank to reset to default.
-        """
-        self._check_if_command_requires_embed_links(command)
-        # qualified name might be different if alias was passed to this command
-        command_name = command.qualified_name
-
-        if enabled is None:
-            await self.bot._config.custom("COMMAND", command_name, ctx.guild.id).embeds.clear()
-            await ctx.send(_("Embeds will now fall back to the server setting."))
-            return
-
-        await self.bot._config.custom("COMMAND", command_name, ctx.guild.id).embeds.set(enabled)
-        if enabled:
-            await ctx.send(
-                _("Embeds are now enabled for {command_name} command.").format(
-                    command_name=inline(command_name)
-                )
-            )
-        else:
-            await ctx.send(
-                _("Embeds are now disabled for {command_name} command.").format(
-                    command_name=inline(command_name)
-                )
-            )
-
-    @embedset.command(name="channel")
-    @commands.guildowner_or_permissions(administrator=True)
-    @commands.guild_only()
-    async def embedset_channel(
-        self,
-        ctx: commands.Context,
-        channel: Union[
-            discord.TextChannel, discord.VoiceChannel, discord.StageChannel, discord.ForumChannel
-        ],
-        enabled: bool = None,
-    ):
-        """
-        Set's a channel's embed setting.
-
-        If set, this is used instead of the guild and command defaults to determine whether or not to use embeds.
-        This is used for all commands done in a channel.
-
-        If enabled is left blank, the setting will be unset and the guild default will be used instead.
-
-        To see full evaluation order of embed settings, run `[p]help embedset`.
-
-        **Examples:**
-        - `[p]embedset channel #text-channel False` - Disables embeds in the #text-channel.
-        - `[p]embedset channel #forum-channel disable` - Disables embeds in the #forum-channel.
-        - `[p]embedset channel #text-channel` - Resets value to use guild default in the #text-channel.
-
-        **Arguments:**
-            - `<channel>` - The text, voice, stage, or forum channel to set embed setting for.
-            - `[enabled]` - Whether to use embeds in this channel. Leave blank to reset to default.
-        """
-        if enabled is None:
-            await self.bot._config.channel(channel).embeds.clear()
-            await ctx.send(_("Embeds will now fall back to the global setting."))
-            return
-
-        await self.bot._config.channel(channel).embeds.set(enabled)
-        await ctx.send(
-            _("Embeds are now {} for this channel.").format(
-                _("enabled") if enabled else _("disabled")
-            )
-        )
-
-    @embedset.command(name="user")
-    async def embedset_user(self, ctx: commands.Context, enabled: bool = None):
-        """
-        Sets personal embed setting for DMs.
-
-        If set, this is used instead of the global default to determine whether or not to use embeds.
-        This is used for all commands executed in a DM with the bot.
-
-        If enabled is left blank, the setting will be unset and the global default will be used instead.
-
-        To see full evaluation order of embed settings, run `[p]help embedset`.
-
-        **Examples:**
-        - `[p]embedset user False` - Disables embeds in your DMs.
-        - `[p]embedset user` - Resets value to use global default.
-
-        **Arguments:**
-        - `[enabled]` - Whether to use embeds in your DMs. Leave blank to reset to default.
-        """
-        if enabled is None:
-            await self.bot._config.user(ctx.author).embeds.clear()
-            await ctx.send(_("Embeds will now fall back to the global setting."))
-            return
-
-        await self.bot._config.user(ctx.author).embeds.set(enabled)
-        await ctx.send(
-            _("Embeds are now enabled for you in DMs.")
-            if enabled
-            else _("Embeds are now disabled for you in DMs.")
         )
 
     @commands.command()
@@ -780,7 +418,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @commands.command()
     @commands.check(CoreLogic._can_get_invite_url)
     async def invite(self, ctx):
-        """Shows [botname]'s invite url.
+        """Shows grief's invite url.
 
         This will always send the invite to DMs to keep it private.
 
@@ -809,7 +447,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @commands.group()
     @commands.is_owner()
     async def inviteset(self, ctx):
-        """Commands to setup [botname]'s invite settings."""
+        """Commands to setup grief's invite settings."""
         pass
 
     @inviteset.command()
@@ -961,26 +599,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
                         await ctx.send(_("Alright, I'm not leaving those servers."))
                     else:
                         await ctx.send(_("Alright, I'm not leaving that server."))
-
-    @commands.command()
-    @commands.is_owner()
-    async def servers(self, ctx: commands.Context):
-        """
-        Lists the servers [botname] is currently in.
-
-        Note: This command is interactive.
-        """
-        guilds = sorted(self.bot.guilds, key=lambda s: s.name.lower())
-        msg = "\n".join(
-            f"{discord.utils.escape_markdown(guild.name)} (`{guild.id}`)\n" for guild in guilds
-        )
-
-        pages = list(pagify(msg, ["\n"], page_length=1000))
-
-        if len(pages) == 1:
-            await ctx.send(pages[0])
-        else:
-            await menu(ctx, pages)
 
     @commands.command(require_var_positional=True)
     @commands.is_owner()
@@ -1665,8 +1283,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def _shutdown(self, ctx: commands.Context, silently: bool = True):
         """Shuts down grief.
         """
-        wave = "\N{WAVING HAND SIGN}"
-        skin = "\N{EMOJI MODIFIER FITZPATRICK TYPE-3}"
         with contextlib.suppress(discord.HTTPException):
             if not silently:
                 await ctx.send(_("<:check:1107472942830456892> grief is shutting down."))
@@ -1786,19 +1402,19 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
     @commands.group(name="set")
     async def _set(self, ctx: commands.Context):
-        """Commands for changing [botname]'s settings."""
+        """Commands for changing grief's settings."""
 
     # -- Bot Metadata Commands -- ###
 
     @_set.group(name="bot", aliases=["metadata"])
     @commands.admin_or_permissions(manage_nicknames=True)
     async def _set_bot(self, ctx: commands.Context):
-        """Commands for changing [botname]'s metadata."""
+        """Commands for changing grief's metadata."""
 
     @_set_bot.group(name="avatar", invoke_without_command=True)
     @commands.is_owner()
     async def _set_bot_avatar(self, ctx: commands.Context, url: str = None):
-        """Sets [botname]'s avatar
+        """Sets grief's avatar
 
         Supports either an attachment or an image URL.
 
@@ -1848,7 +1464,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @commands.is_owner()
     async def _set_bot_avatar_remove(self, ctx: commands.Context):
         """
-        Removes [botname]'s avatar.
+        Removes grief's avatar.
 
         **Example:**
         - `[p]set bot avatar remove`
@@ -1861,7 +1477,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @commands.admin_or_permissions(manage_nicknames=True)
     @commands.guild_only()
     async def _set_bot_nickname(self, ctx: commands.Context, *, nickname: str = None):
-        """Sets [botname]'s nickname for the current server.
+        """Sets grief's nickname for the current server.
 
         Maximum length for a nickname is 32 characters.
 
@@ -1888,7 +1504,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @commands.bot_in_a_guild()
     @commands.is_owner()
     async def _set_status(self, ctx: commands.Context):
-        """Commands for setting [botname]'s status."""
+        """Commands for setting grief's status."""
 
     @_set_status.command(
         name="streaming", aliases=["stream", "twitch"], usage="[(<streamer> <stream_title>)]"
@@ -1902,7 +1518,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         *,
         stream_title: commands.Range[str, 1, 128] = None,
     ):
-        """Sets [botname]'s streaming status to a twitch stream.
+        """Sets grief's streaming status to a twitch stream.
 
         This will appear as `Streaming <stream_title>` or `LIVE ON TWITCH` depending on the context.
         It will also include a `Watch` button with a twitch.tv url for the provided streamer.
@@ -1940,7 +1556,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def _set_status_game(
         self, ctx: commands.Context, *, game: commands.Range[str, 1, 128] = None
     ):
-        """Sets [botname]'s playing status.
+        """Sets grief's playing status.
 
         This will appear as `Playing <game>` or `PLAYING A GAME: <game>` depending on the context.
 
@@ -1971,7 +1587,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def _set_status_listening(
         self, ctx: commands.Context, *, listening: commands.Range[str, 1, 128] = None
     ):
-        """Sets [botname]'s listening status.
+        """Sets grief's listening status.
 
         This will appear as `Listening to <listening>`.
 
@@ -2004,7 +1620,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def _set_status_watching(
         self, ctx: commands.Context, *, watching: commands.Range[str, 1, 128] = None
     ):
-        """Sets [botname]'s watching status.
+        """Sets grief's watching status.
 
         This will appear as `Watching <watching>`.
 
@@ -2035,7 +1651,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def _set_status_competing(
         self, ctx: commands.Context, *, competing: commands.Range[str, 1, 128] = None
     ):
-        """Sets [botname]'s competing status.
+        """Sets grief's competing status.
 
         This will appear as `Competing in <competing>`.
 
@@ -2068,7 +1684,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     async def _set_status_custom(
         self, ctx: commands.Context, *, text: commands.Range[str, 1, 128] = None
     ):
-        """Sets [botname]'s custom status.
+        """Sets grief's custom status.
 
         This will appear as `<text>`.
 
@@ -2102,28 +1718,28 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @commands.bot_in_a_guild()
     @commands.is_owner()
     async def _set_status_online(self, ctx: commands.Context):
-        """Set [botname]'s status to online."""
+        """Set grief's status to online."""
         await self._set_my_status(ctx, discord.Status.online)
 
     @_set_status.command(name="dnd", aliases=["donotdisturb", "busy"])
     @commands.bot_in_a_guild()
     @commands.is_owner()
     async def _set_status_dnd(self, ctx: commands.Context):
-        """Set [botname]'s status to do not disturb."""
+        """Set grief's status to do not disturb."""
         await self._set_my_status(ctx, discord.Status.do_not_disturb)
 
     @_set_status.command(name="idle", aliases=["away", "afk"])
     @commands.bot_in_a_guild()
     @commands.is_owner()
     async def _set_status_idle(self, ctx: commands.Context):
-        """Set [botname]'s status to idle."""
+        """Set grief's status to idle."""
         await self._set_my_status(ctx, discord.Status.idle)
 
     @_set_status.command(name="invisible", aliases=["offline"])
     @commands.bot_in_a_guild()
     @commands.is_owner()
     async def _set_status_invisible(self, ctx: commands.Context):
-        """Set [botname]'s status to invisible."""
+        """Set grief's status to invisible."""
         await self._set_my_status(ctx, discord.Status.invisible)
 
     # -- End Bot Status Commands -- ###
@@ -2241,7 +1857,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @commands.guildowner_or_permissions(manage_guild=True)
     async def _set_locale(self, ctx: commands.Context, language_code: str):
         """
-        Changes [botname]'s locale in this server.
+        Changes grief's locale in this server.
 
         Use "default" to return to the bot's default set language.
 
@@ -2266,7 +1882,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @commands.is_owner()
     async def _set_locale_global(self, ctx: commands.Context, language_code: str):
         """
-        Changes [botname]'s default locale.
+        Changes grief's default locale.
 
         This will be used when a server has not set a locale, or in DMs.
 
@@ -2302,7 +1918,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @commands.guildowner_or_permissions(manage_guild=True)
     async def _set_locale_local(self, ctx: commands.Context, language_code: str):
         """
-        Changes [botname]'s locale in this server.
+        Changes grief's locale in this server.
 
         Use "default" to return to the bot's default set language.
 
@@ -2737,7 +2353,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     )
     @commands.is_owner()
     async def _set_prefix(self, ctx: commands.Context, *prefixes: str):
-        """Sets [botname]'s global prefix(es).
+        """Sets grief's global prefix(es).
 
         Warning: This is not additive. It will replace all current prefixes.
 
@@ -2787,7 +2403,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         self, ctx: commands.Context, server: Optional[discord.Guild], *prefixes: str
     ):
         """
-        Sets [botname]'s server prefix(es).
+        Sets grief's server prefix(es).
 
         Warning: This will override global prefixes, the bot will not respond to any global prefixes in this server.
             This is not additive. It will replace all current server prefixes.
@@ -2907,7 +2523,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @helpset.command(name="resetformatter")
     async def helpset_resetformatter(self, ctx: commands.Context):
         """
-        This resets [botname]'s help formatter to the default formatter.
+        This resets grief's help formatter to the default formatter.
 
         **Example:**
         - `[p]helpset resetformatter`
@@ -2925,7 +2541,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @helpset.command(name="resetsettings")
     async def helpset_resetsettings(self, ctx: commands.Context):
         """
-        This resets [botname]'s help settings to their defaults.
+        This resets grief's help settings to their defaults.
 
         This may not have an impact when using custom formatters from 3rd party cogs
 
