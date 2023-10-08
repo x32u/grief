@@ -390,12 +390,9 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
     These commands come loaded with every grief bot, and cover some of the most basic usage of the bot.
     """
-
-    async def red_delete_data_for_user(self, **kwargs):
-        """Nothing to delete (Core Config is handled in a bot method)"""
-        return
-
+ 
     @commands.command()
+    @commands.is_owner()
     async def uptime(self, ctx: commands.Context):
         """Shows grief's uptime."""
         delta = datetime.datetime.utcnow() - self.bot.uptime
