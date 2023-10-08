@@ -30,7 +30,7 @@ import discord
 from discord.ext.commands import check
 from .errors import BotMissingPermissions
 
-from redbot.core import utils
+from grief.core import utils
 
 if TYPE_CHECKING:
     from .commands import Command
