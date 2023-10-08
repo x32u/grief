@@ -116,7 +116,7 @@ class Cleanup(commands.Cog):
         return message
 
     @commands.group()
-    async def purge(self, ctx, number = None):
+    async def purge(self, ctx: commands.Context, number = None):
         if number == None:
             embed = discord.Embed(description=f"You haven't made a number input.", color=0x313338)
             await ctx.send(embed=embed)
