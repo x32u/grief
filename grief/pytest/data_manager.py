@@ -1,6 +1,6 @@
 import pytest
 
-from redbot.core import data_manager
+from grief.core import data_manager
 
 __all__ = ["cleanup_datamanager", "data_mgr_config", "cog_instance"]
 

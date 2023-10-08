@@ -6,8 +6,8 @@ import shutil
 
 import pytest
 
-from redbot.cogs.downloader.repo_manager import RepoManager, Repo, ProcessFormatter
-from redbot.cogs.downloader.installable import Installable, InstalledModule
+from grief.cogs.downloader.repo_manager import RepoManager, Repo, ProcessFormatter
+from grief.cogs.downloader.installable import Installable, InstalledModule
 
 __all__ = [
     "GIT_VERSION",

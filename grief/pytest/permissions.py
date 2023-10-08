@@ -1,7 +1,7 @@
 import pytest
 
-from redbot.cogs.permissions import Permissions
-from redbot.core import Config
+from grief.cogs.permissions import Permissions
+from grief.core import Config
 
 
 @pytest.fixture()

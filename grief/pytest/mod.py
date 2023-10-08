@@ -1,5 +1,5 @@
 import pytest
-from redbot.core import modlog
+from grief.core import modlog
 
 __all__ = ["mod"]
 

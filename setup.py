@@ -9,7 +9,7 @@ REQUIREMENTS_FOLDER = ROOT_FOLDER / "requirements"
 
 sys.path.insert(0, str(ROOT_FOLDER))
 
-from redbot import VersionInfo
+from grief import VersionInfo
 
 version, _ = VersionInfo._get_version(ignore_installed=True)
 
