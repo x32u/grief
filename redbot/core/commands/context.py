@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from .commands import Command
     from ..bot import Red
 
-TICK = "\N{WHITE HEAVY CHECK MARK}"
+TICK = "\<:grief_check:1107472942830456892>"
 
 __all__ = ["Context", "GuildContext", "DMContext"]
 
