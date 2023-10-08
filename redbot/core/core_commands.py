@@ -371,6 +371,18 @@ class CoreLogic:
         is_invite_public = await ctx.bot._config.invite_public()
         return is_owner or is_invite_public
 
+
+    @classmethod
+    async def _version_info(cls) -> Dict[str, str]:
+        """
+        Version information for Red and discord.py
+        Returns
+        -------
+        dict
+            `redbot` and `discordpy` keys containing version information for both.
+        """
+        return {"discordpy": discord.__version__}
+
 @i18n.cog_i18n(_)
 class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     """
