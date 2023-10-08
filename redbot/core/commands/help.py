@@ -67,7 +67,7 @@ class HelpSettings:
     verify_exists: bool = False
     tagline: str = ""
     delete_delay: int = 0
-    use_tick: bool = False
+    use_tick: bool = True
     react_timeout: int = 30
 
     @classmethod
