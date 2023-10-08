@@ -116,6 +116,9 @@ class Cleanup(commands.Cog):
         return message
 
     @commands.group()
+    @commands.guild_only()
+    @commands.mod_or_permissions(manage_messages=True)
+    @commands.bot_has_permissions(manage_messages=True)
     async def purge(self, ctx: commands.Context, number = None):
         if number == None:
             """Mass delete messages,"""
@@ -410,7 +413,7 @@ class Cleanup(commands.Cog):
     @commands.guild_only()
     @commands.mod_or_permissions(manage_messages=True)
     @commands.bot_has_permissions(manage_messages=True)
-    async def cleanup_bot(
+    async def purge_bot(
         self, ctx: commands.Context, number: positive_int, delete_pinned: bool = False
     ):
         """Clean up command messages and messages from the bot in the current channel.
@@ -494,7 +497,7 @@ class Cleanup(commands.Cog):
 
     @purge.command(name="self")
     @check_self_permissions()
-    async def cleanup_self(
+    async def purge_self(
         self,
         ctx: commands.Context,
         number: positive_int,
@@ -583,7 +586,7 @@ class Cleanup(commands.Cog):
     @commands.guild_only()
     @commands.mod_or_permissions(manage_messages=True)
     @commands.bot_has_permissions(manage_messages=True)
-    async def cleanup_duplicates(self, ctx: commands.Context, number: positive_int = 50):
+    async def purge_duplicates(self, ctx: commands.Context, number: positive_int = 50):
         """Deletes duplicate messages in the channel from the last X messages and keeps only one copy.
 
         Defaults to 50.
