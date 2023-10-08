@@ -1,6 +1,5 @@
 from grief import _early_init
 
-# this needs to be called as early as possible
 _early_init()
 
 import asyncio
