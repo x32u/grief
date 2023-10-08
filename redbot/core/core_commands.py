@@ -354,6 +354,17 @@ class CoreLogic:
         return is_owner or is_invite_public
 
 
+    @classmethod
+    async def _version_info(cls) -> Dict[str, str]:
+        """
+        Version information for Red and discord.py
+        Returns
+        -------
+        dict
+            `redbot` and `discordpy` keys containing version information for both.
+        """
+        return {"redbot": __version__, "discordpy": discord.__version__}
+
 @i18n.cog_i18n(_)
 class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     """
@@ -2598,29 +2609,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             await ctx.bot._config.help.use_menus.set(0)
 
         await ctx.send(msg)
-
-    @helpset.command(name="showhidden")
-    async def helpset_showhidden(self, ctx: commands.Context, show_hidden: bool = None):
-        """
-        This allows the help command to show hidden commands.
-
-        This defaults to False.
-        Using this without a setting will toggle.
-
-        **Examples:**
-        - `[p]helpset showhidden True` - Enables showing hidden commands.
-        - `[p]helpset showhidden` - Toggles the value.
-
-        **Arguments:**
-        - `[show_hidden]` - Whether to use show hidden commands in help. Leave blank to toggle.
-        """
-        if show_hidden is None:
-            show_hidden = not await ctx.bot._config.help.show_hidden()
-        await ctx.bot._config.help.show_hidden.set(show_hidden)
-        if show_hidden:
-            await ctx.send(_("Help will not filter hidden commands."))
-        else:
-            await ctx.send(_("Help will filter hidden commands."))
 
     @helpset.command(name="showaliases")
     async def helpset_showaliases(self, ctx: commands.Context, show_aliases: bool = None):
