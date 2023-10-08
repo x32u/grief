@@ -8,7 +8,7 @@ from aiohttp_json_rpc.rpc import JsonRpcMethod
 
 import logging
 
-from redbot.core._cli import ExitCodes
+from grief._cli import ExitCodes
 
 log = logging.getLogger("red.rpc")
 

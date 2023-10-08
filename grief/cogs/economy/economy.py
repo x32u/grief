@@ -9,13 +9,13 @@ from typing import cast, Iterable, Literal
 
 import discord
 
-from redbot.core import Config, bank, commands, errors
-from redbot.core.commands.converter import TimedeltaConverter, positive_int
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import box, humanize_number
-from redbot.core.utils.menus import menu
+from grief import Config, bank, commands, errors
+from grief.commands.converter import TimedeltaConverter, positive_int
+from grief import Red
+from grief.i18n import Translator, cog_i18n
+from grief.utils import AsyncIter
+from grief.utils.chat_formatting import box, humanize_number
+from grief.utils.menus import menu
 
 T_ = Translator("Economy", __file__)
 

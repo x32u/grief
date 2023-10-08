@@ -8,10 +8,10 @@ from functools import partial
 from typing import TYPE_CHECKING, Awaitable, Callable, Iterable, List, Optional, Union
 
 import discord
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils import can_user_send_messages_in
-from redbot.core.utils.chat_formatting import (
+from grief import commands
+from grief.i18n import Translator
+from grief.utils import can_user_send_messages_in
+from grief.utils.chat_formatting import (
     bold,
     escape,
     format_perms_list,
@@ -20,7 +20,7 @@ from redbot.core.utils.chat_formatting import (
 )
 
 if TYPE_CHECKING:
-    from redbot.core.bot import Red
+    from grief import Red
 
 _ = Translator("IssueDiagnoser", __file__)
 

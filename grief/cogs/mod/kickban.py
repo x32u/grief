@@ -5,17 +5,17 @@ from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional, Tuple, Union
 
 import discord
-from redbot.core import commands, i18n, modlog
-from redbot.core.commands import RawUserIdConverter
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import (
+from grief import commands, i18n, modlog
+from grief.commands import RawUserIdConverter
+from grief.utils import AsyncIter
+from grief.utils.chat_formatting import (
     pagify,
     humanize_number,
     bold,
     humanize_list,
     format_perms_list,
 )
-from redbot.core.utils.mod import get_audit_reason
+from grief.utils.mod import get_audit_reason
 from .abc import MixinMeta
 from .utils import is_allowed_by_hierarchy
 

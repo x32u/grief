@@ -31,7 +31,7 @@ import discord
 from discord.ext import commands as dpy_commands
 from discord.utils import maybe_coroutine
 
-from redbot.core import commands
+from grief import commands
 
 if TYPE_CHECKING:
     GuildMessageable = Union[
@@ -291,7 +291,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
 
     Examples
     --------
-    >>> from redbot.core.utils import AsyncIter
+    >>> from grief.utils import AsyncIter
     >>> async for value in AsyncIter(range(3)):
     ...     print(value)
     0
@@ -330,7 +330,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
 
         Examples
         --------
-        >>> from redbot.core.utils import AsyncIter
+        >>> from grief.utils import AsyncIter
         >>> iterator = AsyncIter(range(5))
         >>> await iterator
         [0, 1, 2, 3, 4]
@@ -353,7 +353,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
 
         Examples
         --------
-        >>> from redbot.core.utils import AsyncIter
+        >>> from grief.utils import AsyncIter
         >>> iterator = AsyncIter(range(5))
         >>> await iterator.next()
         0
@@ -374,7 +374,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
 
         Examples
         --------
-        >>> from redbot.core.utils import AsyncIter
+        >>> from grief.utils import AsyncIter
         >>> iterator = AsyncIter(range(5))
         >>> await iterator.flatten()
         [0, 1, 2, 3, 4]
@@ -399,7 +399,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
 
         Examples
         --------
-        >>> from redbot.core.utils import AsyncIter
+        >>> from grief.utils import AsyncIter
         >>> def predicate(value):
         ...     return value <= 5
         >>> iterator = AsyncIter([1, 10, 5, 100])
@@ -408,7 +408,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
         1
         5
 
-        >>> from redbot.core.utils import AsyncIter
+        >>> from grief.utils import AsyncIter
         >>> def predicate(value):
         ...     return value <= 5
         >>> iterator = AsyncIter([1, 10, 5, 100])
@@ -433,7 +433,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
 
         Examples
         --------
-        >>> from redbot.core.utils import AsyncIter
+        >>> from grief.utils import AsyncIter
         >>> iterator = AsyncIter(['one', 'two', 'three'])
         >>> async for i in iterator.enumerate(start=10):
         ...     print(i)
@@ -450,7 +450,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
 
         Examples
         --------
-        >>> from redbot.core.utils import AsyncIter
+        >>> from grief.utils import AsyncIter
         >>> iterator = AsyncIter([1,2,3,3,4,4,5])
         >>> async for i in iterator.without_duplicates():
         ...     print(i)
@@ -489,7 +489,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
 
         Examples
         --------
-        >>> from redbot.core.utils import AsyncIter
+        >>> from grief.utils import AsyncIter
         >>> await AsyncIter(range(3)).find(lambda x: x == 1)
         1
         """
@@ -520,7 +520,7 @@ class AsyncIter(AsyncIterator[_T], Awaitable[List[_T]]):  # pylint: disable=dupl
 
         Examples
         --------
-        >>> from redbot.core.utils import AsyncIter
+        >>> from grief.utils import AsyncIter
         >>> async for value in AsyncIter(range(3)).map(bool):
         ...     print(value)
         False
@@ -549,7 +549,7 @@ def get_end_user_data_statement(file: Union[Path, str]) -> Optional[str]:
 
     .. code-block:: python
 
-        from redbot.core.utils import get_end_user_data_statement
+        from grief.utils import get_end_user_data_statement
 
         __red_end_user_data_statement__ = get_end_user_data_statement(__file__)
 
@@ -608,7 +608,7 @@ def get_end_user_data_statement_or_raise(file: Union[Path, str]) -> str:
 
     .. code-block:: python
 
-        from redbot.core.utils import get_end_user_data_statement_or_raise
+        from grief.utils import get_end_user_data_statement_or_raise
 
         __red_end_user_data_statement__ = get_end_user_data_statement_or_raise(__file__)
 

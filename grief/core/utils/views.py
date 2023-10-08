@@ -4,12 +4,12 @@ import discord
 
 from discord.ext.commands import BadArgument
 from typing import TYPE_CHECKING, Any, List, Optional, Union, Dict
-from redbot.core.i18n import Translator
+from grief.i18n import Translator
 from redbot.vendored.discord.ext import menus
-from redbot.core.commands.converter import get_dict_converter
+from grief.commands.converter import get_dict_converter
 
 if TYPE_CHECKING:
-    from redbot.core.commands import Context
+    from grief.commands import Context
 
 __all__ = ("SimpleMenu", "SetApiModal", "SetApiView", "ConfirmView")
 
@@ -110,14 +110,14 @@ class SimpleMenu(discord.ui.View):
     --------
         You can provide a list of strings::
 
-            from redbot.core.utils.views import SimpleMenu
+            from grief.utils.views import SimpleMenu
 
             pages = ["Hello", "Hi", "Bonjour", "Salut"]
             await SimpleMenu(pages).start(ctx)
 
         You can provide a list of dicts::
 
-            from redbot.core.utils.views import SimpleMenu
+            from grief.utils.views import SimpleMenu
             pages = [{"content": "My content", "embed": discord.Embed(description="hello")}]
             await SimpleMenu(pages).start(ctx)
 

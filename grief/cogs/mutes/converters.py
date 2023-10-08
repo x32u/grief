@@ -4,8 +4,8 @@ from typing import Union, Dict
 from datetime import timedelta
 
 from discord.ext.commands.converter import Converter
-from redbot.core import commands
-from redbot.core import i18n
+from grief import commands
+from grief import i18n
 
 log = logging.getLogger("grief.cogs.mutes")
 

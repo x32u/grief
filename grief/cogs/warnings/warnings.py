@@ -7,13 +7,13 @@ from typing import Union, Literal
 
 import discord
 
-from redbot.core import Config, commands, modlog
-from redbot.core.bot import Red
-from redbot.core.commands import UserInputOptional
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import warning, pagify
-from redbot.core.utils.menus import menu
+from grief import Config, commands, modlog
+from grief import Red
+from grief.commands import UserInputOptional
+from grief.i18n import Translator, cog_i18n
+from grief.utils import AsyncIter
+from grief.utils.chat_formatting import warning, pagify
+from grief.utils.menus import menu
 
 
 _ = Translator("Warnings", __file__)

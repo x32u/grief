@@ -18,10 +18,10 @@ import pip
 import traceback
 from pathlib import Path
 from collections import defaultdict
-from redbot.core import app_commands, data_manager
-from redbot.core.utils.menus import menu
-from redbot.core.utils.views import SetApiView
-from redbot.core.commands import GuildConverter, RawUserIdConverter
+from grief import app_commands, data_manager
+from grief.utils.menus import menu
+from grief.utils.views import SetApiView
+from grief.commands import GuildConverter, RawUserIdConverter
 from string import ascii_letters, digits
 from typing import (
     TYPE_CHECKING,
@@ -39,7 +39,7 @@ from typing import (
 import aiohttp
 import discord
 from babel import Locale as BabelLocale, UnknownLocaleError
-from redbot.core.data_manager import storage_type
+from grief.data_manager import storage_type
 
 from . import (
     __version__,
@@ -106,7 +106,7 @@ def entity_transformer(statement: str) -> str:
 
 
 if TYPE_CHECKING:
-    from redbot.core.bot import Red
+    from grief import Red
 
 __all__ = ["Core"]
 
@@ -2829,7 +2829,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @commands.is_owner()
     async def datapath(self, ctx: commands.Context):
         """Prints the bot's data path."""
-        from redbot.core.data_manager import basic_config
+        from grief.data_manager import basic_config
 
         data_dir = Path(basic_config["DATA_PATH"])
         msg = _("Data path: {path}").format(path=data_dir)
@@ -2839,7 +2839,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @commands.is_owner()
     async def debuginfo(self, ctx: commands.Context):
         """Shows debug information useful for debugging."""
-        from redbot.core._debuginfo import DebugInfo
+        from grief._debuginfo import DebugInfo
 
         await ctx.send(await DebugInfo(self.bot).get_command_text())
 

@@ -3,11 +3,11 @@ import logging
 from typing import Tuple, Union
 
 import discord
-from redbot.core import Config, commands
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import box
-from redbot.core.utils.mod import get_audit_reason
-from redbot.core.utils.predicates import MessagePredicate
+from grief import Config, commands
+from grief.i18n import Translator, cog_i18n
+from grief.utils.chat_formatting import box
+from grief.utils.mod import get_audit_reason
+from grief.utils.predicates import MessagePredicate
 
 from .announcer import Announcer
 from .converters import SelfRole

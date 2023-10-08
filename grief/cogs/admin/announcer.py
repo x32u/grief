@@ -2,10 +2,10 @@ import asyncio
 from typing import Optional
 
 import discord
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import humanize_list, inline
+from grief import commands
+from grief.i18n import Translator
+from grief.utils import AsyncIter
+from grief.utils.chat_formatting import humanize_list, inline
 
 _ = Translator("Announcer", __file__)
 

@@ -3,9 +3,9 @@ from re import findall
 
 import discord
 from discord.ext.commands.view import StringView  # DEP-WARN
-from redbot.core import commands, Config
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
+from grief import commands, Config
+from grief.i18n import Translator
+from grief.utils import AsyncIter
 
 _ = Translator("Alias", __file__)
 

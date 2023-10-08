@@ -11,9 +11,9 @@ import pip
 import psutil
 
 from redbot import __version__
-from redbot.core import data_manager
-from redbot.core.bot import Red
-from redbot.core.utils.chat_formatting import box
+from grief import data_manager
+from grief import Red
+from grief.utils.chat_formatting import box
 
 
 def noop_box(text: str, **kwargs) -> str:

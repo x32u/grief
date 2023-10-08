@@ -3,14 +3,14 @@ from datetime import timezone, timedelta, datetime
 from .abc import MixinMeta
 
 import discord
-from redbot.core import commands, i18n, modlog
-from redbot.core.utils.chat_formatting import (
+from grief import commands, i18n, modlog
+from grief.utils.chat_formatting import (
     humanize_timedelta,
     humanize_list,
     pagify,
     format_perms_list,
 )
-from redbot.core.utils.mod import get_audit_reason
+from grief.utils.mod import get_audit_reason
 
 from .converters import MuteTime
 

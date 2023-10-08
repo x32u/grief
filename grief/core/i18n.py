@@ -15,7 +15,7 @@ import babel.localedata
 from babel.core import Locale
 
 if TYPE_CHECKING:
-    from redbot.core.bot import Red
+    from grief import Red
 
 
 __all__ = [

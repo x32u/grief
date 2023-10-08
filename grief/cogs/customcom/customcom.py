@@ -8,12 +8,12 @@ from urllib.parse import quote_plus
 import discord
 import rapidfuzz
 
-from redbot.core import Config, commands
-from redbot.core.commands import Parameter
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils import menus, AsyncIter
-from redbot.core.utils.chat_formatting import box, pagify, escape, humanize_list
-from redbot.core.utils.predicates import MessagePredicate
+from grief import Config, commands
+from grief.commands import Parameter
+from grief.i18n import Translator, cog_i18n
+from grief.utils import menus, AsyncIter
+from grief.utils.chat_formatting import box, pagify, escape, humanize_list
+from grief.utils.predicates import MessagePredicate
 
 _ = Translator("CustomCommands", __file__)
 

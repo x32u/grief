@@ -38,12 +38,12 @@ from rich.progress_bar import ProgressBar
 from red_commons.logging import VERBOSE, TRACE
 
 from redbot import VersionInfo
-from redbot.core import data_manager
-from redbot.core.utils.chat_formatting import box
+from grief import data_manager
+from grief.utils.chat_formatting import box
 
 if TYPE_CHECKING:
-    from redbot.core.bot import Red
-    from redbot.core.commands import Command, Context
+    from grief import Red
+    from grief.commands import Command, Context
 
 main_log = logging.getLogger("red")
 

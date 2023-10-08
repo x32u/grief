@@ -5,7 +5,7 @@ from io import BytesIO
 import struct
 
 from redbot import VersionInfo
-from redbot.core import commands
+from grief import commands
 
 from ..converters import get_lazy_converter, get_playlist_converter
 

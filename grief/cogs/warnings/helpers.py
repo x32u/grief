@@ -2,10 +2,10 @@ from copy import copy
 import asyncio
 import discord
 
-from redbot.core import Config, commands
-from redbot.core.commands.requires import PrivilegeLevel
-from redbot.core.i18n import Translator
-from redbot.core.utils.predicates import MessagePredicate
+from grief import Config, commands
+from grief.commands.requires import PrivilegeLevel
+from grief.i18n import Translator
+from grief.utils.predicates import MessagePredicate
 
 _ = Translator("Warnings", __file__)
 

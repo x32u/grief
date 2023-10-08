@@ -11,7 +11,7 @@ import discord
 from babel.lists import format_list as babel_list
 from babel.numbers import format_decimal
 
-from redbot.core.i18n import Translator, get_babel_locale, get_babel_regional_format
+from grief.i18n import Translator, get_babel_locale, get_babel_regional_format
 
 __all__ = (
     "error",
@@ -476,7 +476,7 @@ def humanize_list(
     --------
     .. testsetup::
 
-        from redbot.core.utils.chat_formatting import humanize_list
+        from grief.utils.chat_formatting import humanize_list
 
     .. doctest::
 

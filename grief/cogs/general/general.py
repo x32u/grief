@@ -6,11 +6,11 @@ from typing import Final
 import urllib.parse
 import aiohttp
 import discord
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.menus import menu
-from redbot.core.utils.chat_formatting import (
+from grief import commands
+from grief import Red
+from grief.i18n import Translator, cog_i18n
+from grief.utils.menus import menu
+from grief.utils.chat_formatting import (
     bold,
     escape,
     italics,

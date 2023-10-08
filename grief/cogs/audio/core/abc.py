@@ -23,11 +23,11 @@ import aiohttp
 import discord
 import lavalink
 
-from redbot.core import Config, commands
-from redbot.core.bot import Red
-from redbot.core.commands import Context
-from redbot.core.utils.antispam import AntiSpam
-from redbot.core.utils.dbtools import APSWConnectionWrapper
+from grief import Config, commands
+from grief import Red
+from grief.commands import Context
+from grief.utils.antispam import AntiSpam
+from grief.utils.dbtools import APSWConnectionWrapper
 
 if TYPE_CHECKING:
     from ..apis.interface import AudioAPIInterface

@@ -11,11 +11,11 @@ import aiohttp
 import discord
 import importlib.metadata
 from packaging.requirements import Requirement
-from redbot.core import data_manager
+from grief import data_manager
 
-from redbot.core.bot import ExitCodes
-from redbot.core.commands import RedHelpFormatter, HelpSettings
-from redbot.core.i18n import (
+from grief import ExitCodes
+from grief.commands import RedHelpFormatter, HelpSettings
+from grief.i18n import (
     Translator,
     set_contextual_locales_from_guild,
 )

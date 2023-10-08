@@ -30,7 +30,7 @@ __all__ = [
 
 @pytest.fixture(autouse=True)
 def override_data_path(tmpdir):
-    from redbot.core import data_manager
+    from grief import data_manager
 
     data_manager.basic_config = data_manager.basic_config_default
     data_manager.basic_config["DATA_PATH"] = str(tmpdir)
@@ -154,7 +154,7 @@ def ctx(empty_member, empty_channel, red):
 # region Red Mock
 @pytest.fixture()
 def red(config_fr):
-    from redbot.core._cli import parse_cli_flags
+    from grief._cli import parse_cli_flags
 
     cli_flags = parse_cli_flags(["ignore_me"])
 

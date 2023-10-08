@@ -1,5 +1,5 @@
-from redbot.core.commands import BadArgument, Context, Converter
-from redbot.core.i18n import Translator
+from grief.commands import BadArgument, Context, Converter
+from grief.i18n import Translator
 
 _ = Translator("Cleanup", __file__)
 

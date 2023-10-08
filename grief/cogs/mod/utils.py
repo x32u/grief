@@ -1,7 +1,7 @@
 import discord
 
-from redbot.core.bot import Red
-from redbot.core.config import Config
+from grief import Red
+from grief.config import Config
 
 
 async def is_allowed_by_hierarchy(

@@ -1,4 +1,4 @@
-from redbot.core.bot import Red
+from grief import Red
 from .mod import Mod
 
 

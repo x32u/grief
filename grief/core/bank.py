@@ -8,8 +8,8 @@ from functools import wraps
 
 import discord
 
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import humanize_number
+from grief.utils import AsyncIter
+from grief.utils.chat_formatting import humanize_number
 from . import Config, errors, commands
 from .i18n import Translator
 

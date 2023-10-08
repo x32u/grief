@@ -7,13 +7,13 @@ from typing import Union, Optional, Dict, List, Tuple, Any, Iterator, ItemsView,
 import discord
 import yaml
 from schema import And, Or, Schema, SchemaError, Optional as UseOptional
-from redbot.core import commands, config
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils import can_user_react_in
-from redbot.core.utils.chat_formatting import box, error, success
-from redbot.core.utils.menus import start_adding_reactions
-from redbot.core.utils.predicates import ReactionPredicate, MessagePredicate
+from grief import commands, config
+from grief import Red
+from grief.i18n import Translator, cog_i18n
+from grief.utils import can_user_react_in
+from grief.utils.chat_formatting import box, error, success
+from grief.utils.menus import start_adding_reactions
+from grief.utils.predicates import ReactionPredicate, MessagePredicate
 
 from .converters import (
     CogOrCommand,

@@ -9,12 +9,12 @@ from typing import Mapping, Dict
 import aiohttp
 import discord
 
-from redbot.core import Config
-from redbot.core.bot import Red
-from redbot.core.commands import Cog
-from redbot.core.data_manager import cog_data_path
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.antispam import AntiSpam
+from grief import Config
+from grief import Red
+from grief.commands import Cog
+from grief.data_manager import cog_data_path
+from grief.i18n import Translator, cog_i18n
+from grief.utils.antispam import AntiSpam
 
 from ..utils import (
     CacheLevel,

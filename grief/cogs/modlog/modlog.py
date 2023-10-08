@@ -4,12 +4,12 @@ from typing import Optional, Union
 
 import discord
 
-from redbot.core import commands, modlog
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import bold, box, pagify
-from redbot.core.utils.menus import menu
-from redbot.core.utils.predicates import MessagePredicate
+from grief import commands, modlog
+from grief import Red
+from grief.i18n import Translator, cog_i18n
+from grief.utils.chat_formatting import bold, box, pagify
+from grief.utils.menus import menu
+from grief.utils.predicates import MessagePredicate
 
 _ = Translator("ModLog", __file__)
 

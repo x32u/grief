@@ -4,12 +4,12 @@ import re
 from datetime import timezone
 from typing import Union, Set, Literal, Optional
 
-from redbot.core import Config, modlog, commands
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator, cog_i18n, set_contextual_locales_from_guild
-from redbot.core.utils.predicates import MessagePredicate
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import pagify, humanize_list
+from grief import Config, modlog, commands
+from grief import Red
+from grief.i18n import Translator, cog_i18n, set_contextual_locales_from_guild
+from grief.utils.predicates import MessagePredicate
+from grief.utils import AsyncIter
+from grief.utils.chat_formatting import pagify, humanize_list
 
 _ = Translator("Filter", __file__)
 

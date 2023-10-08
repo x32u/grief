@@ -10,19 +10,19 @@ from datetime import datetime, timedelta, timezone
 from .converters import MuteTime
 from .voicemutes import VoiceMutes
 
-from redbot.core.bot import Red
-from redbot.core import commands, i18n, modlog, Config
-from redbot.core.utils import AsyncIter, bounded_gather, can_user_react_in
-from redbot.core.utils.chat_formatting import (
+from grief import Red
+from grief import commands, i18n, modlog, Config
+from grief.utils import AsyncIter, bounded_gather, can_user_react_in
+from grief.utils.chat_formatting import (
     bold,
     humanize_timedelta,
     humanize_list,
     inline,
     pagify,
 )
-from redbot.core.utils.mod import get_audit_reason
-from redbot.core.utils.menus import start_adding_reactions
-from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
+from grief.utils.mod import get_audit_reason
+from grief.utils.menus import start_adding_reactions
+from grief.utils.predicates import MessagePredicate, ReactionPredicate
 
 T_ = i18n.Translator("Mutes", __file__)
 

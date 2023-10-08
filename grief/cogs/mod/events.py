@@ -4,8 +4,8 @@ from collections import defaultdict, deque
 from typing import List, Optional
 
 import discord
-from redbot.core import i18n, modlog, commands
-from redbot.core.utils.mod import is_mod_or_superior
+from grief import i18n, modlog, commands
+from grief.utils.mod import is_mod_or_superior
 from .abc import MixinMeta
 
 _ = i18n.Translator("Mod", __file__)
