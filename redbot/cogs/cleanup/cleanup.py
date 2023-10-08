@@ -118,6 +118,7 @@ class Cleanup(commands.Cog):
     @commands.group()
     async def purge(self, ctx: commands.Context, number = None):
         if number == None:
+            """Mass delete messages,"""
             embed = discord.Embed(description=f"You haven't made a number input.", color=0x313338)
             await ctx.send(embed=embed)
             return
