@@ -6,7 +6,6 @@ from collections import defaultdict
 from typing import Literal
 
 from grief import Config, commands
-from grief import Red
 from grief.i18n import Translator, cog_i18n
 from grief.utils import AsyncIter
 from grief.utils._internal_utils import send_to_owners_with_prefix_replaced

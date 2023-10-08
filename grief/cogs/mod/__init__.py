@@ -1,4 +1,4 @@
-from .grief import Red
+from grief.core.bot import Red
 from .mod import Mod
 
 
