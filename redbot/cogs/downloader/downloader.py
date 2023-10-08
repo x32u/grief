@@ -19,7 +19,6 @@ from redbot.core.utils.menus import start_adding_reactions
 from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
 
 from . import errors
-from .checks import do_install_agreement
 from .converters import InstalledCog
 from .installable import InstallableType, Installable, InstalledModule
 from .log import log
