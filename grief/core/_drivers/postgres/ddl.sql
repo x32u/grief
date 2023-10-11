@@ -4,8 +4,8 @@
  ************************************************************
  */
 
-CREATE SCHEMA IF NOT EXISTS red_config;
-CREATE SCHEMA IF NOT EXISTS red_utils;
+CREATE SCHEMA IF NOT EXISTS grief_config;
+CREATE SCHEMA IF NOT EXISTS grief_utils;
 
 DO $$
 BEGIN
