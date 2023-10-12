@@ -1,5 +1,5 @@
 from .alias import Alias
-from grief import Red
+from grief.core.bot import Red
 
 
 async def setup(bot: Red) -> None:
