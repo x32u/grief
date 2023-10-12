@@ -9,14 +9,14 @@ import discord
 import lavalink
 from red_commons.logging import getLogger
 
-from grief.core import grief
+from grief.core.bot import Red
 from grief.core.i18n import Translator
 from grief.core.utils.chat_formatting import humanize_list
 
 from ..errors import InvalidPlaylistScope, MissingAuthor, MissingGuild
 from ..utils import PlaylistScope
 
-log = getLogger("red.cogs.Audio.api.utils")
+log = getLogger("grief.cogs.Audio.api.utils")
 _ = Translator("Audio", Path(__file__))
 
 
