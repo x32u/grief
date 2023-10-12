@@ -45,7 +45,7 @@ if TYPE_CHECKING:
     from grief import Red
     from grief.commands import Command, Context
 
-main_log = logging.getLogger("red")
+main_log = logging.getLogger("grief")
 
 __all__ = (
     "safe_delete",
