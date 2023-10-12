@@ -12,7 +12,7 @@ from grief.utils.predicates import MessagePredicate
 from .announcer import Announcer
 from .converters import SelfRole
 
-log = logging.getLogger("red.admin")
+log = logging.getLogger("grief.admin")
 
 T_ = Translator("Admin", __file__)
 
