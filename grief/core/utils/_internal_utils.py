@@ -37,13 +37,13 @@ from rich.progress import ProgressColumn
 from rich.progress_bar import ProgressBar
 from red_commons.logging import VERBOSE, TRACE
 
-from redbot import VersionInfo
-from grief import data_manager
-from grief.utils.chat_formatting import box
+from grief import VersionInfo
+from grief.core import data_manager
+from grief.core.utils.chat_formatting import box
 
 if TYPE_CHECKING:
-    from grief import Red
-    from grief.commands import Command, Context
+    from grief.core.bot import Red
+    from grief.core.commands import Command, Context
 
 main_log = logging.getLogger("grief")
 
