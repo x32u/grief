@@ -6,17 +6,17 @@ from string import Formatter
 from typing import List, Literal
 
 import discord
-from grief import Config, commands
-from grief.i18n import Translator, cog_i18n
-from grief.utils.chat_formatting import box, pagify
-from grief.utils.menus import menu
+from grief.core import Config, commands
+from grief.core.i18n import Translator, cog_i18n
+from grief.core.utils.chat_formatting import box, pagify
+from grief.core.utils.menus import menu
 
-from grief import Red
+from grief.core.bot import Red
 from .alias_entry import AliasEntry, AliasCache, ArgParseError
 
 _ = Translator("Alias", __file__)
 
-log = logging.getLogger("red.cogs.alias")
+log = logging.getLogger("grief.alias")
 
 
 class _TrackingFormatter(Formatter):
