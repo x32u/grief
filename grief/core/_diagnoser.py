@@ -8,7 +8,7 @@ from functools import partial
 from typing import TYPE_CHECKING, Awaitable, Callable, Iterable, List, Optional, Union
 
 import discord
-from grief import commands
+from grief.core import commands
 from grief.i18n import Translator
 from grief.utils import can_user_send_messages_in
 from grief.utils.chat_formatting import (
