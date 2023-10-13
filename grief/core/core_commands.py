@@ -18,7 +18,7 @@ import pip
 import traceback
 from pathlib import Path
 from collections import defaultdict
-from grief import app_commands, data_manager
+from grief.core import app_commands, data_manager
 from grief.utils.menus import menu
 from grief.utils.views import SetApiView
 from grief.commands import GuildConverter, RawUserIdConverter
