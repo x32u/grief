@@ -37,7 +37,7 @@ class CogManager:
     bot directory.
     """
 
-    CORE_PATH = Path(redbot.cogs.__path__[0]).resolve()
+    CORE_PATH = Path(grief.cogs.__path__[0]).resolve()
 
     def __init__(self):
         self.config = Config.get_conf(self, 2938473984732, True)
