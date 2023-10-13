@@ -13,7 +13,7 @@ import importlib.metadata
 from packaging.requirements import Requirement
 from grief.core import data_manager
 
-from grief import ExitCodes
+from grief.core import ExitCodes
 from grief.core.commands import RedHelpFormatter, HelpSettings
 from grief.core.i18n import (
     Translator,
