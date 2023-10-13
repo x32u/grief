@@ -21,7 +21,7 @@ from .i18n import Translator, set_contextual_locales_from_guild
 from .generic_casetypes import all_generics
 
 if TYPE_CHECKING:
-    from grief import Red
+    from grief.core.bot import Red
 
 log = logging.getLogger("red.core.modlog")
 
