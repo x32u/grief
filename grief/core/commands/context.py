@@ -13,7 +13,7 @@ from ..utils import can_user_react_in
 
 if TYPE_CHECKING:
     from .commands import Command
-    from ..bot import Red
+    from grief.core.bot import Red
 
 TICK = "\N{WHITE HEAVY CHECK MARK}"
 
