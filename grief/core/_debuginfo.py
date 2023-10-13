@@ -12,7 +12,7 @@ import psutil
 
 from grief import __version__
 from grief.core import data_manager
-from grief.core import Red
+from grief.core.bot import Red
 from grief.core.utils.chat_formatting import box
 
 
