@@ -37,7 +37,8 @@ import discord
 from discord.ext import commands as dpy_commands
 from discord.ext.commands import when_mentioned_or
 
-from grief.core import Config, i18n, app_commands, commands, errors, _drivers
+from grief.core import Config
+from grief.core import i18n, app_commands, commands, errors, _drivers
 from grief.core._cli import ExitCodes
 from grief.core._cog_manager import CogManager, CogManagerUI
 from grief.core._commands import Core
