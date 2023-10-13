@@ -54,5 +54,5 @@ setup(
     python_requires=python_requires,
     install_requires=install_requires,
     extras_require=extras_require,
-    packages=find_namespace_packages(include=["grief", "grief.*"]),
+    packages=find_namespace_packages(include=["grief", "redbot.*"]),
 )
