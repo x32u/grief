@@ -39,7 +39,7 @@ stylediff:
 
 # Translations
 gettext:
-	$(PYTHON) -m redgettext --command-docstrings --verbose --recursive redbot --exclude-files "redbot/pytest/**/*"
+	$(PYTHON) -m redgettext --command-docstrings --verbose --recursive redbot --exclude-files "grief/pytest/**/*"
 upload_translations:
 	crowdin upload sources
 download_translations:
@@ -52,7 +52,7 @@ bumpdeps:
 # Development environment
 newenv:
 	$(PYTHON) -m venv --clear .venv
-	.venv/bin/pip install -U pip wheel
+	.grief/bin/pip install -U pip wheel
 	$(MAKE) syncenv
 syncenv:
 	.venv/bin/pip install -Ur ./tools/dev-requirements.txt
