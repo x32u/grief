@@ -6,7 +6,7 @@ from typing import Callable, ClassVar, List, Optional, Pattern, Sequence, Tuple,
 import discord
 from discord.ext import commands as dpy_commands
 
-from grief import commands
+from grief.core import commands
 
 __all__ = ("MessagePredicate", "ReactionPredicate")
 
