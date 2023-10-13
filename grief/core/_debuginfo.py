@@ -10,10 +10,10 @@ import discord
 import pip
 import psutil
 
-from redbot import __version__
-from grief import data_manager
-from grief import Red
-from grief.utils.chat_formatting import box
+from grief import __version__
+from grief.core import data_manager
+from grief.core import Red
+from grief.core.utils.chat_formatting import box
 
 
 def noop_box(text: str, **kwargs) -> str:
