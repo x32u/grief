@@ -46,87 +46,6 @@ INTRO = r"""
 _ = Translator(__name__, __file__)
 
 
-def get_outdated_red_messages(pypi_version: str, py_version_req: str) -> Tuple[str, str]:
-    outdated_red_message = _(
-        "Your Red instance is out of date! {} is the current version, however you are using {}!"
-    ).format(pypi_version, red_version)
-    rich_outdated_message = (
-        f"[red]Outdated version![/red]\n"
-        f"[red]!!![/red]Version [cyan]{pypi_version}[/] is available, "
-        f"but you're using [cyan]{red_version}[/][red]!!![/red]"
-    )
-    current_python = platform.python_version()
-    extra_update = _(
-        "\n\nWhile the following command should work in most scenarios as it is "
-        "based on your current OS, environment, and Python version, "
-        "**we highly recommend you to read the update docs at <{docs}> and "
-        "make sure there is nothing else that "
-        "needs to be done during the update.**"
-    ).format(docs="https://docs.discord.red/en/stable/update_red.html")
-
-    if not expected_version(current_python, py_version_req):
-        extra_update += _(
-            "\n\nYou have Python `{py_version}` and this update "
-            "requires `{req_py}`; you cannot simply run the update command.\n\n"
-            "You will need to follow the update instructions in our docs above, "
-            "if you still need help updating after following the docs go to our "
-            "#support channel in <https://discord.gg/red>"
-        ).format(py_version=current_python, req_py=py_version_req)
-        outdated_red_message += extra_update
-        return outdated_red_message, rich_outdated_message
-
-    red_dist = importlib.metadata.distribution("Red-DiscordBot")
-    installed_extras = red_dist.metadata.get_all("Provides-Extra")
-    installed_extras.remove("dev")
-    installed_extras.remove("all")
-    distributions = {}
-    for req_str in red_dist.requires:
-        req = Requirement(req_str)
-        if req.marker is None or req.marker.evaluate():
-            continue
-        for extra in reversed(installed_extras):
-            if not req.marker.evaluate({"extra": extra}):
-                continue
-
-            # Check that the requirement is met.
-            # This is a bit simplified for our purposes and does not check
-            # whether the requirements of our requirements are met as well.
-            # This could potentially be an issue if we'll ever depend on
-            # a dependency's extra in our extra when we already depend on that
-            # in our base dependencies. However, considering that right now, all
-            # our dependencies are also fully pinned, this should not ever matter.
-            if req.name in distributions:
-                dist = distributions[req.name]
-            else:
-                try:
-                    dist = importlib.metadata.distribution(req.name)
-                except importlib.metadata.PackageNotFoundError:
-                    dist = None
-                distributions[req.name] = dist
-            if dist is None or not req.specifier.contains(dist.version, prereleases=True):
-                installed_extras.remove(extra)
-
-    if installed_extras:
-        package_extras = f"[{','.join(installed_extras)}]"
-    else:
-        package_extras = ""
-
-    extra_update += _(
-        "\n\nTo update your bot, first shutdown your bot"
-        " then open a window of {console} (Not as admin) and run the following:"
-        "{command_1}\n"
-        "Once you've started up your bot again, we recommend that"
-        " you update any installed 3rd-party cogs with this command in Discord:"
-        "{command_2}"
-    ).format(
-        console=_("Command Prompt") if platform.system() == "Windows" else _("Terminal"),
-        command_1=f'```"{sys.executable}" -m pip install -U "Red-DiscordBot{package_extras}"```',
-        command_2=f"```[p]cog update```",
-    )
-    outdated_red_message += extra_update
-    return outdated_red_message, rich_outdated_message
-
-
 def init_events(bot, cli_flags):
     @bot.event
     async def on_connect():
@@ -159,7 +78,6 @@ def init_events(bot, cli_flags):
         table_general_info = Table(show_edge=False, show_header=False, box=box.MINIMAL)
         table_general_info.add_row("Prefixes", ", ".join(prefixes))
         table_general_info.add_row("Language", lang)
-        table_general_info.add_row("Red version", red_version)
         table_general_info.add_row("Discord.py version", dpy_version)
         table_general_info.add_row("Storage type", data_manager.storage_type())
 
@@ -169,15 +87,6 @@ def init_events(bot, cli_flags):
         table_counts.add_row("Servers", str(guilds))
         if bot.intents.members:  # Lets avoid 0 Unique Users
             table_counts.add_row("Unique Users", str(users))
-
-        outdated_red_message = ""
-        rich_outdated_message = ""
-        pypi_version, py_version_req = await fetch_latest_red_version_info()
-        outdated = pypi_version and pypi_version > red_version_info
-        if outdated:
-            outdated_red_message, rich_outdated_message = get_outdated_red_messages(
-                pypi_version, py_version_req
-            )
 
         rich_console = rich.get_console()
         rich_console.print(INTRO, style="red", markup=False, highlight=False)
@@ -199,16 +108,6 @@ def init_events(bot, cli_flags):
         if invite_url:
             rich_console.print(f"\nInvite URL: {Text(invite_url, style=f'link {invite_url}')}")
             # We generally shouldn't care if the client supports it or not as Rich deals with it.
-        if not guilds:
-            rich_console.print(
-                f"Looking for a quick guide on setting up Red? Checkout {Text('https://start.discord.red', style='link https://start.discord.red}')}"
-            )
-        if rich_outdated_message:
-            rich_console.print(rich_outdated_message)
-
-        bot._red_ready.set()
-        if outdated_red_message:
-            await send_to_owners_with_prefix_replaced(bot, outdated_red_message)
 
     @bot.event
     async def on_command_completion(ctx: commands.Context):
