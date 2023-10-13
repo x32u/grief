@@ -9,7 +9,7 @@ from grief.vendored.discord.ext import menus
 from grief.commands.converter import get_dict_converter
 
 if TYPE_CHECKING:
-    from grief.commands import Context
+    from grief.core.commands import Context
 
 __all__ = ("SimpleMenu", "SetApiModal", "SetApiView", "ConfirmView")
 
