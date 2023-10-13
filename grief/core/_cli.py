@@ -8,7 +8,6 @@ from typing import Optional
 import discord
 from discord import __version__ as discord_version
 
-from grief.utils._internal_utils import cli_level_to_log_level
 
 
 # This needs to be an int enum to be used
