@@ -19,9 +19,9 @@ import traceback
 from pathlib import Path
 from collections import defaultdict
 from grief.core import app_commands, data_manager
-from grief.utils.menus import menu
-from grief.utils.views import SetApiView
-from grief.commands import GuildConverter, RawUserIdConverter
+from grief.core.utils.menus import menu
+from grief.core.utils.views import SetApiView
+from grief.core.commands import GuildConverter, RawUserIdConverter
 from string import ascii_letters, digits
 from typing import (
     TYPE_CHECKING,
