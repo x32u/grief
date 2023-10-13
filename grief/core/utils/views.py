@@ -6,7 +6,7 @@ from discord.ext.commands import BadArgument
 from typing import TYPE_CHECKING, Any, List, Optional, Union, Dict
 from grief.core.i18n import Translator
 from grief.vendored.discord.ext import menus
-from grief.commands.converter import get_dict_converter
+from grief.core.commands.converter import get_dict_converter
 
 if TYPE_CHECKING:
     from grief.core.commands import Context
