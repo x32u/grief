@@ -6,6 +6,8 @@ from datetime import datetime, timedelta, timezone
 from typing import List, Literal, Union, Optional, cast, TYPE_CHECKING
 
 import discord
+
+from grief.core import Config
 from .utils import AsyncIter
 from .utils.common_filters import (
     filter_invites,
@@ -13,13 +15,13 @@ from .utils.common_filters import (
     filter_urls,
     escape_spoilers,
 )
-from grief.core.utils.chat_formatting import bold, pagify
+from .utils.chat_formatting import bold, pagify
 from .i18n import Translator, set_contextual_locales_from_guild
 
 from .generic_casetypes import all_generics
 
 if TYPE_CHECKING:
-    from grief.core.bot import Red
+    from redbot.core.bot import Red
 
 log = logging.getLogger("red.core.modlog")
 
