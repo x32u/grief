@@ -6,6 +6,7 @@ from importlib.machinery import ModuleSpec
 from pathlib import Path
 from typing import Union, List, Optional
 
+import grief.cogs
 from grief.core.commands import positive_int
 from grief.core.utils import deduplicate_iterables
 import discord
@@ -35,6 +36,8 @@ class CogManager:
     install new cogs to, the default being the :code:`cogs/` folder in the root
     bot directory.
     """
+
+    CORE_PATH = Path(grief.cogs.__path__[0]).resolve()
 
     def __init__(self):
         self.config = Config.get_conf(self, 2938473984732, True)
@@ -248,7 +251,7 @@ class CogManager:
             When no matching spec can be found.
         """
         real_name = ".{}".format(name)
-        package = "grief.cogs"
+        package = "redbot.cogs"
 
         try:
             mod = import_module(real_name, package=package)
@@ -442,7 +445,7 @@ class CogManagerUI(commands.Cog):
 
         install_path = await ctx.bot._cog_mgr.install_path()
         await ctx.send(
-            _("<:check:1107472942830456892> grief will install new cogs to the `{}` directory.").format(install_path)
+            _("The bot will install new cogs to the `{}` directory.").format(install_path)
         )
 
     @commands.command()
@@ -461,24 +464,24 @@ class CogManagerUI(commands.Cog):
         unloaded = sorted(list(unloaded), key=str.lower)
 
         if await ctx.embed_requested():
-            loaded = _("**grief has {} cogs loaded:**\n").format(len(loaded)) + ", ".join(loaded)
-            unloaded = _("**grief has {} cogs unloaded:**\n").format(len(unloaded)) + ", ".join(unloaded)
+            loaded = _("**{} loaded:**\n").format(len(loaded)) + ", ".join(loaded)
+            unloaded = _("**{} unloaded:**\n").format(len(unloaded)) + ", ".join(unloaded)
 
             for page in pagify(loaded, delims=[", ", "\n"], page_length=1800):
                 if page.startswith(", "):
                     page = page[2:]
-                e = discord.Embed(description=page, colour=discord.Colour.dark_theme())
+                e = discord.Embed(description=page, colour=discord.Colour.dark_green())
                 await ctx.send(embed=e)
 
             for page in pagify(unloaded, delims=[", ", "\n"], page_length=1800):
                 if page.startswith(", "):
                     page = page[2:]
-                e = discord.Embed(description=page, colour=discord.Colour.dark_theme())
+                e = discord.Embed(description=page, colour=discord.Colour.dark_red())
                 await ctx.send(embed=e)
         else:
-            loaded_count = _("**grief has {} cogs loaded:**\n").format(len(loaded))
+            loaded_count = _("**{} loaded:**\n").format(len(loaded))
             loaded = ", ".join(loaded)
-            unloaded_count = _("**grief has {} cogs unloaded:**\n").format(len(unloaded))
+            unloaded_count = _("**{} unloaded:**\n").format(len(unloaded))
             unloaded = ", ".join(unloaded)
             loaded_count_sent = False
             unloaded_count_sent = False
