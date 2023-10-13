@@ -4,7 +4,7 @@ import discord
 
 from discord.ext.commands import BadArgument
 from typing import TYPE_CHECKING, Any, List, Optional, Union, Dict
-from grief.i18n import Translator
+from grief.core.i18n import Translator
 from redbot.vendored.discord.ext import menus
 from grief.commands.converter import get_dict_converter
 
