@@ -4,8 +4,6 @@ from typing import Tuple, Dict, Any, Union, List, AsyncIterator, Type
 
 import rich.progress
 
-from grief.utils._internal_utils import RichIndefiniteBarColumn
-
 __all__ = ["BaseDriver", "IdentifierData", "ConfigCategory"]
 
 
@@ -287,7 +285,6 @@ class BaseDriver(abc.ABC):
         with rich.progress.Progress(
             rich.progress.SpinnerColumn(),
             rich.progress.TextColumn("[progress.description]{task.description}"),
-            RichIndefiniteBarColumn(),
             rich.progress.TextColumn("{task.completed} cogs processed"),
             rich.progress.TimeElapsedColumn(),
         ) as progress:
