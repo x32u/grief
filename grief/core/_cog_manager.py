@@ -464,8 +464,8 @@ class CogManagerUI(commands.Cog):
         unloaded = sorted(list(unloaded), key=str.lower)
 
         if await ctx.embed_requested():
-            loaded = _("**{} loaded:**\n").format(len(loaded)) + ", ".join(loaded)
-            unloaded = _("**{} unloaded:**\n").format(len(unloaded)) + ", ".join(unloaded)
+            loaded = _("**grief has {} loaded:**\n").format(len(loaded)) + ", ".join(loaded)
+            unloaded = _("**grief has {} unloaded:**\n").format(len(unloaded)) + ", ".join(unloaded)
 
             for page in pagify(loaded, delims=[", ", "\n"], page_length=1800):
                 if page.startswith(", "):
