@@ -306,7 +306,7 @@ async def run_bot(red: Red, cli_flags: Namespace) -> None:
 
     await driver_cls.initialize(**data_manager.storage_details())
 
-    redbot.logging.init_logging(
+    grief.logging.init_logging(
         level=cli_flags.logging_level,
         location=data_manager.core_data_path() / "logs",
         cli_flags=cli_flags,
