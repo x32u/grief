@@ -2,7 +2,7 @@ import importlib.machinery
 
 import discord
 
-from grief.utils.chat_formatting import humanize_number
+from grief.core.utils.chat_formatting import humanize_number
 from .i18n import Translator
 
 _ = Translator(__name__, __file__)
