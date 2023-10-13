@@ -31,7 +31,7 @@ import discord
 from discord.ext import commands as dpy_commands
 from discord.utils import maybe_coroutine
 
-from grief import commands
+from grief.core.commands import commands
 
 if TYPE_CHECKING:
     GuildMessageable = Union[
