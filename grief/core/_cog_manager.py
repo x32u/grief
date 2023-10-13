@@ -251,7 +251,7 @@ class CogManager:
             When no matching spec can be found.
         """
         real_name = ".{}".format(name)
-        package = "redbot.cogs"
+        package = "grief.cogs"
 
         try:
             mod = import_module(real_name, package=package)
