@@ -31,8 +31,6 @@ import discord
 from discord.ext import commands as dpy_commands
 from discord.utils import maybe_coroutine
 
-from grief import commands
-
 if TYPE_CHECKING:
     GuildMessageable = Union[
         commands.GuildContext,
@@ -57,7 +55,7 @@ __all__ = (
     "can_user_react_in",
 )
 
-log = logging.getLogger("red.core.utils")
+log = logging.getLogger("grief.core.utils")
 
 _T = TypeVar("_T")
 _S = TypeVar("_S")
