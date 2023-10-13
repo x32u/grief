@@ -37,16 +37,15 @@ import discord
 from discord.ext import commands as dpy_commands
 from discord.ext.commands import when_mentioned_or
 
-from grief.core.config import Config
-from grief.core import i18n, app_commands, commands, errors, _drivers
-from grief.core._cli import ExitCodes
-from grief.core._cog_manager import CogManager, CogManagerUI
-from grief.core._commands import Core
-from grief.core.data_manager import cog_data_path
-from grief.core.dev_commands import Dev
-from grief.core._events import init_events
-from grief.core._global_checks import init_global_checks
-from grief.core._settings_caches import (
+from . import Config, i18n, app_commands, commands, errors, _drivers, modlog, bank
+from ._cli import ExitCodes
+from ._cog_manager import CogManager, CogManagerUI
+from .core_commands import Core
+from .data_manager import cog_data_path
+from .dev_commands import Dev
+from ._events import init_events
+from ._global_checks import init_global_checks
+from ._settings_caches import (
     PrefixManager,
     IgnoreManager,
     WhitelistBlacklistManager,
@@ -72,7 +71,7 @@ SHARED_API_TOKENS = "SHARED_API_TOKENS"
 
 log = logging.getLogger("grief")
 
-__all__ = ("grief",)
+__all__ = ("Red",)
 
 NotMessage = namedtuple("NotMessage", "guild")
 
@@ -133,7 +132,7 @@ class Red(
             help__tagline="",
             help__use_tick=False,
             help__react_timeout=30,
-            description="grief",
+            description="Red V3",
             invite_public=False,
             invite_perm=0,
             invite_commands_scope=False,
@@ -1154,6 +1153,9 @@ class Red(
         if self._cli_flags.dev:
             await self.add_cog(Dev())
 
+        await modlog._init(self)
+        await bank._init()
+
         packages = OrderedDict()
 
         last_system_info = await self._config.last_system_info()
@@ -1792,6 +1794,8 @@ class Red(
         Checks if the user, message, context, or role should be considered immune from automated
         moderation actions.
 
+        Bot users are considered immune.
+
         This will return ``False`` in direct messages.
 
         Parameters
@@ -1810,22 +1814,22 @@ class Red(
             return False
 
         if isinstance(to_check, discord.Role):
-            ids_to_check = [to_check.id]
+            ids_to_check = {to_check.id}
         else:
             author = getattr(to_check, "author", to_check)
+            if author.bot:
+                return True
+            ids_to_check = set()
             try:
-                ids_to_check = [r.id for r in author.roles]
+                ids_to_check = {r.id for r in author.roles}
             except AttributeError:
-                # webhook messages are a user not member,
-                # cheaper than isinstance
-                if author.bot and author.discriminator == "0000":
-                    return True  # webhooks require significant permissions to enable.
-            else:
-                ids_to_check.append(author.id)
+                # cheaper than isinstance(author, discord.User)
+                pass
+            ids_to_check.add(author.id)
 
         immune_ids = await self._config.guild(guild).autoimmune_ids()
 
-        return any(i in immune_ids for i in ids_to_check)
+        return not ids_to_check.isdisjoint(immune_ids)
 
     @staticmethod
     async def send_filtered(
@@ -2278,6 +2282,8 @@ class Red(
         }
 
         special_handlers = {
+            "Red Core Modlog API": modlog._process_data_deletion,
+            "Red Core Bank API": bank._process_data_deletion,
             "Red Core Bot Data": self._core_data_deletion,
         }
 
