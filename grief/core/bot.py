@@ -37,10 +37,10 @@ import discord
 from discord.ext import commands as dpy_commands
 from discord.ext.commands import when_mentioned_or
 
-from . import Config, i18n, app_commands, commands, errors, _drivers
+from . import Config, i18n, app_commands, commands, errors, _drivers, modlog
 from ._cli import ExitCodes
 from ._cog_manager import CogManager, CogManagerUI
-from grief.core_commands import Core
+from .core_commands import Core
 from .data_manager import cog_data_path
 from .dev_commands import Dev
 from ._events import init_events
@@ -71,7 +71,7 @@ SHARED_API_TOKENS = "SHARED_API_TOKENS"
 
 log = logging.getLogger("grief")
 
-__all__ = ("Red",)
+__all__ = ("grief",)
 
 NotMessage = namedtuple("NotMessage", "guild")
 
@@ -132,7 +132,7 @@ class Red(
             help__tagline="",
             help__use_tick=False,
             help__react_timeout=30,
-            description="Red V3",
+            description="grief",
             invite_public=False,
             invite_perm=0,
             invite_commands_scope=False,
@@ -1153,6 +1153,8 @@ class Red(
         if self._cli_flags.dev:
             await self.add_cog(Dev())
 
+        await modlog._init(self)
+
         packages = OrderedDict()
 
         last_system_info = await self._config.last_system_info()
@@ -1791,8 +1793,6 @@ class Red(
         Checks if the user, message, context, or role should be considered immune from automated
         moderation actions.
 
-        Bot users are considered immune.
-
         This will return ``False`` in direct messages.
 
         Parameters
@@ -1811,22 +1811,22 @@ class Red(
             return False
 
         if isinstance(to_check, discord.Role):
-            ids_to_check = {to_check.id}
+            ids_to_check = [to_check.id]
         else:
             author = getattr(to_check, "author", to_check)
-            if author.bot:
-                return True
-            ids_to_check = set()
             try:
-                ids_to_check = {r.id for r in author.roles}
+                ids_to_check = [r.id for r in author.roles]
             except AttributeError:
-                # cheaper than isinstance(author, discord.User)
-                pass
-            ids_to_check.add(author.id)
+                # webhook messages are a user not member,
+                # cheaper than isinstance
+                if author.bot and author.discriminator == "0000":
+                    return True  # webhooks require significant permissions to enable.
+            else:
+                ids_to_check.append(author.id)
 
         immune_ids = await self._config.guild(guild).autoimmune_ids()
 
-        return not ids_to_check.isdisjoint(immune_ids)
+        return any(i in immune_ids for i in ids_to_check)
 
     @staticmethod
     async def send_filtered(
@@ -2278,6 +2278,11 @@ class Red(
             cog_qualname: cog.red_delete_data_for_user for cog_qualname, cog in self.cogs.items()
         }
 
+        special_handlers = {
+            "Red Core Modlog API": modlog._process_data_deletion,
+            "Red Core Bot Data": self._core_data_deletion,
+        }
+
         failures = {
             "extension": [],
             "cog": [],
@@ -2297,6 +2302,7 @@ class Red(
         handlers = [
             *(wrapper(coro, "extension", name) for name, coro in extension_handlers.items()),
             *(wrapper(coro, "cog", name) for name, coro in cog_handlers.items()),
+            *(wrapper(coro, "extension", name) for name, coro in special_handlers.items()),
         ]
 
         await asyncio.gather(*handlers)
