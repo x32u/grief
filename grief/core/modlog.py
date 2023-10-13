@@ -7,7 +7,7 @@ from typing import List, Literal, Union, Optional, cast, TYPE_CHECKING
 
 import discord
 
-from grief import Config
+from grief.core import Config
 from .utils import AsyncIter
 from .utils.common_filters import (
     filter_invites,
