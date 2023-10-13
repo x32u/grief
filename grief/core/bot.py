@@ -40,7 +40,7 @@ from discord.ext.commands import when_mentioned_or
 from . import Config, i18n, app_commands, commands, errors, _drivers
 from ._cli import ExitCodes
 from ._cog_manager import CogManager, CogManagerUI
-from .core_commands import Core
+from grief.core_commands import Core
 from .data_manager import cog_data_path
 from .dev_commands import Dev
 from ._events import init_events
@@ -1152,9 +1152,6 @@ class Red(
         await self.add_cog(CogManagerUI())
         if self._cli_flags.dev:
             await self.add_cog(Dev())
-
-        await modlog._init(self)
-        await bank._init()
 
         packages = OrderedDict()
 
@@ -2281,12 +2278,6 @@ class Red(
             cog_qualname: cog.red_delete_data_for_user for cog_qualname, cog in self.cogs.items()
         }
 
-        special_handlers = {
-            "Red Core Modlog API": modlog._process_data_deletion,
-            "Red Core Bank API": bank._process_data_deletion,
-            "Red Core Bot Data": self._core_data_deletion,
-        }
-
         failures = {
             "extension": [],
             "cog": [],
@@ -2306,7 +2297,6 @@ class Red(
         handlers = [
             *(wrapper(coro, "extension", name) for name, coro in extension_handlers.items()),
             *(wrapper(coro, "cog", name) for name, coro in cog_handlers.items()),
-            *(wrapper(coro, "extension", name) for name, coro in special_handlers.items()),
         ]
 
         await asyncio.gather(*handlers)
