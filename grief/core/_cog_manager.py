@@ -464,24 +464,24 @@ class CogManagerUI(commands.Cog):
         unloaded = sorted(list(unloaded), key=str.lower)
 
         if await ctx.embed_requested():
-            loaded = _("**{} loaded:**\n").format(len(loaded)) + ", ".join(loaded)
-            unloaded = _("**{} unloaded:**\n").format(len(unloaded)) + ", ".join(unloaded)
+            loaded = _("**grief has {} loaded:**\n").format(len(loaded)) + ", ".join(loaded)
+            unloaded = _("**grief has {} unloaded:**\n").format(len(unloaded)) + ", ".join(unloaded)
 
             for page in pagify(loaded, delims=[", ", "\n"], page_length=1800):
                 if page.startswith(", "):
                     page = page[2:]
-                e = discord.Embed(description=page, colour=discord.Colour.dark_green())
+                e = discord.Embed(description=page, colour=0x313338)
                 await ctx.send(embed=e)
 
             for page in pagify(unloaded, delims=[", ", "\n"], page_length=1800):
                 if page.startswith(", "):
                     page = page[2:]
-                e = discord.Embed(description=page, colour=discord.Colour.dark_red())
+                e = discord.Embed(description=page, colour=0x313338)
                 await ctx.send(embed=e)
         else:
-            loaded_count = _("**{} loaded:**\n").format(len(loaded))
+            loaded_count = _("**grief has {} loaded:**\n").format(len(loaded))
             loaded = ", ".join(loaded)
-            unloaded_count = _("**{} unloaded:**\n").format(len(unloaded))
+            unloaded_count = _("**grief has {} unloaded:**\n").format(len(unloaded))
             unloaded = ", ".join(unloaded)
             loaded_count_sent = False
             unloaded_count_sent = False
