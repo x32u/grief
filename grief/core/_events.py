@@ -205,6 +205,8 @@ def init_events(bot, cli_flags):
         if rich_outdated_message:
             rich_console.print(rich_outdated_message)
 
+        bot._red_ready.set()
+
     @bot.event
     async def on_command_completion(ctx: commands.Context):
         await bot._delete_delay(ctx)
