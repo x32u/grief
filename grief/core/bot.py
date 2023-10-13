@@ -37,7 +37,7 @@ import discord
 from discord.ext import commands as dpy_commands
 from discord.ext.commands import when_mentioned_or
 
-from . import Config, i18n, app_commands, commands, errors, _drivers
+from . import i18n, app_commands, commands, errors, _drivers
 from ._cli import ExitCodes
 from ._cog_manager import CogManager, CogManagerUI
 from .core_commands import Core
@@ -104,7 +104,6 @@ class Red(
     def __init__(self, *args, cli_flags=None, bot_dir: Path = Path.cwd(), **kwargs):
         self._shutdown_mode = ExitCodes.CRITICAL
         self._cli_flags = cli_flags
-        self._config = Config.get_core_conf(force_registration=False)
         self.rpc_enabled = cli_flags.rpc
         self.rpc_port = cli_flags.rpc_port
         self._last_exception = None
