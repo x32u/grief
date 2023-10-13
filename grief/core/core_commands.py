@@ -39,7 +39,7 @@ from typing import (
 import aiohttp
 import discord
 from babel import Locale as BabelLocale, UnknownLocaleError
-from grief.data_manager import storage_type
+from grief.core.data_manager import storage_type
 
 from . import (
     __version__,
