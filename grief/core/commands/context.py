@@ -9,13 +9,13 @@ import discord
 from discord.ext.commands import Context as DPYContext
 
 from .requires import PermState
-from grief.core.utils import can_user_react_in
+from ..utils import can_user_react_in
 
 if TYPE_CHECKING:
     from .commands import Command
     from ..bot import Red
 
-TICK = "\<:grief_check:1107472942830456892>"
+TICK = "\N{WHITE HEAVY CHECK MARK}"
 
 __all__ = ["Context", "GuildContext", "DMContext"]
 
