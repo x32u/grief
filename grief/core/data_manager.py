@@ -10,7 +10,6 @@ from typing import Any, Dict
 
 import platformdirs
 
-from . import commands
 from ._cli import ExitCodes
 
 __all__ = (
