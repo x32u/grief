@@ -6,8 +6,6 @@ from datetime import datetime, timedelta, timezone
 from typing import List, Literal, Union, Optional, cast, TYPE_CHECKING
 
 import discord
-
-from grief.core.config import Config
 from .utils import AsyncIter
 from .utils.common_filters import (
     filter_invites,
