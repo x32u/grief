@@ -14,7 +14,8 @@ from . import commands
 from .context import Context
 from ..i18n import Translator
 from ..utils.views import SimpleMenu
-from ..utils import can_user_react_in, menus
+from ..utils import menus
+from grief.core.utils.__init__ import can_user_react_in
 from ..utils.mod import mass_purge
 from ..utils._internal_utils import fuzzy_command_search, format_fuzzy_results
 from ..utils.chat_formatting import (
