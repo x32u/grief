@@ -23,7 +23,7 @@ import rich
 
 import grief.logging
 from grief import __version__
-from redbot.core.bot import redbot, ExitCodes, _NoOwnerSet
+from grief.core.bot import Red, ExitCodes, _NoOwnerSet
 from grief.core._cli import interactive_config, confirm, parse_cli_flags
 from grief.setup import get_data_dir, get_name, save_config
 from grief.core import data_manager, _drivers
