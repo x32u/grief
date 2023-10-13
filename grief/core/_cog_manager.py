@@ -6,7 +6,7 @@ from importlib.machinery import ModuleSpec
 from pathlib import Path
 from typing import Union, List, Optional
 
-import redbot.cogs
+import grief.cogs
 from grief.core.commands import positive_int
 from grief.core.utils import deduplicate_iterables
 import discord
