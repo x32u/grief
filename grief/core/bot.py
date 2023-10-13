@@ -37,15 +37,15 @@ import discord
 from discord.ext import commands as dpy_commands
 from discord.ext.commands import when_mentioned_or
 
-from . import Config, i18n, app_commands, commands, errors, _drivers
-from ._cli import ExitCodes
-from ._cog_manager import CogManager, CogManagerUI
-from .core_commands import Core
-from .data_manager import cog_data_path
-from .dev_commands import Dev
-from ._events import init_events
-from ._global_checks import init_global_checks
-from ._settings_caches import (
+from grief.core import Config, i18n, app_commands, commands, errors, _drivers
+from grief.core._cli import ExitCodes
+from grief.core._cog_manager import CogManager, CogManagerUI
+from grief.core._commands import Core
+from grief.core.data_manager import cog_data_path
+from grief.core.dev_commands import Dev
+from grief.core._events import init_events
+from grief.core._global_checks import init_global_checks
+from grief.core._settings_caches import (
     PrefixManager,
     IgnoreManager,
     WhitelistBlacklistManager,
