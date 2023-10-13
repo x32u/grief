@@ -24,7 +24,7 @@ __all__ = (
     "storage_details",
 )
 
-log = logging.getLogger("red.data_manager")
+log = logging.getLogger("grief.data_manager")
 
 basic_config = None
 

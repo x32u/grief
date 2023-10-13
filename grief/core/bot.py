@@ -130,7 +130,7 @@ class Red(
             help__verify_checks=True,
             help__verify_exists=False,
             help__tagline="",
-            help__use_tick=False,
+            help__use_tick=True,
             help__react_timeout=30,
             description="grief",
             invite_public=False,

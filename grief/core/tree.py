@@ -28,7 +28,7 @@ from typing import List, Dict, Tuple, Union, Optional, Sequence
 
 __all__ = ("RedTree",)
 
-log = logging.getLogger("red")
+log = logging.getLogger("grief")
 
 _ = Translator(__name__, __file__)
 

@@ -563,7 +563,7 @@ class Dev(commands.Cog):
                 ctx, source=source, source_cache=self.source_cache, env=env
             )
             try:
-                await output.send(tick=False)
+                await output.send(tick=True)
             except discord.Forbidden:
                 pass
             except discord.HTTPException as exc:

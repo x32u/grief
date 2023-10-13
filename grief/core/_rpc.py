@@ -10,7 +10,7 @@ import logging
 
 from grief.core._cli import ExitCodes
 
-log = logging.getLogger("red.rpc")
+log = logging.getLogger("grief.rpc")
 
 __all__ = ("RPC", "RPCMixin", "get_name")
 

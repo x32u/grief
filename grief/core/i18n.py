@@ -30,7 +30,7 @@ __all__ = [
     "cog_i18n",
 ]
 
-log = logging.getLogger("red.i18n")
+log = logging.getLogger("grief.i18n")
 
 _current_locale = ContextVar("_current_locale", default="en-US")
 _current_regional_format = ContextVar("_current_regional_format", default=None)
