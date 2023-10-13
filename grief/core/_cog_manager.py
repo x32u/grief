@@ -6,7 +6,6 @@ from importlib.machinery import ModuleSpec
 from pathlib import Path
 from typing import Union, List, Optional
 
-import grief.cogs
 from grief.core.commands import positive_int
 from grief.core.utils import deduplicate_iterables
 import discord
@@ -36,8 +35,6 @@ class CogManager:
     install new cogs to, the default being the :code:`cogs/` folder in the root
     bot directory.
     """
-
-    CORE_PATH = Path(grief.cogs.__path__[0]).resolve()
 
     def __init__(self):
         self.config = Config.get_conf(self, 2938473984732, True)
