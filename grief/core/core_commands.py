@@ -47,7 +47,6 @@ from . import (
     commands,
     errors,
     i18n,
-    bank,
     modlog,
 )
 from ._diagnoser import IssueDiagnoser
