@@ -11,11 +11,11 @@ import aiohttp
 import discord
 import importlib.metadata
 from packaging.requirements import Requirement
-from grief import data_manager
+from grief.core import data_manager
 
 from grief import ExitCodes
-from grief.commands import RedHelpFormatter, HelpSettings
-from grief.i18n import (
+from grief.core.commands import RedHelpFormatter, HelpSettings
+from grief.core.i18n import (
     Translator,
     set_contextual_locales_from_guild,
 )
@@ -41,12 +41,6 @@ from rich.text import Text
 log = logging.getLogger("grief")
 
 INTRO = r"""
-______         _           ______ _                       _  ______       _
-| ___ \       | |          |  _  (_)                     | | | ___ \     | |
-| |_/ /___  __| |  ______  | | | |_ ___  ___ ___  _ __ __| | | |_/ / ___ | |_
-|    // _ \/ _` | |______| | | | | / __|/ __/ _ \| '__/ _` | | ___ \/ _ \| __|
-| |\ \  __/ (_| |          | |/ /| \__ \ (_| (_) | | | (_| | | |_/ / (_) | |_
-\_| \_\___|\__,_|          |___/ |_|___/\___\___/|_|  \__,_| \____/ \___/ \__|
 """
 
 _ = Translator(__name__, __file__)
