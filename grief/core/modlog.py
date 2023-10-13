@@ -13,7 +13,7 @@ from .utils.common_filters import (
     filter_urls,
     escape_spoilers,
 )
-from .utils.chat_formatting import bold, pagify
+from grief.core.utils.chat_formatting import bold, pagify
 from .i18n import Translator, set_contextual_locales_from_guild
 
 from .generic_casetypes import all_generics
