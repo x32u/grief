@@ -10,8 +10,8 @@ from typing import TYPE_CHECKING, Awaitable, Callable, Iterable, List, Optional,
 import discord
 from grief.core import commands
 from grief.core.i18n import Translator
-from grief.utils import can_user_send_messages_in
-from grief.utils.chat_formatting import (
+from grief.core.utils import can_user_send_messages_in
+from grief.core.utils.chat_formatting import (
     bold,
     escape,
     format_perms_list,
