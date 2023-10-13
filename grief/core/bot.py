@@ -37,7 +37,7 @@ import discord
 from discord.ext import commands as dpy_commands
 from discord.ext.commands import when_mentioned_or
 
-from . import Config, i18n, app_commands, commands, errors, _drivers, modlog
+from . import Config, i18n, app_commands, commands, errors, _drivers
 from ._cli import ExitCodes
 from ._cog_manager import CogManager, CogManagerUI
 from .core_commands import Core
@@ -1152,8 +1152,6 @@ class Red(
         await self.add_cog(CogManagerUI())
         if self._cli_flags.dev:
             await self.add_cog(Dev())
-
-        await modlog._init(self)
 
         packages = OrderedDict()
 
@@ -2279,7 +2277,6 @@ class Red(
         }
 
         special_handlers = {
-            "Red Core Modlog API": modlog._process_data_deletion,
             "Red Core Bot Data": self._core_data_deletion,
         }
 
