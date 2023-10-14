@@ -6,9 +6,6 @@ include requirements/base.txt
 include requirements/extra-*.in
 include requirements/extra-*.txt
 
-# include locale files
-recursive-include redbot locales/*.po
-
 # include data folders for cogs
 recursive-include grief/**/data *
 
