@@ -1,6 +1,4 @@
-# include license files
-include LICENSE
-recursive-include redbot *.LICENSE
+
 
 # include requirements files
 include requirements/base.in
@@ -12,16 +10,16 @@ include requirements/extra-*.txt
 recursive-include redbot locales/*.po
 
 # include data folders for cogs
-recursive-include redbot/**/data *
+recursive-include grief/**/data *
 
 # include *.export files from the test fixtures
-recursive-include redbot *.export
+recursive-include grief *.export
 
 # include the py.typed file informing about Red being typed
-recursive-include redbot py.typed
+recursive-include grief py.typed
 
 # include *.sql files from postgres driver
-recursive-include redbot/core/_drivers/postgres *.sql
+recursive-include grief/core/_drivers/postgres *.sql
 
 # include tests
 graft tests
