@@ -1,7 +1,7 @@
 import asyncio
 import discord
 from datetime import datetime
-from grief.utils.chat_formatting import pagify
+from grief.core.utils.chat_formatting import pagify
 import io
 import weakref
 from typing import List, Optional, Union
