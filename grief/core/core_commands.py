@@ -430,6 +430,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @commands.command()
     @commands.is_owner()
     async def invite(self, ctx):
+        """Invite grief."""
         button1 = Button(label="Invite", url="https://discord.com/api/oauth2/authorize?client_id=716939297009434656&permissions=8&scope=bot%20applications.commands")
         button2 = Button(label="Support", url="https://discord.gg/seer")
         embed = discord.Embed(color=0x313338, description=f"Use the buttons below to invite grief.\nServer must be whitelisted.")
