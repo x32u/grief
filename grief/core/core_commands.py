@@ -36,6 +36,8 @@ from typing import (
     Literal,
 )
 
+from discord.ui import View, Button
+
 import aiohttp
 import discord
 from babel import Locale as BabelLocale, UnknownLocaleError
@@ -426,117 +428,16 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             await ctx.send(_("No exception has occurred yet."))
 
     @commands.command()
-    @commands.check(CoreLogic._can_get_invite_url)
-    async def invite(self, ctx):
-        """Shows grief's invite url.
-
-        This will always send the invite to DMs to keep it private.
-
-        This command is locked to the owner unless `[p]inviteset public` is set to True.
-
-        **Example:**
-        - `[p]invite`
-        """
-        message = await self.bot.get_invite_url()
-        if (admin := self.bot.get_cog("Admin")) and await admin.config.serverlocked():
-            message += "\n\n" + warning(
-                _(
-                    "This bot is currently **serverlocked**, meaning that it is locked "
-                    "to its current servers and will leave any server it joins."
-                )
-            )
-        try:
-            await ctx.author.send(message)
-            await ctx.tick()
-        except discord.errors.Forbidden:
-            await ctx.send(
-                "I couldn't send the invite message to you in DM. "
-                "Either you blocked me or you disabled DMs in this server."
-            )
-
-    @commands.group()
     @commands.is_owner()
-    async def inviteset(self, ctx):
-        """Commands to setup grief's invite settings."""
-        pass
-
-    @inviteset.command()
-    async def public(self, ctx, confirm: bool = False):
-        """
-        Toggles if `[p]invite` should be accessible for the average user.
-
-        The bot must be made into a `Public bot` in the developer dashboard for public invites to work.
-
-        **Example:**
-        - `[p]inviteset public yes` - Toggles the public invite setting.
-
-        **Arguments:**
-        - `[confirm]` - Required to set to public. Not required to toggle back to private.
-        """
-        if await self.bot._config.invite_public():
-            await self.bot._config.invite_public.set(False)
-            await ctx.send("The invite is now private.")
-            return
-        app_info = await self.bot.application_info()
-        if not app_info.bot_public:
-            await ctx.send(
-                "I am not a public bot. That means that nobody except "
-                "you can invite me on new servers.\n\n"
-                "You can change this by ticking `Public bot` in "
-                "your token settings: "
-                "https://discord.com/developers/applications/{0}/bot".format(self.bot.user.id)
-            )
-            return
-        if not confirm:
-            await ctx.send(
-                "You're about to make the `{0}invite` command public. "
-                "All users will be able to invite me on their server.\n\n"
-                "If you agree, you can type `{0}inviteset public yes`.".format(ctx.clean_prefix)
-            )
-        else:
-            await self.bot._config.invite_public.set(True)
-            await ctx.send("The invite command is now public.")
-
-    @inviteset.command()
-    async def perms(self, ctx, level: int):
-        """
-        Make the bot create its own role with permissions on join.
-
-        The bot will create its own role with the desired permissions when it joins a new server. This is a special role that can't be deleted or removed from the bot.
-
-        For that, you need to provide a valid permissions level.
-        You can generate one here: https://discordapi.com/permissions.html
-
-        Please note that you might need two factor authentication for some permissions.
-
-        **Example:**
-        - `[p]inviteset perms 134217728` - Adds a "Manage Nicknames" permission requirement to the invite.
-
-        **Arguments:**
-        - `<level>` - The permission level to require for the bot in the generated invite.
-        """
-        await self.bot._config.invite_perm.set(level)
-        await ctx.send("The new permissions level has been set.")
-
-    @inviteset.command()
-    async def commandscope(self, ctx: commands.Context):
-        """
-        Add the `applications.commands` scope to your invite URL.
-
-        This allows the usage of slash commands on the servers that invited your bot with that scope.
-
-        Note that previous servers that invited the bot without the scope cannot have slash commands, they will have to invite the bot a second time.
-        """
-        enabled = not await self.bot._config.invite_commands_scope()
-        await self.bot._config.invite_commands_scope.set(enabled)
-        if enabled is True:
-            await ctx.send(
-                _("The `applications.commands` scope has been added to the invite URL.")
-            )
-        else:
-            await ctx.send(
-                _("The `applications.commands` scope has been removed from the invite URL.")
-            )
+    async def invite(self, ctx):
+        button1 = Button(label="Invite", url="https://discord.com/api/oauth2/authorize?client_id=716939297009434656&permissions=8&scope=bot%20applications.commands")
+        button2 = Button(label="Support", url="https://discord.gg/seer")
+        embed = discord.Embed(color=0x313338, description=f"Use the buttons below to invite grief.\nServer must be whitelisted.")
+        embed.set_author(icon_url=self.bot.user.display_avatar, name="grief")
+        view = View()
+        view.add_item(button1)
+        view.add_item(button2)
+        await ctx.reply(mention_author=False, embed=embed, view=view)
 
     @commands.command()
     @commands.is_owner()
