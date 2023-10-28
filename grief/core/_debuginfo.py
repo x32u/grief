@@ -124,7 +124,7 @@ class DebugInfo:
             f"Python version: {pyver}\n"
             f"Pip version: {pipver}\n"
         )
-        resp_red_metadata = f"Red version: {redver}\nDiscord.py version: {dpy_version}"
+        resp_red_metadata = f"Grief version: {redver}\nDiscord.py version: {dpy_version}"
         return DebugInfoSection(
             "OS variables",
             resp_os,
