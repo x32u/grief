@@ -2477,6 +2477,78 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         await ctx.bot._config.disabled_command_msg.set(message)
         await ctx.tick()
 
+    @commands.group()
+    @commands.is_owner()
+    async def blacklist(self, ctx: commands.Context):
+        """
+        Commands to manage the blacklist.
+
+        Use `[p]blacklist clear` to disable the blacklist
+        """
+        pass
+
+    @blacklist.command(name="add", require_var_positional=True)
+    async def blacklist_add(self, ctx: commands.Context, *users: Union[discord.Member, int]):
+        """
+        Adds users to the blacklist.
+        """
+        for user in users:
+            if isinstance(user, int):
+                user_obj = discord.Object(id=user)
+            else:
+                user_obj = user
+            if await ctx.bot.is_owner(user_obj):
+                await ctx.send(_("You cannot add an owner to the blacklist."))
+                return
+
+        await self.bot.add_to_blacklist(users)
+        if len(users) > 1:
+            await ctx.tick()
+        else:
+            await ctx.tick()
+
+    @blacklist.command(name="list")
+    async def blacklist_list(self, ctx: commands.Context):
+        """
+        Lists users on the blacklist.
+        """
+        curr_list = await self.bot.get_blacklist()
+
+        if not curr_list:
+            await ctx.send("Blocklist is empty.")
+            return
+        if len(curr_list) > 1:
+            msg = _("Users on the blacklist:")
+        else:
+            msg = _("User on the blacklist:")
+        for user_id in curr_list:
+            user = self.bot.get_user(user_id)
+            if not user:
+                user = _("Unknown or Deleted User")
+            msg += f"\n\t- {user_id} ({user})"
+
+        for page in pagify(msg):
+            await ctx.send(box(page))
+
+    @blacklist.command(name="remove", require_var_positional=True)
+    async def blacklist_remove(self, ctx: commands.Context, *users: Union[discord.Member, int]):
+        """
+        Removes users from the blacklist.
+        """
+        await self.bot.remove_from_blacklist(users)
+        if len(users) > 1:
+            await ctx.send(_("Users have been removed from the blacklist."))
+        else:
+            await ctx.send(_("User has been removed from the blacklist."))
+
+    @blacklist.command(name="clear")
+    async def blacklist_clear(self, ctx: commands.Context):
+        """
+        Clears the blacklist.
+        """
+        await self.bot.clear_blacklist()
+        await ctx.send(_("Blocklist has been cleared."))
+
     async def rpc_load(self, request):
         cog_name = request.params[0]
 
