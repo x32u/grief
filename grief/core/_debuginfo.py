@@ -59,7 +59,7 @@ class DebugInfo:
         return self.bot is not None and self.bot.is_ready()
 
     async def get_cli_text(self) -> str:
-        parts = ["\x1b[31m# Debug Info for Red:\x1b[0m"]
+        parts = ["\x1b[31m# Debug Info for Grief:\x1b[0m"]
         for section in (
             self._get_system_metadata_section(),
             self._get_os_variables_section(),
@@ -71,7 +71,7 @@ class DebugInfo:
         return "\n".join(parts)
 
     async def get_command_text(self) -> str:
-        parts = [box("# Debug Info for Red:", lang="md")]
+        parts = [box("# Debug Info for Grief:", lang="md")]
         for section in (
             self._get_system_metadata_section(),
             self._get_os_variables_section(),
@@ -193,6 +193,6 @@ class DebugInfo:
         parts.append(f"Metadata file: {data_manager.config_file}")
 
         return DebugInfoSection(
-            "Red variables",
+            "Grief variables",
             "\n".join(parts),
         )
