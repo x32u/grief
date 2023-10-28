@@ -2112,7 +2112,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
     @commands.is_owner()
     async def debuginfo(self, ctx: commands.Context):
         """Shows debug information useful for debugging."""
-        from grief._debuginfo import DebugInfo
+        from grief.core._debuginfo import DebugInfo
 
         await ctx.send(await DebugInfo(self.bot).get_command_text())
 
