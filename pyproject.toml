@@ -11,7 +11,6 @@ classifiers = [
     "Framework :: AsyncIO",
     "Intended Audience :: Developers",
     "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Natural Language :: English",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: Microsoft :: Windows",
@@ -30,7 +29,7 @@ redbot = "grief.__main__:main"
 redbot-setup = "grief.setup:run_cli"
 
 [project.entry-points.pytest11]
-red-discordbot = "grief.pytest"
+grief-discordbot = "grief.pytest"
 
 [tool.black]
 line-length = 99
