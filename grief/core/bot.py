@@ -1876,12 +1876,6 @@ class Red(
         guild: Optional[discord.abc.Snowflake] = discord.utils.MISSING,
         guilds: List[discord.abc.Snowflake] = discord.utils.MISSING,
     ) -> None:
-        if not isinstance(cog, commands.Cog):
-            raise RuntimeError(
-                f"The {cog.__class__.__name__} cog in the {cog.__module__} package does "
-                f"not inherit from the commands.Cog base class. The cog author must update "
-                f"the cog to adhere to this requirement."
-            )
         cog_name = cog.__cog_name__
         if cog_name in self.cogs:
             if not override:
