@@ -215,6 +215,21 @@ class CoreLogic:
             else:
                 await bot.add_loaded_package(name)
                 loaded_packages.append(name)
+                # remove in Red 3.4
+                downloader = bot.get_cog("Downloader")
+                if downloader is None:
+                    continue
+                try:
+                    maybe_repo = await downloader._shared_lib_load_check(name)
+                except Exception:
+                    log.exception(
+                        "Shared library check failed,"
+                        " if you're not using modified Downloader, report this issue."
+                    )
+                    maybe_repo = None
+                if maybe_repo is not None:
+                    repos_with_shared_libs.add(maybe_repo.name)
+
         return {
             "loaded_packages": loaded_packages,
             "failed_packages": failed_packages,
