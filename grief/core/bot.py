@@ -1882,9 +1882,6 @@ class Red(
                 raise discord.ClientException(f"Cog named {cog_name!r} already loaded")
             await self.remove_cog(cog_name, guild=guild, guilds=guilds)
 
-        if not hasattr(cog, "requires"):
-            commands.Cog.__init__(cog)
-
         added_hooks = []
 
         try:
