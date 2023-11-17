@@ -6,6 +6,7 @@ from importlib.machinery import ModuleSpec
 from pathlib import Path
 from typing import Union, List, Optional
 
+import grief.cogs
 from grief.core.commands import positive_int
 from grief.core.utils import deduplicate_iterables
 import discord
@@ -36,6 +37,8 @@ class CogManager:
     bot directory.
     """
 
+    CORE_PATH = Path(grief.cogs.__path__[0]).resolve()
+
     def __init__(self):
         self.config = Config.get_conf(self, 2938473984732, True)
         tmp_cog_install_path = cog_data_path(self) / "cogs"
@@ -55,7 +58,7 @@ class CogManager:
 
         """
         return deduplicate_iterables(
-            [await self.install_path()], await self.user_defined_paths()
+            [await self.install_path()], await self.user_defined_paths(), [self.CORE_PATH]
         )
 
     async def install_path(self) -> Path:
