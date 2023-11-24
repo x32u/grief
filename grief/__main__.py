@@ -22,7 +22,7 @@ from typing import Any, Awaitable, Callable, NoReturn, Optional, Union
 import discord
 import rich
 
-import redbot.logging
+import grief.logging
 from grief import __version__
 from grief.core.bot import Red, ExitCodes, _NoOwnerSet
 from grief.core._cli import interactive_config, confirm, parse_cli_flags
@@ -308,7 +308,7 @@ async def run_bot(red: Red, cli_flags: Namespace) -> None:
 
     await driver_cls.initialize(**data_manager.storage_details())
 
-    redbot.logging.init_logging(
+    grief.logging.init_logging(
         level=cli_flags.logging_level,
         location=data_manager.core_data_path() / "logs",
         cli_flags=cli_flags,
