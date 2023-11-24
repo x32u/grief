@@ -490,7 +490,7 @@ def main():
 
         data_manager.load_basic_configuration(cli_flags.instance_name)
 
-        grief = grief(cli_flags=cli_flags, description="grief V3", dm_help=None)
+        grief = grief(parse_cli_flags=cli_flags, description="grief V3", dm_help=None)
 
         if os.name != "nt":
             # None of this works on windows.
