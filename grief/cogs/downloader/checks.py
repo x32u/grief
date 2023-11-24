@@ -1,9 +1,9 @@
 import asyncio
 
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils.chat_formatting import bold
-from redbot.core.utils.predicates import MessagePredicate
+from grief.core import commands
+from grief.core.i18n import Translator
+from grief.core.utils.chat_formatting import bold
+from grief.core.utils.predicates import MessagePredicate
 
 __all__ = ["do_install_agreement"]
 

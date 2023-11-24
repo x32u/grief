@@ -1,4 +1,4 @@
-from redbot.core.bot import Red
+from grief.core.bot import Red
 
 from .downloader import Downloader
 
