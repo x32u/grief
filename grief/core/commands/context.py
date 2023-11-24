@@ -13,7 +13,7 @@ from grief.core.utils.__init__ import can_user_react_in
 
 if TYPE_CHECKING:
     from .commands import Command
-    from grief.core.bot import grief
+    from grief.core.bot import Red
 
 TICK = "\<:grief_check:1107472942830456892>"
 

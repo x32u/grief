@@ -10,7 +10,7 @@ from collections import defaultdict
 
 import discord
 from grief.core import commands, Config, version_info as red_version_info
-from grief.core.bot import grief
+from grief.core.bot import Red
 from grief.core.data_manager import cog_data_path
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils import can_user_react_in
