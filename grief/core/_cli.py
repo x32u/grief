@@ -125,7 +125,7 @@ def message_cache_size_int(arg: str) -> int:
 
 def parse_cli_flags(args):
     parser = argparse.ArgumentParser(
-        description="grief - Discord Bot", usage="grief <instance_name> [arguments]"
+        description="Grief Discord Bot", usage="grief <instance_name> [arguments]"
     )
     parser.add_argument("--version", "-V", action="store_true", help="Show grief's current version")
     parser.add_argument("--debuginfo", action="store_true", help="Show debug information.")
