@@ -28,7 +28,7 @@ from grief.core._cli import interactive_config, confirm, parse_cli_flags
 from grief.setup import get_data_dir, get_name, save_config
 from grief.core import data_manager, _drivers
 from grief.core._debuginfo import DebugInfo
-from grief.core._shalibdeprecation import SharedLibImportWarner
+from grief.core._sharedlibdeprecation import SharedLibImportWarner
 
 
 log = logging.getLogger("grief.main")
