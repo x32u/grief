@@ -25,8 +25,8 @@ classifiers = [
 dynamic = ["version", "requires-python", "dependencies", "optional-dependencies"]
 
 [project.scripts]
-redbot = "grief.__main__:main"
-redbot-setup = "grief.setup:run_cli"
+grief = "grief.__main__:main"
+grief-setup = "grief.setup:run_cli"
 
 [project.entry-points.pytest11]
 grief-discordbot = "grief.pytest"
