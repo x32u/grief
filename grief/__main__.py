@@ -28,7 +28,7 @@ from grief.core._cli import interactive_config, confirm, parse_cli_flags
 from grief.setup import get_data_dir, get_name, save_config
 from grief.core import data_manager, _drivers
 from grief.core._debuginfo import DebugInfo
-from grief.core._shagrieflibdeprecation import ShagriefLibImportWarner
+from grief.core._shagrieflibdeprecation import SharedLibImportWarner
 
 
 log = logging.getLogger("grief.main")
@@ -332,7 +332,7 @@ async def run_bot(grief:grief, cli_flags: Namespace) -> None:
         pkg_resources = sys.modules.get("pkg_resources")
         if pkg_resources is not None:
             pkg_resources.working_set.add_entry(str(LIB_PATH))
-    sys.meta_path.insert(0, ShagriefLibImportWarner())
+    sys.meta_path.insert(0, SharedLibImportWarner())
 
     if cli_flags.token:
         token = cli_flags.token
@@ -368,13 +368,13 @@ async def run_bot(grief:grief, cli_flags: Namespace) -> None:
                 print("Token has been reset.")
                 sys.exit(ExitCodes.SHUTDOWN)
         sys.exit(ExitCodes.CONFIGURATION_ERROR)
-    except discord.PrivilegedIntentsRequigrief:
+    except discord.PrivilegedIntentsRequired:
         console = rich.get_console()
         console.print(
             "grief requires all Privileged Intents to be enabled.\n"
             "You can find out how to enable Privileged Intents with this guide:\n"
             "https://docs.discord.grief/en/stable/bot_application_guide.html#enabling-privileged-intents",
-            style="grief",
+            style="red",
         )
         sys.exit(ExitCodes.CONFIGURATION_ERROR)
     except _NoOwnerSet:
@@ -494,7 +494,7 @@ def main():
 
         if os.name != "nt":
             # None of this works on windows.
-            # At least it's not a griefundant handler...
+            # At least it's not a redundant handler...
             signals = (signal.SIGHUP, signal.SIGTERM, signal.SIGINT)
             for s in signals:
                 loop.add_signal_handler(
