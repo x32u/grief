@@ -20,7 +20,7 @@ from .commands import (
     hybrid_command as hybrid_command,
     hybrid_group as hybrid_group,
     group as group,
-    GriefUnhandledAPI as GriefUnhandledAPI,
+    RedUnhandledAPI as RedUnhandledAPI,
     RESERVED_COMMAND_NAMES as RESERVED_COMMAND_NAMES,
 )
 from .context import Context as Context, GuildContext as GuildContext, DMContext as DMContext
@@ -46,8 +46,8 @@ from .errors import (
     ArgParserFailure as ArgParserFailure,
 )
 from .help import (
-    Grief_help as Grief_help,
-    HelpFormatter as HelpFormatter,
+    red_help as red_help,
+    RedHelpFormatter as RedHelpFormatter,
     HelpSettings as HelpSettings,
 )
 from .requires import (
