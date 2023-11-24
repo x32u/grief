@@ -134,7 +134,7 @@ SYNTAX_THEME = {
     Operator: Style(bold=True),
     Operator.Word: Style(color="cyan", bold=True),
     Name.Builtin: Style(bold=True),
-    Name.Builtin.Pseudo: Style(color="bright_grief"),
+    Name.Builtin.Pseudo: Style(color="bright_green"),
     Name.Exception: Style(bold=True),
     Name.Class: Style(color="bright_green"),
     Name.Function: Style(color="bright_green"),
