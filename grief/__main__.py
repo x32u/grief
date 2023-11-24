@@ -22,9 +22,9 @@ from typing import Any, Awaitable, Callable, NoReturn, Optional, Union
 import discord
 import rich
 
-import grief.logging
+import redbot.logging
 from grief import __version__
-from grief.core.bot import grief, ExitCodes, _NoOwnerSet
+from grief.core.bot import Red, ExitCodes, _NoOwnerSet
 from grief.core._cli import interactive_config, confirm, parse_cli_flags
 from grief.setup import get_data_dir, get_name, save_config
 from grief.core import data_manager, _drivers
@@ -32,7 +32,8 @@ from grief.core._debuginfo import DebugInfo
 from grief.core._sharedlibdeprecation import SharedLibImportWarner
 
 
-log = logging.getLogger("grief.main")
+log = logging.getLogger("red.main")
+
 
 def _get_instance_names():
     with data_manager.config_file.open(encoding="utf-8") as fs:
@@ -55,12 +56,12 @@ def list_instances():
         sys.exit(ExitCodes.SHUTDOWN)
 
 
-async def debug_info(grief: Optional[grief] = None, *args: Any) -> None:
+async def debug_info(red: Optional[Red] = None, *args: Any) -> None:
     """Shows debug information useful for debugging."""
-    print(await DebugInfo(grief).get_cli_text())
+    print(await DebugInfo(red).get_cli_text())
 
 
-async def edit_instance(grief, cli_flags):
+async def edit_instance(red, cli_flags):
     no_prompt = cli_flags.no_prompt
     token = cli_flags.token
     owner = cli_flags.owner
@@ -89,9 +90,9 @@ async def edit_instance(grief, cli_flags):
         )
         sys.exit(ExitCodes.INVALID_CLI_USAGE)
 
-    await _edit_token(grief, token, no_prompt)
-    await _edit_prefix(grief, prefix, no_prompt)
-    await _edit_owner(grief, owner, no_prompt)
+    await _edit_token(red, token, no_prompt)
+    await _edit_prefix(red, prefix, no_prompt)
+    await _edit_owner(red, owner, no_prompt)
 
     data = deepcopy(data_manager.basic_config)
     name = _edit_instance_name(old_name, new_name, confirm_overwrite, no_prompt)
@@ -260,7 +261,7 @@ def _copy_data(data):
 
 def early_exit_runner(
     cli_flags: Namespace,
-    func: Union[Callable[[], Awaitable[Any]], Callable[[grief, Namespace], Awaitable[Any]]],
+    func: Union[Callable[[], Awaitable[Any]], Callable[[Red, Namespace], Awaitable[Any]]],
 ) -> NoReturn:
     """
     This one exists to not log all the things like it's a full run of the bot.
@@ -274,7 +275,7 @@ def early_exit_runner(
             return
 
         data_manager.load_basic_configuration(cli_flags.instance_name)
-        red = grief(cli_flags=cli_flags, description="Red V3", dm_help=None)
+        red = Red(cli_flags=cli_flags, description="Red V3", dm_help=None)
         driver_cls = _drivers.get_driver_class()
         loop.run_until_complete(driver_cls.initialize(**data_manager.storage_details()))
         loop.run_until_complete(func(red, cli_flags))
@@ -290,7 +291,7 @@ def early_exit_runner(
     sys.exit(ExitCodes.SHUTDOWN)
 
 
-async def run_bot(red: grief, cli_flags: Namespace) -> None:
+async def run_bot(red: Red, cli_flags: Namespace) -> None:
     """
     This runs the bot.
 
@@ -306,7 +307,8 @@ async def run_bot(red: grief, cli_flags: Namespace) -> None:
     driver_cls = _drivers.get_driver_class()
 
     await driver_cls.initialize(**data_manager.storage_details())
-    grief.logging.init_logging(
+
+    redbot.logging.init_logging(
         level=cli_flags.logging_level,
         location=data_manager.core_data_path() / "logs",
         cli_flags=cli_flags,
@@ -490,7 +492,7 @@ def main():
 
         data_manager.load_basic_configuration(cli_flags.instance_name)
 
-        red = grief(cli_flags=cli_flags, description="Red V3", dm_help=None)
+        red = Red(cli_flags=cli_flags, description="Red V3", dm_help=None)
 
         if os.name != "nt":
             # None of this works on windows.
