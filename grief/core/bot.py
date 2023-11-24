@@ -96,7 +96,7 @@ class _NoOwnerSet(RuntimeError):
 # d.py autoshardedbot should be at the end
 # all of our mixins should happen before,
 # and must include a call to super().__init__ unless they do not provide an init
-class grief(
+class Red(
     commands.GroupMixin, RPCMixin, dpy_commands.bot.AutoShardedBot
 ):  # pylint: disable=no-member # barely spurious warning caused by shadowing
     """Our subclass of discord.ext.commands.AutoShardedBot"""
