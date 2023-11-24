@@ -54,7 +54,7 @@ def list_instances():
         sys.exit(ExitCodes.SHUTDOWN)
 
 
-async def debug_info(red: Optional[Red] = None, *args: Any) -> None:
+async def debug_info(red: Optional[grief] = None, *args: Any) -> None:
     """Shows debug information useful for debugging."""
     print(await DebugInfo(red).get_cli_text())
 
@@ -259,7 +259,7 @@ def _copy_data(data):
 
 def early_exit_runner(
     cli_flags: Namespace,
-    func: Union[Callable[[], Awaitable[Any]], Callable[[Red, Namespace], Awaitable[Any]]],
+    func: Union[Callable[[], Awaitable[Any]], Callable[[grief, Namespace], Awaitable[Any]]],
 ) -> NoReturn:
     """
     This one exists to not log all the things like it's a full run of the bot.
@@ -273,7 +273,7 @@ def early_exit_runner(
             return
 
         data_manager.load_basic_configuration(cli_flags.instance_name)
-        red = Red(cli_flags=cli_flags, description="Red V3", dm_help=None)
+        red = grief(cli_flags=cli_flags, description="grief", dm_help=None)
         driver_cls = _drivers.get_driver_class()
         loop.run_until_complete(driver_cls.initialize(**data_manager.storage_details()))
         loop.run_until_complete(func(red, cli_flags))
@@ -289,7 +289,7 @@ def early_exit_runner(
     sys.exit(ExitCodes.SHUTDOWN)
 
 
-async def run_bot(red: Red, cli_flags: Namespace) -> None:
+async def run_bot(red:grief, cli_flags: Namespace) -> None:
     """
     This runs the bot.
 
@@ -490,7 +490,7 @@ def main():
 
         data_manager.load_basic_configuration(cli_flags.instance_name)
 
-        red = Red(cli_flags=cli_flags, description="Red V3", dm_help=None)
+        red =grief(cli_flags=cli_flags, description="Red V3", dm_help=None)
 
         if os.name != "nt":
             # None of this works on windows.
