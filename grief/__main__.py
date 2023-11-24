@@ -24,7 +24,7 @@ import rich
 import grief.logging
 from grief import __version__
 from grief.core.bot import grief, ExitCodes, _NoOwnerSet
-from grief.core._cli import interactive_config, confirm, parse_cli_flags
+from grief.core._cli import interactive_config, confirm, parse_cli_flags, cli_flags
 from grief.setup import get_data_dir, get_name, save_config
 from grief.core import data_manager, _drivers
 from grief.core._debuginfo import DebugInfo
