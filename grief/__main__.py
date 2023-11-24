@@ -1,5 +1,6 @@
-from red import _early_init
+from grief import _early_init
 
+# this needs to be called as early as possible
 _early_init()
 
 import asyncio
@@ -21,17 +22,17 @@ from typing import Any, Awaitable, Callable, NoReturn, Optional, Union
 import discord
 import rich
 
-import red.logging
-from red import __version__
-from red.core.bot import red, ExitCodes, _NoOwnerSet
-from red.core._cli import interactive_config, confirm, parse_cli_flags
-from red.setup import get_data_dir, get_name, save_config
-from red.core import data_manager, _drivers
-from red.core._debuginfo import DebugInfo
-from red.core._sharedlibdeprecation import SharedLibImportWarner
+import grief.logging
+from grief import __version__
+from grief.core.bot import Red, ExitCodes, _NoOwnerSet
+from grief.core._cli import interactive_config, confirm, parse_cli_flags
+from grief.setup import get_data_dir, get_name, save_config
+from grief.core import data_manager, _drivers
+from grief.core._debuginfo import DebugInfo
+from grief.core._sharedlibdeprecation import SharedLibImportWarner
 
 
-log = logging.getLogger("red.main")
+log = logging.getLogger("grief.main")
 
 def _get_instance_names():
     with data_manager.config_file.open(encoding="utf-8") as fs:
@@ -54,7 +55,7 @@ def list_instances():
         sys.exit(ExitCodes.SHUTDOWN)
 
 
-async def debug_info(red: Optional[red] = None, *args: Any) -> None:
+async def debug_info(red: Optional[Red] = None, *args: Any) -> None:
     """Shows debug information useful for debugging."""
     print(await DebugInfo(red).get_cli_text())
 
@@ -152,7 +153,7 @@ async def _edit_owner(red, owner, no_prompt):
     elif not no_prompt and confirm("Would you like to change instance's owner?", default=False):
         print(
             "Remember:\n"
-            "ONLY the person who is hosting red should be owner."
+            "ONLY the person who is hosting Red should be owner."
             " This has SERIOUS security implications."
             " The owner can access any data that is present on the host system.\n"
         )
@@ -259,7 +260,7 @@ def _copy_data(data):
 
 def early_exit_runner(
     cli_flags: Namespace,
-    func: Union[Callable[[], Awaitable[Any]], Callable[[red, Namespace], Awaitable[Any]]],
+    func: Union[Callable[[], Awaitable[Any]], Callable[[Red, Namespace], Awaitable[Any]]],
 ) -> NoReturn:
     """
     This one exists to not log all the things like it's a full run of the bot.
@@ -273,7 +274,7 @@ def early_exit_runner(
             return
 
         data_manager.load_basic_configuration(cli_flags.instance_name)
-        red = red(cli_flags=cli_flags, description="red", dm_help=None)
+        red = Red(cli_flags=cli_flags, description="Red V3", dm_help=None)
         driver_cls = _drivers.get_driver_class()
         loop.run_until_complete(driver_cls.initialize(**data_manager.storage_details()))
         loop.run_until_complete(func(red, cli_flags))
@@ -289,7 +290,7 @@ def early_exit_runner(
     sys.exit(ExitCodes.SHUTDOWN)
 
 
-async def run_bot(red:red, cli_flags: Namespace) -> None:
+async def run_bot(red: Red, cli_flags: Namespace) -> None:
     """
     This runs the bot.
 
@@ -305,8 +306,7 @@ async def run_bot(red:red, cli_flags: Namespace) -> None:
     driver_cls = _drivers.get_driver_class()
 
     await driver_cls.initialize(**data_manager.storage_details())
-
-    red.logging.init_logging(
+    grief.logging.init_logging(
         level=cli_flags.logging_level,
         location=data_manager.core_data_path() / "logs",
         cli_flags=cli_flags,
@@ -337,7 +337,7 @@ async def run_bot(red:red, cli_flags: Namespace) -> None:
     if cli_flags.token:
         token = cli_flags.token
     else:
-        token = os.environ.get("red_TOKEN", None)
+        token = os.environ.get("RED_TOKEN", None)
         if not token:
             token = await red._config.token()
 
@@ -371,7 +371,7 @@ async def run_bot(red:red, cli_flags: Namespace) -> None:
     except discord.PrivilegedIntentsRequired:
         console = rich.get_console()
         console.print(
-            "red requires all Privileged Intents to be enabled.\n"
+            "Red requires all Privileged Intents to be enabled.\n"
             "You can find out how to enable Privileged Intents with this guide:\n"
             "https://docs.discord.red/en/stable/bot_application_guide.html#enabling-privileged-intents",
             style="red",
@@ -383,15 +383,15 @@ async def run_bot(red:red, cli_flags: Namespace) -> None:
             "This can happen when your bot's application is owned by team"
             " as team members are NOT owners by default.\n\n"
             "Remember:\n"
-            "ONLY the person who is hosting red should be owner."
+            "ONLY the person who is hosting Red should be owner."
             " This has SERIOUS security implications."
             " The owner can access any data that is present on the host system.\n"
             "With that out of the way, depending on who you want to be considered as owner,"
             " you can:\n"
-            "a) pass --team-members-are-owners when launching red"
-            " - in this case red will treat all members of the bot application's team as owners\n"
+            "a) pass --team-members-are-owners when launching Red"
+            " - in this case Red will treat all members of the bot application's team as owners\n"
             f"b) set owner manually with `redbot --edit {cli_flags.instance_name}`\n"
-            "c) pass owner ID(s) when launching red with --owner"
+            "c) pass owner ID(s) when launching Red with --owner"
             " (and --co-owner if you need more than one) flag\n"
         )
         sys.exit(ExitCodes.CONFIGURATION_ERROR)
@@ -403,7 +403,7 @@ def handle_early_exit_flags(cli_flags: Namespace):
     if cli_flags.list_instances:
         list_instances()
     elif cli_flags.version:
-        print("red")
+        print("Red V3")
         print("Current Version: {}".format(__version__))
         sys.exit(ExitCodes.SHUTDOWN)
     elif cli_flags.debuginfo:
@@ -450,7 +450,7 @@ def global_exception_handler(red, loop, context):
 
 def red_exception_handler(red, red_task: asyncio.Future):
     """
-    This is set as a done callback for red
+    This is set as a done callback for Red
 
     must be used with functools.partial
 
@@ -465,7 +465,6 @@ def red_exception_handler(red, red_task: asyncio.Future):
         log.critical("The main bot task didn't handle an exception and has crashed", exc_info=exc)
         log.warning("Attempting to die as gracefully as possible...")
         asyncio.create_task(shutdown_handler(red))
-
 
 
 def main():
@@ -491,6 +490,8 @@ def main():
 
         data_manager.load_basic_configuration(cli_flags.instance_name)
 
+        red = Red(cli_flags=cli_flags, description="Red V3", dm_help=None)
+
         if os.name != "nt":
             # None of this works on windows.
             # At least it's not a redundant handler...
@@ -511,7 +512,7 @@ def main():
         loop.run_forever()
     except KeyboardInterrupt:
         # We still have to catch this here too. (*joy*)
-        log.warning("Please do not use Ctrl+C to Shutdown red! (attempting to die gracefully...)")
+        log.warning("Please do not use Ctrl+C to Shutdown Red! (attempting to die gracefully...)")
         log.error("Received KeyboardInterrupt, treating as interrupt")
         if red is not None:
             loop.run_until_complete(shutdown_handler(red, signal.SIGINT))
