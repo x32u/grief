@@ -600,7 +600,7 @@ class Group(Value):
 
 
 class Config(metaclass=ConfigMeta):
-    """Configuration manager for cogs and Red.
+    """Configuration manager for cogs and grief.
 
     You should always use `get_conf` to instantiate a Config object. Use
     `get_core_conf` for Config used in the core package.
@@ -962,7 +962,7 @@ class Config(metaclass=ConfigMeta):
 
         Returns
         -------
-        `Group <redbot.core.config.Group>`
+        `Group <grief.core.config.Group>`
             The guild's Group object.
 
         Raises
@@ -984,7 +984,7 @@ class Config(metaclass=ConfigMeta):
 
         Returns
         -------
-        `Group <redbot.core.config.Group>`
+        `Group <grief.core.config.Group>`
             The guild's Group object.
 
         """
@@ -1002,7 +1002,7 @@ class Config(metaclass=ConfigMeta):
 
         Returns
         -------
-        `Group <redbot.core.config.Group>`
+        `Group <grief.core.config.Group>`
             The channel's Group object.
 
         Raises
@@ -1028,7 +1028,7 @@ class Config(metaclass=ConfigMeta):
 
         Returns
         -------
-        `Group <redbot.core.config.Group>`
+        `Group <grief.core.config.Group>`
             The channel's Group object.
 
         """
@@ -1044,7 +1044,7 @@ class Config(metaclass=ConfigMeta):
 
         Returns
         -------
-        `Group <redbot.core.config.Group>`
+        `Group <grief.core.config.Group>`
             The role's Group object.
 
         Raises
@@ -1066,7 +1066,7 @@ class Config(metaclass=ConfigMeta):
 
         Returns
         -------
-        `Group <redbot.core.config.Group>`
+        `Group <grief.core.config.Group>`
             The role's Group object.
 
         """
@@ -1082,7 +1082,7 @@ class Config(metaclass=ConfigMeta):
 
         Returns
         -------
-        `Group <redbot.core.config.Group>`
+        `Group <grief.core.config.Group>`
             The user's Group object.
 
         Raises
@@ -1104,7 +1104,7 @@ class Config(metaclass=ConfigMeta):
 
         Returns
         -------
-        `Group <redbot.core.config.Group>`
+        `Group <grief.core.config.Group>`
             The user's Group object.
 
         """
@@ -1122,7 +1122,7 @@ class Config(metaclass=ConfigMeta):
 
         Returns
         -------
-        `Group <redbot.core.config.Group>`
+        `Group <grief.core.config.Group>`
             The member's Group object.
 
         Raises
@@ -1148,7 +1148,7 @@ class Config(metaclass=ConfigMeta):
 
         Returns
         -------
-        `Group <redbot.core.config.Group>`
+        `Group <grief.core.config.Group>`
             The member's Group object.
 
         """
@@ -1167,7 +1167,7 @@ class Config(metaclass=ConfigMeta):
 
         Returns
         -------
-        `Group <redbot.core.config.Group>`
+        `Group <grief.core.config.Group>`
             The custom group's Group object.
 
         """

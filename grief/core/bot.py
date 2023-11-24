@@ -204,7 +204,7 @@ class grief(
             kwargs["command_prefix"] = prefix_manager
 
         if "owner_id" in kwargs:
-            raise RuntimeError("Red doesn't accept owner_id kwarg, use owner_ids instead.")
+            raise RuntimeError("grief doesn't accept owner_id kwarg, use owner_ids instead.")
 
         if "intents" not in kwargs:
             intents = discord.Intents.all()
@@ -252,7 +252,7 @@ class grief(
 
     def set_help_formatter(self, formatter: commands.help.HelpFormatterABC):
         """
-        Set's Red's help formatter.
+        Set's grief's help formatter.
 
         .. warning::
             This method is provisional.
@@ -293,7 +293,7 @@ class grief(
 
     def reset_help_formatter(self):
         """
-        Resets Red's help formatter.
+        Resets grief's help formatter.
 
         .. warning::
             This method is provisional.
@@ -462,7 +462,7 @@ class grief(
 
     def before_invoke(self, coro: T_BIC, /) -> T_BIC:
         """
-        Overridden decorator method for Red's ``before_invoke`` behavior.
+        Overridden decorator method for grief's ``before_invoke`` behavior.
 
         This can safely be used purely functionally as well.
 
@@ -701,7 +701,7 @@ class grief(
     ) -> bool:
         """
         This checks if a user or member is allowed to run things,
-        as considered by Red's allowlist and blocklist.
+        as considered by grief's allowlist and blocklist.
 
         If given a user object, this function will check the global lists
 
@@ -856,7 +856,7 @@ class grief(
     ) -> bool:
         """
         This checks if the bot is meant to be ignoring commands in a channel or guild,
-        as considered by Red's whitelist and blacklist.
+        as considered by grief's whitelist and blacklist.
 
         Parameters
         ----------
@@ -1282,7 +1282,7 @@ class grief(
         from_help_command: bool = False,
     ):
         """
-        Invokes Red's helpformatter for a given context and object.
+        Invokes grief's helpformatter for a given context and object.
         """
         return await self._help_formatter.send_help(
             ctx, help_for, from_help_command=from_help_command
@@ -1421,7 +1421,7 @@ class grief(
 
         Does not check if the invite URL is configured to be public
         with ``[p]inviteset public``. To check if invites are public,
-        use `Red.is_invite_url_public()`.
+        use `grief.is_invite_url_public()`.
 
         Returns
         -------
@@ -2177,7 +2177,7 @@ class grief(
             pass
 
     async def shutdown(self, *, restart: bool = False):
-        """Gracefully quit Red.
+        """Gracefully quit grief.
 
         The program will exit with code :code:`0` by default.
 
@@ -2225,7 +2225,7 @@ class grief(
         user_id: int,
     ) -> DataDeletionResults:
         """
-        This tells each cog and extension, as well as any APIs in Red
+        This tells each cog and extension, as well as any APIs in grief
         to go delete data
 
         Calling this should be limited to interfaces designed for it.
@@ -2279,8 +2279,8 @@ class grief(
         }
 
         special_handlers = {
-            "Red Core Modlog API": modlog._process_data_deletion,
-            "Red Core Bot Data": self._core_data_deletion,
+            "grief Core Modlog API": modlog._process_data_deletion,
+            "grief Core Bot Data": self._core_data_deletion,
         }
 
         failures = {

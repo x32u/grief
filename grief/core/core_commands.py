@@ -107,7 +107,7 @@ def entity_transformer(statement: str) -> str:
 
 
 if TYPE_CHECKING:
-    from grief import Red
+    from grief import grief
 
 __all__ = ["Core"]
 
@@ -121,7 +121,7 @@ MAX_PREFIX_LENGTH = 25
 
 
 class CoreLogic:
-    def __init__(self, bot: "Red"):
+    def __init__(self, bot: "grief"):
         self.bot = bot
         self.bot.register_rpc_handler(self._load)
         self.bot.register_rpc_handler(self._unload)
@@ -215,7 +215,7 @@ class CoreLogic:
             else:
                 await bot.add_loaded_package(name)
                 loaded_packages.append(name)
-                # remove in Red 3.4
+                # remove in grief 3.4
                 downloader = bot.get_cog("Downloader")
                 if downloader is None:
                     continue
@@ -376,7 +376,7 @@ class CoreLogic:
     @classmethod
     async def _version_info(cls) -> Dict[str, str]:
         """
-        Version information for Red and discord.py
+        Version information for grief and discord.py
         Returns
         -------
         dict
