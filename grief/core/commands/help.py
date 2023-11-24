@@ -147,10 +147,10 @@ class HelpFormatterABC(abc.ABC):
     .. note::
         You may define __init__ however you want
         (such as to include config),
-        Red will not initialize a formatter for you,
+        grief will not initialize a formatter for you,
         and must be passed an initialized formatter.
 
-        If you want to use Red's existing settings, use ``HelpSettings.from_context``
+        If you want to use grief's existing settings, use ``HelpSettings.from_context``
 
     .. warning::
 
@@ -176,7 +176,7 @@ class HelpFormatterABC(abc.ABC):
 
 class RedHelpFormatter(HelpFormatterABC):
     """
-    Red's help implementation
+    grief's help implementation
 
     This is intended to be overridable in parts to only change some behavior.
 

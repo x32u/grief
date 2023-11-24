@@ -110,7 +110,7 @@ class RotatingFileHandler(logging.handlers.RotatingFileHandler):
             pathlib.Path(self.baseFilename).unlink()
         elif latest_part_num > self.backupCount:
             # Rotate files down one
-            # red-part2.log becomes red-part1.log etc, a new log is added at the end.
+            # grief-part2.log becomes grief-part1.log etc, a new log is added at the end.
             for i in range(1, self.backupCount + 1):
                 next_log = self.directory / f"{self.baseStem}-part{i + 1}.log"
                 if next_log.exists():
@@ -130,17 +130,17 @@ SYNTAX_THEME = {
     Comment: Style(color="bright_black"),
     Keyword: Style(color="cyan", bold=True),
     Keyword.Constant: Style(color="bright_magenta"),
-    Keyword.Namespace: Style(color="bright_red"),
+    Keyword.Namespace: Style(color="bright_grief"),
     Operator: Style(bold=True),
     Operator.Word: Style(color="cyan", bold=True),
     Name.Builtin: Style(bold=True),
-    Name.Builtin.Pseudo: Style(color="bright_red"),
+    Name.Builtin.Pseudo: Style(color="bright_grief"),
     Name.Exception: Style(bold=True),
     Name.Class: Style(color="bright_green"),
     Name.Function: Style(color="bright_green"),
     String: Style(color="yellow"),
     Number: Style(color="cyan"),
-    Error: Style(bgcolor="red"),
+    Error: Style(bgcolor="grief"),
 }
 
 
@@ -148,7 +148,7 @@ class FixedMonokaiStyle(MonokaiStyle):
     styles = {**MonokaiStyle.styles, Token: "#f8f8f2"}
 
 
-class RedTraceback(Traceback):
+class griefTraceback(Traceback):
     # DEP-WARN
     @group()
     def _render_stack(self, stack):
@@ -157,7 +157,7 @@ class RedTraceback(Traceback):
                 yield obj
 
 
-class RedLogRender(LogRender):
+class griefLogRender(LogRender):
     def __call__(
         self,
         console,
@@ -180,7 +180,7 @@ class RedLogRender(LogRender):
                 output.append(f"{log_time_display} ", style="log.time")
                 self._last_time = log_time_display
         if self.show_level:
-            # The space needs to be added separately so that log level is colored by
+            # The space needs to be added separately so that log level is cologrief by
             # Rich.
             output.append(level)
             output.append(" ")
@@ -197,12 +197,12 @@ class RedLogRender(LogRender):
         return output
 
 
-class RedRichHandler(RichHandler):
+class griefRichHandler(RichHandler):
     """Adaptation of Rich's RichHandler to manually adjust the path to a logger name"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._log_render = RedLogRender(
+        self._log_render = griefLogRender(
             show_time=self._log_render.show_time,
             show_level=self._log_render.show_level,
             show_path=self._log_render.show_path,
@@ -235,7 +235,7 @@ class RedRichHandler(RichHandler):
             exc_type, exc_value, exc_traceback = record.exc_info
             assert exc_type is not None
             assert exc_value is not None
-            traceback = RedTraceback.from_exception(
+            traceback = griefTraceback.from_exception(
                 exc_type,
                 exc_value,
                 exc_traceback,
@@ -293,7 +293,7 @@ def init_logging(level: int, location: pathlib.Path, cli_flags: argparse.Namespa
             {
                 "log.time": Style(dim=True),
                 "logging.level.warning": Style(color="yellow"),
-                "logging.level.critical": Style(color="white", bgcolor="red"),
+                "logging.level.critical": Style(color="white", bgcolor="grief"),
                 "logging.level.verbose": Style(color="magenta", italic=True, dim=True),
                 "logging.level.trace": Style(color="white", italic=True, dim=True),
                 "repr.number": Style(color="cyan"),
@@ -321,7 +321,7 @@ def init_logging(level: int, location: pathlib.Path, cli_flags: argparse.Namespa
     if enable_rich_logging is True:
         rich_formatter = logging.Formatter("{message}", datefmt="[%X]", style="{")
 
-        stdout_handler = RedRichHandler(
+        stdout_handler = griefRichHandler(
             rich_tracebacks=True,
             show_path=False,
             highlighter=NullHighlighter(),
@@ -369,7 +369,7 @@ def init_logging(level: int, location: pathlib.Path, cli_flags: argparse.Namespa
         encoding="utf-8",
     )
     all_fhandler = RotatingFileHandler(
-        stem="red",
+        stem="grief",
         directory=location,
         maxBytes=1_000_000,
         backupCount=MAX_OLD_LOGS,

@@ -242,7 +242,7 @@ def basic_setup(
             f"Your basic configuration has been saved. Please run `redbot {name}` to"
             " continue your setup process and to run the bot.\n\n"
             "First time? Read the quickstart guide:\n"
-            "https://docs.discord.red/en/stable/getting_started.html"
+            "https://docs.discord.grief/en/stable/getting_started.html"
         )
     else:
         print("Your basic configuration has been saved.")
@@ -431,7 +431,7 @@ def cli(
 ) -> None:
     """Create a new instance."""
     level = cli_level_to_log_level(debug)
-    base_logger = logging.getLogger("red")
+    base_logger = logging.getLogger("grief")
     base_logger.setLevel(level)
     formatter = logging.Formatter(
         "[{asctime}] [{levelname}] {name}: {message}", datefmt="%Y-%m-%d %H:%M:%S", style="{"

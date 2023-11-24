@@ -22,7 +22,7 @@ __all__ = (
 MIN_PYTHON_VERSION = (3, 8, 1)
 if _sys.version_info < MIN_PYTHON_VERSION:
     print(
-        f"Python {'.'.join(map(str, MIN_PYTHON_VERSION))} is required to run Red, but you have "
+        f"Python {'.'.join(map(str, MIN_PYTHON_VERSION))} is required to run grief, but you have "
         f"{_sys.version}! Please update Python."
     )
     _sys.exit(78)
@@ -286,7 +286,7 @@ class VersionInfo:
     def _get_version_from_package_metadata(cls, project_root: str) -> str:
         from importlib.metadata import version
 
-        return version("Red-DiscordBot")
+        return version("grief-DiscordBot")
 
 
 def _update_event_loop_policy():
@@ -312,7 +312,7 @@ def _ensure_no_colorama():
             import colorama
             import colorama.initialise
         except ModuleNotFoundError:
-            # colorama is not Red's primary dependency so it might not be present
+            # colorama is not grief's primary dependency so it might not be present
             return
 
         colorama.deinit()
@@ -349,7 +349,7 @@ _warnings.filterwarnings("default", category=DeprecationWarning)
 # TODO: Rearrange cli flags here and use the value instead of this monkeypatch
 if not any(_re.match("^-(-debug|d+|-verbose|v+)$", i) for i in _sys.argv):
     # DEP-WARN
-    # Individual warnings - tracked in https://github.com/Cog-Creators/Red-DiscordBot/issues/3529
+    # Individual warnings - tracked in https://github.com/Cog-Creators/grief-DiscordBot/issues/3529
     # DeprecationWarning: an integer is required (got type float).  Implicit conversion to integers using __int__ is deprecated, and may be removed in a future version of Python.
     _warnings.filterwarnings("ignore", category=DeprecationWarning, module="importlib", lineno=219)
     # DeprecationWarning: The loop argument is deprecated since Python 3.8, and scheduled for removal in Python 3.10

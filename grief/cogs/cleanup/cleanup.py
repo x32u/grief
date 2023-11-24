@@ -17,7 +17,7 @@ from .converters import RawMessageIds
 
 _ = Translator("Cleanup", __file__)
 
-log = logging.getLogger("red.cleanup")
+log = logging.getLogger("grief.cleanup")
 
 
 @cog_i18n(_)
@@ -25,7 +25,7 @@ class Cleanup(commands.Cog):
     """This cog contains commands used for deleting messages.
     """
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: grief):
         super().__init__()
         self.bot = bot
         self.config = Config.get_conf(self, 8927348724, force_registration=True)
@@ -249,7 +249,7 @@ class Cleanup(commands.Cog):
 
         Examples:
         - `[p]cleanup user @Twentysix 2`
-        - `[p]cleanup user Red 6`
+        - `[p]cleanup user grief 6`
 
         **Arguments:**
 

@@ -47,7 +47,7 @@ class Context(DPYContext):
 
     command: "Command"
     invoked_subcommand: "Optional[Command]"
-    bot: "Red"
+    bot: "grief"
 
     def __init__(self, **attrs):
         self.assume_yes = attrs.pop("assume_yes", False)
