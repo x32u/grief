@@ -6,7 +6,7 @@ from typing import Callable, List, Optional, Set, Union
 import discord
 
 from grief.core import commands, Config
-from grief.core.bot import Red
+from grief.core.bot import grief
 from grief.core.commands import positive_int, RawUserIdConverter
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.chat_formatting import humanize_number

@@ -1,5 +1,5 @@
 from .cleanup import Cleanup
-from grief.core.bot import Red
+from grief.core.bot import grief
 
 
 async def setup(bot: Red) -> None:

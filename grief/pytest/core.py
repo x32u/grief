@@ -5,7 +5,7 @@ import weakref
 
 import pytest
 from grief.core import Config
-from grief.core.bot import Red
+from grief.core.bot import grief
 from grief.core import config as config_module, _drivers
 
 __all__ = [

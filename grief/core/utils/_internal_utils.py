@@ -42,7 +42,7 @@ from grief.core import data_manager
 from grief.core.utils.chat_formatting import box
 
 if TYPE_CHECKING:
-    from grief.core.bot import Red
+    from grief.core.bot import grief
     from grief.core.commands import Command, Context
 
 main_log = logging.getLogger("grief")
