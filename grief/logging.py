@@ -130,7 +130,7 @@ SYNTAX_THEME = {
     Comment: Style(color="bright_black"),
     Keyword: Style(color="cyan", bold=True),
     Keyword.Constant: Style(color="bright_magenta"),
-    Keyword.Namespace: Style(color="bright_grief"),
+    Keyword.Namespace: Style(color="bright_red"),
     Operator: Style(bold=True),
     Operator.Word: Style(color="cyan", bold=True),
     Name.Builtin: Style(bold=True),
@@ -140,7 +140,7 @@ SYNTAX_THEME = {
     Name.Function: Style(color="bright_green"),
     String: Style(color="yellow"),
     Number: Style(color="cyan"),
-    Error: Style(bgcolor="grief"),
+    Error: Style(bgcolor="red"),
 }
 
 
@@ -293,7 +293,7 @@ def init_logging(level: int, location: pathlib.Path, cli_flags: argparse.Namespa
             {
                 "log.time": Style(dim=True),
                 "logging.level.warning": Style(color="yellow"),
-                "logging.level.critical": Style(color="white", bgcolor="grief"),
+                "logging.level.critical": Style(color="white", bgcolor="red"),
                 "logging.level.verbose": Style(color="magenta", italic=True, dim=True),
                 "logging.level.trace": Style(color="white", italic=True, dim=True),
                 "repr.number": Style(color="cyan"),
@@ -307,7 +307,7 @@ def init_logging(level: int, location: pathlib.Path, cli_flags: argparse.Namespa
     # this highlighter which dims most of the path and therefore makes it unreadable on Mac.
     PathHighlighter.highlights = []
 
-    enable_rich_logging = False
+    enable_rich_logging = True
 
     if isatty(0) and cli_flags.rich_logging is None:
         # Check if the bot thinks it has a active terminal.
