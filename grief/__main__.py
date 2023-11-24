@@ -413,7 +413,7 @@ def handle_early_exit_flags(cli_flags: Namespace):
         sys.exit(ExitCodes.INVALID_CLI_USAGE)
 
 
-async def shutdown_handler(grief, signal_type=None, exit_code=None):
+async def shutdown_handler(red, signal_type=None, exit_code=None):
     if signal_type:
         log.info("%s received. Quitting...", signal_type.name)
         # Do not collapse the below line into other logic
@@ -422,10 +422,10 @@ async def shutdown_handler(grief, signal_type=None, exit_code=None):
         sys.exit(ExitCodes.SHUTDOWN)
     elif exit_code is None:
         log.info("Shutting down from unhandled exception")
-        grief._shutdown_mode = ExitCodes.CRITICAL
+        red._shutdown_mode = ExitCodes.CRITICAL
 
     if exit_code is not None:
-        grief._shutdown_mode = exit_code
+        red._shutdown_mode = exit_code
 
     try:
         if not grief.is_closed():

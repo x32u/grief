@@ -47,7 +47,7 @@ class DebugInfoSection:
 
 
 class DebugInfo:
-    def __init__(self, bot: Optional[Red] = None) -> None:
+    def __init__(self, bot: Optional[grief] = None) -> None:
         self.bot = bot
 
     @property
@@ -136,7 +136,7 @@ class DebugInfo:
         instance_name = data_manager.instance_name()
         if instance_name is None:
             return DebugInfoSection(
-                "Red variables",
+                "grief variables",
                 f"Metadata file: {data_manager.config_file}",
             )
 
