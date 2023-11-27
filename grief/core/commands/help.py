@@ -582,7 +582,7 @@ class RedHelpFormatter(HelpFormatterABC):
         if not coms:
             return
 
-        await ctx.send("to view my commands: <https://dash.grief.cloud/commands>")
+        await ctx.send("to view my commands: <https://grief.cloud/commands>")
 
     @staticmethod
     async def help_filter_func(
