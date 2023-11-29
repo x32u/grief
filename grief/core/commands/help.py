@@ -264,13 +264,7 @@ class RedHelpFormatter(HelpFormatterABC):
 
     @staticmethod
     def get_default_tagline(ctx: Context):
-        return _(
-            "Type {command1} for more info on a command. "
-            "You can also type {command2} for more info on a category."
-        ).format(
-            command1=f"{ctx.clean_prefix}help <command>",
-            command2=f"{ctx.clean_prefix}help <category>",
-        )
+        return _("grief")
 
     @staticmethod
     def get_command_signature(ctx: Context, command: commands.Command) -> str:
