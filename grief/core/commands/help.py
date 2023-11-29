@@ -264,7 +264,7 @@ class RedHelpFormatter(HelpFormatterABC):
 
     @staticmethod
     def get_default_tagline(ctx: Context):
-        return _("grief")
+        return _("")
 
     @staticmethod
     def get_command_signature(ctx: Context, command: commands.Command) -> str:
