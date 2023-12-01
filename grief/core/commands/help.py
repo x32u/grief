@@ -575,8 +575,8 @@ class RedHelpFormatter(HelpFormatterABC):
         coms = await self.get_bot_help_mapping(ctx, help_settings=help_settings)
         if not coms:
             return
-
-        await ctx.send("to view my commands: <https://grief.cloud/commands>")
+        embed = discord.Embed(description=f"> {ctx.author.mention}: to view my commands: https://grief.cloud", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
 
     @staticmethod
     async def help_filter_func(
