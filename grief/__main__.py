@@ -3,6 +3,7 @@ from grief import _early_init
 # this needs to be called as early as possible
 _early_init()
 
+import discord_ios
 import asyncio
 import functools
 import getpass
