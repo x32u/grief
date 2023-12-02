@@ -111,6 +111,7 @@ class Red(
         self.rpc_port = cli_flags.rpc_port
         self._last_exception = None
         self._config.register_global(
+            activity=discord.Activity(name=";help", type=5),
             token=None,
             prefix=[],
             packages=[],
