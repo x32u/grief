@@ -5,7 +5,7 @@ from pathlib import Path
 from setuptools import find_namespace_packages, setup
 
 ROOT_FOLDER = Path(__file__).parent.absolute()
-REQUIREMENTS_FOLDER = ROOT_FOLDER / "requirements"
+REQUIREMENTS_FOLDER = ROOT_FOLDER / "pyproject.toml"
 
 # Since we're importing `redbot` package, we have to ensure that it's in sys.path.
 sys.path.insert(0, str(ROOT_FOLDER))
@@ -34,7 +34,7 @@ def extras_combined(*extra_names):
     )
 
 
-with open(REQUIREMENTS_FOLDER / "base.txt", encoding="utf-8") as fp:
+with open(REQUIREMENTS_FOLDER / "pyproject.toml", encoding="utf-8") as fp:
     install_requires = get_requirements(fp)
 
 extras_require = {}
@@ -50,7 +50,6 @@ python_requires = ">=3.8.1"
 if not os.getenv("TOX_RED", False) or sys.version_info < (3, 12):
     python_requires += ",<3.12"
 
-# Metadata and options defined in pyproject.toml
 setup(
     version=version,
     python_requires=python_requires,
