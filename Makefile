@@ -55,7 +55,7 @@ newenv:
 	.grief/bin/pip install -U pip wheel
 	$(MAKE) syncenv
 syncenv:
-	.venv/bin/pip install -Ur ./tools/dev-requirements.txt
+	.venv/bin/pip install -Ur requirements.txt
 
 # Help
 help:

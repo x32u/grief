@@ -5,7 +5,7 @@ from pathlib import Path
 from setuptools import find_namespace_packages, setup
 
 ROOT_FOLDER = Path(__file__).parent.absolute()
-REQUIREMENTS_FOLDER = ROOT_FOLDER / "requirements"
+REQUIREMENTS_FOLDER = "requirements.txt"
 
 # Since we're importing `redbot` package, we have to ensure that it's in sys.path.
 sys.path.insert(0, str(ROOT_FOLDER))
