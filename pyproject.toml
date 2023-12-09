@@ -3,6 +3,19 @@ requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
+name = "Grief"
+description = "a highly customisable Discord bot"
+authors = [{ name = "sin <damon@slit.sh>" }]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: MIT",
+]
+dynamic = ["version", "requires-python", "dependencies", "optional-dependencies"]
+
+[project]
 authors     = ["sin <damon@slit.sh>"]
 description = "a premium discord bot"
 license     = "MIT  "
