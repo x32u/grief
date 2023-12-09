@@ -36,7 +36,6 @@ from typing import (
 from types import MappingProxyType
 
 import discord
-from discord import Activity, ActivityType
 from discord.ext import commands as dpy_commands
 from discord.ext.commands import when_mentioned_or
 
