@@ -1,5 +1,5 @@
 [tool.poetry]
-authors     = "sin <damon@slit.sh"
+authors     = ["Damon Brown <damon@slit.sh>"]
 description = "a premium discord bot "
 license     = "MIT"
 name        = "grief"
