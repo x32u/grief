@@ -5,7 +5,7 @@ from pathlib import Path
 from setuptools import find_namespace_packages, setup
 
 ROOT_FOLDER = Path(__file__).parent.absolute()
-REQUIREMENTS_FOLDER = "grief"
+REQUIREMENTS_FOLDER = ROOT_FOLDER / "requirements.txt"
 
 # Since we're importing `redbot` package, we have to ensure that it's in sys.path.
 sys.path.insert(0, str(ROOT_FOLDER))
@@ -22,7 +22,7 @@ def get_requirements(fp):
         if line.strip() and not line.strip().startswith("#")
     ]
 
-with open(REQUIREMENTS_FOLDER / "requirements.txt", encoding="utf-8") as fp:
+with open(REQUIREMENTS_FOLDER / "base.txt", encoding="utf-8") as fp:
     install_requires = get_requirements(fp)
 
 
@@ -35,6 +35,5 @@ setup(
     version=version,
     python_requires=python_requires,
     # TODO: use [tool.setuptools.dynamic] table once this feature gets out of beta
-    install_requires=install_requires,
     packages=find_namespace_packages(include=["grief", "grief.*"]),
 )
