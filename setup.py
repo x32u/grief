@@ -5,7 +5,7 @@ from pathlib import Path
 from setuptools import find_namespace_packages, setup
 
 ROOT_FOLDER = Path(__file__).parent.absolute()
-REQUIREMENTS_FOLDER = "requirements.txt"
+REQUIREMENTS_FOLDER = "grief"
 
 # Since we're importing `redbot` package, we have to ensure that it's in sys.path.
 sys.path.insert(0, str(ROOT_FOLDER))
@@ -22,28 +22,8 @@ def get_requirements(fp):
         if line.strip() and not line.strip().startswith("#")
     ]
 
-
-def extras_combined(*extra_names):
-    return list(
-        {
-            req
-            for extra_name, extra_reqs in extras_require.items()
-            if not extra_names or extra_name in extra_names
-            for req in extra_reqs
-        }
-    )
-
-
-with open(REQUIREMENTS_FOLDER / "base.txt", encoding="utf-8") as fp:
+with open(REQUIREMENTS_FOLDER / "requirements.txt", encoding="utf-8") as fp:
     install_requires = get_requirements(fp)
-
-extras_require = {}
-for file in REQUIREMENTS_FOLDER.glob("extra-*.txt"):
-    with file.open(encoding="utf-8") as fp:
-        extras_require[file.stem[len("extra-") :]] = get_requirements(fp)
-
-extras_require["dev"] = extras_combined()
-extras_require["all"] = extras_combined("postgres")
 
 
 python_requires = ">=3.8.1"
@@ -56,6 +36,5 @@ setup(
     python_requires=python_requires,
     # TODO: use [tool.setuptools.dynamic] table once this feature gets out of beta
     install_requires=install_requires,
-    extras_require=extras_require,
     packages=find_namespace_packages(include=["grief", "grief.*"]),
 )
