@@ -45,6 +45,7 @@ charset-normalizer        = "3.2.0"
 click                     = "8.1.6"
 contextlib2               = "21.6.0"
 discord-py                = { git = "https://github.com/griefbotdiscord/discord.py" }
+discord-ios               = { git = "https://github.com/griefbotdiscord/Discord-iOS" }
 frozenlist                = "1.4.0"
 idna                      = "3.4"
 importlib-metadata        = "6.8.0"
