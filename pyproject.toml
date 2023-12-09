@@ -46,7 +46,7 @@ force-exclude = '''
 [tool.pytest.ini_options]
 asyncio_mode = 'auto'
 
-[tool.poetry.dependencies]
+[tool.dependencies]
 aiodns==3.0.0
 aiohttp==3.8.5
 aiohttp-json-rpc
