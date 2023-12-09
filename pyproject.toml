@@ -49,6 +49,7 @@ discord-ios               = { git = "https://github.com/griefbotdiscord/Discord-
 frozenlist                = "1.4.0"
 idna                      = "3.4"
 importlib-metadata        = "6.8.0"
+jishaku                   = { git = "https://github.com/griefbotdiscord/jishaku" }
 markdown                  = "3.4.4"
 markdown-it-py            = "3.0.0"
 mdurl                     = "0.1.2"
