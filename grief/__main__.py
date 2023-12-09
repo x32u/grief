@@ -57,12 +57,12 @@ def list_instances():
         sys.exit(ExitCodes.SHUTDOWN)
 
 
-async def debug_info(grief: Optional[Grief] = None, *args: Any) -> None:
+async def debug_info(red: Optional[Grief] = None, *args: Any) -> None:
     """Shows debug information useful for debugging."""
-    print(await DebugInfo(grief).get_cli_text())
+    print(await DebugInfo(red).get_cli_text())
 
 
-async def edit_instance(grief, cli_flags):
+async def edit_instance(red, cli_flags):
     no_prompt = cli_flags.no_prompt
     token = cli_flags.token
     owner = cli_flags.owner
@@ -91,9 +91,9 @@ async def edit_instance(grief, cli_flags):
         )
         sys.exit(ExitCodes.INVALID_CLI_USAGE)
 
-    await _edit_token(grief, token, no_prompt)
-    await _edit_prefix(grief, prefix, no_prompt)
-    await _edit_owner(grief, owner, no_prompt)
+    await _edit_token(red, token, no_prompt)
+    await _edit_prefix(red, prefix, no_prompt)
+    await _edit_owner(red, owner, no_prompt)
 
     data = deepcopy(data_manager.basic_config)
     name = _edit_instance_name(old_name, new_name, confirm_overwrite, no_prompt)
@@ -104,7 +104,7 @@ async def edit_instance(grief, cli_flags):
         save_config(old_name, {}, remove=True)
 
 
-async def _edit_token(grief, token, no_prompt):
+async def _edit_token(red, token, no_prompt):
     if token:
         if not len(token) >= 50:
             print(
@@ -112,16 +112,16 @@ async def _edit_token(grief, token, no_prompt):
                 " Instance's token will remain unchanged.\n"
             )
             return
-        await grief._config.token.set(token)
+        await red._config.token.set(token)
     elif not no_prompt and confirm("Would you like to change instance's token?", default=False):
-        await interactive_config(grief, False, True, print_header=False)
+        await interactive_config(red, False, True, print_header=False)
         print("Token updated.\n")
 
 
-async def _edit_prefix(grief, prefix, no_prompt):
+async def _edit_prefix(red, prefix, no_prompt):
     if prefix:
         prefixes = sorted(prefix, reverse=True)
-        await grief._config.prefix.set(prefixes)
+        await red._config.prefix.set(prefixes)
     elif not no_prompt and confirm("Would you like to change instance's prefixes?", default=False):
         print(
             "Enter the prefixes, separated by a space (please note "
@@ -138,12 +138,12 @@ async def _edit_prefix(grief, prefix, no_prompt):
                 )
                 continue
             prefixes = sorted(prefixes, reverse=True)
-            await grief._config.prefix.set(prefixes)
+            await red._config.prefix.set(prefixes)
             print("Prefixes updated.\n")
             break
 
 
-async def _edit_owner(grief, owner, no_prompt):
+async def _edit_owner(red, owner, no_prompt):
     if owner:
         if not (15 <= len(str(owner)) <= 20):
             print(
@@ -151,7 +151,7 @@ async def _edit_owner(grief, owner, no_prompt):
                 " Instance's owner will remain unchanged."
             )
             return
-        await grief._config.owner.set(owner)
+        await red._config.owner.set(owner)
     elif not no_prompt and confirm("Would you like to change instance's owner?", default=False):
         print(
             "Remember:\n"
@@ -167,7 +167,7 @@ async def _edit_owner(grief, owner, no_prompt):
                     print("That doesn't look like a valid Discord user id.")
                     continue
                 owner_id = int(owner_id)
-                await grief._config.owner.set(owner_id)
+                await red._config.owner.set(owner_id)
                 print("Owner updated.")
                 break
         else:
@@ -276,10 +276,10 @@ def early_exit_runner(
             return
 
         data_manager.load_basic_configuration(cli_flags.instance_name)
-        grief = Grief(cli_flags=cli_flags, description="grief", dm_help=None)
+        red = Grief(cli_flags=cli_flags, description="grief", dm_help=None)
         driver_cls = _drivers.get_driver_class()
         loop.run_until_complete(driver_cls.initialize(**data_manager.storage_details()))
-        loop.run_until_complete(func(grief, cli_flags))
+        loop.run_until_complete(func(red, cli_flags))
         loop.run_until_complete(driver_cls.teardown())
     except (KeyboardInterrupt, EOFError):
         print("Aborted!")
@@ -292,7 +292,7 @@ def early_exit_runner(
     sys.exit(ExitCodes.SHUTDOWN)
 
 
-async def run_bot(grief: Grief, cli_flags: Namespace) -> None:
+async def run_bot(red: Grief, cli_flags: Namespace) -> None:
     """
     This runs the bot.
 
@@ -342,14 +342,14 @@ async def run_bot(grief: Grief, cli_flags: Namespace) -> None:
     else:
         token = os.environ.get("RED_TOKEN", None)
         if not token:
-            token = await grief._config.token()
+            token = await red._config.token()
 
-    prefix = cli_flags.prefix or await grief._config.prefix()
+    prefix = cli_flags.prefix or await red._config.prefix()
 
     if not (token and prefix):
         if cli_flags.no_prompt is False:
             new_token = await interactive_config(
-                grief, token_set=bool(token), prefix_set=bool(prefix)
+                red, token_set=bool(token), prefix_set=bool(prefix)
             )
             if new_token:
                 token = new_token
@@ -360,14 +360,14 @@ async def run_bot(grief: Grief, cli_flags: Namespace) -> None:
     if cli_flags.dry_run:
         sys.exit(ExitCodes.SHUTDOWN)
     try:
-        # `async with grief:` is unnecessary here because we call grief.close() in shutdown handler
-        await grief.start(token)
+        # `async with red:` is unnecessary here because we call red.close() in shutdown handler
+        await red.start(token)
     except discord.LoginFailure:
         log.critical("This token doesn't seem to be valid.")
-        db_token = await grief._config.token()
+        db_token = await red._config.token()
         if db_token and not cli_flags.no_prompt:
             if confirm("\nDo you want to reset the token?"):
-                await grief._config.token.set("")
+                await red._config.token.set("")
                 print("Token has been reset.")
                 sys.exit(ExitCodes.SHUTDOWN)
         sys.exit(ExitCodes.CONFIGURATION_ERROR)
@@ -376,8 +376,8 @@ async def run_bot(grief: Grief, cli_flags: Namespace) -> None:
         console.print(
             "Red requires all Privileged Intents to be enabled.\n"
             "You can find out how to enable Privileged Intents with this guide:\n"
-            "https://docs.discord.grief/en/stable/bot_application_guide.html#enabling-privileged-intents",
-            style="grief",
+            "https://docs.discord.red/en/stable/bot_application_guide.html#enabling-privileged-intents",
+            style="red",
         )
         sys.exit(ExitCodes.CONFIGURATION_ERROR)
     except _NoOwnerSet:
@@ -416,7 +416,7 @@ def handle_early_exit_flags(cli_flags: Namespace):
         sys.exit(ExitCodes.INVALID_CLI_USAGE)
 
 
-async def shutdown_handler(grief, signal_type=None, exit_code=None):
+async def shutdown_handler(red, signal_type=None, exit_code=None):
     if signal_type:
         log.info("%s received. Quitting...", signal_type.name)
         # Do not collapse the below line into other logic
@@ -425,14 +425,14 @@ async def shutdown_handler(grief, signal_type=None, exit_code=None):
         sys.exit(ExitCodes.SHUTDOWN)
     elif exit_code is None:
         log.info("Shutting down from unhandled exception")
-        grief._shutdown_mode = ExitCodes.CRITICAL
+        red._shutdown_mode = ExitCodes.CRITICAL
 
     if exit_code is not None:
-        grief._shutdown_mode = exit_code
+        red._shutdown_mode = exit_code
 
     try:
-        if not grief.is_closed():
-            await grief.close()
+        if not red.is_closed():
+            await red.close()
     finally:
         # Then cancels all outstanding tasks other than ourselves
         pending = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
@@ -440,7 +440,7 @@ async def shutdown_handler(grief, signal_type=None, exit_code=None):
         await asyncio.gather(*pending, return_exceptions=True)
 
 
-def global_exception_handler(grief, loop, context):
+def global_exception_handler(red, loop, context):
     """
     Logs unhandled exceptions in other tasks
     """
@@ -451,7 +451,7 @@ def global_exception_handler(grief, loop, context):
     loop.default_exception_handler(context)
 
 
-def grief_exception_handler(grief, grief_task: asyncio.Future):
+def red_exception_handler(red, red_task: asyncio.Future):
     """
     This is set as a done callback for Red
 
@@ -461,17 +461,17 @@ def grief_exception_handler(grief, grief_task: asyncio.Future):
     we don't want to swallow the exception and hang.
     """
     try:
-        grief_task.result()
+        red_task.result()
     except (SystemExit, KeyboardInterrupt, asyncio.CancelledError):
         pass  # Handled by the global_exception_handler, or cancellation
     except Exception as exc:
         log.critical("The main bot task didn't handle an exception and has crashed", exc_info=exc)
         log.warning("Attempting to die as gracefully as possible...")
-        asyncio.create_task(shutdown_handler(grief))
+        asyncio.create_task(shutdown_handler(red))
 
 
 def main():
-    grief = None  # Error handling for users misusing the bot
+    red = None  # Error handling for users misusing the bot
     cli_flags = parse_cli_flags(sys.argv[1:])
     handle_early_exit_flags(cli_flags)
     if cli_flags.edit:
@@ -493,7 +493,7 @@ def main():
 
         data_manager.load_basic_configuration(cli_flags.instance_name)
 
-        grief = Grief(cli_flags=cli_flags, description="grief", dm_help=None)
+        red = Grief(cli_flags=cli_flags, description="grief", dm_help=None)
 
         if os.name != "nt":
             # None of this works on windows.
@@ -501,24 +501,24 @@ def main():
             signals = (signal.SIGHUP, signal.SIGTERM, signal.SIGINT)
             for s in signals:
                 loop.add_signal_handler(
-                    s, lambda s=s: asyncio.create_task(shutdown_handler(grief, s))
+                    s, lambda s=s: asyncio.create_task(shutdown_handler(red, s))
                 )
 
-        exc_handler = functools.partial(global_exception_handler, grief)
+        exc_handler = functools.partial(global_exception_handler, red)
         loop.set_exception_handler(exc_handler)
         # We actually can't (just) use asyncio.run here
         # We probably could if we didn't support windows, but we might run into
         # a scenario where this isn't true if anyone works on RPC more in the future
-        fut = loop.create_task(run_bot(grief, cli_flags))
-        r_exc_handler = functools.partial(grief_exception_handler, grief)
+        fut = loop.create_task(run_bot(red, cli_flags))
+        r_exc_handler = functools.partial(red_exception_handler, red)
         fut.add_done_callback(r_exc_handler)
         loop.run_forever()
     except KeyboardInterrupt:
         # We still have to catch this here too. (*joy*)
-        log.warning("Please do not use Ctrl+C to Shutdown Grief! (attempting to die gracefully...)")
+        log.warning("Please do not use Ctrl+C to Shutdown Red! (attempting to die gracefully...)")
         log.error("Received KeyboardInterrupt, treating as interrupt")
-        if grief is not None:
-            loop.run_until_complete(shutdown_handler(grief, signal.SIGINT))
+        if red is not None:
+            loop.run_until_complete(shutdown_handler(red, signal.SIGINT))
     except SystemExit as exc:
         # We also have to catch this one here. Basically any exception which normally
         # Kills the python interpreter (Base Exceptions minus asyncio.cancelled)
@@ -529,12 +529,12 @@ def main():
         except ValueError:
             exit_code_name = "UNKNOWN"
         log.info("Shutting down with exit code: %s (%s)", exit_code, exit_code_name)
-        if grief is not None:
-            loop.run_until_complete(shutdown_handler(grief, None, exc.code))
+        if red is not None:
+            loop.run_until_complete(shutdown_handler(red, None, exc.code))
     except Exception as exc:  # Non standard case.
         log.exception("Unexpected exception (%s): ", type(exc), exc_info=exc)
-        if grief is not None:
-            loop.run_until_complete(shutdown_handler(grief, None, ExitCodes.CRITICAL))
+        if red is not None:
+            loop.run_until_complete(shutdown_handler(red, None, ExitCodes.CRITICAL))
     finally:
         # Allows transports to close properly, and prevent new ones from being opened.
         # Transports may still not be closed correctly on windows, see below
@@ -549,7 +549,7 @@ def main():
         asyncio.set_event_loop(None)
         loop.stop()
         loop.close()
-    exit_code = grief._shutdown_mode if grief is not None else ExitCodes.CRITICAL
+    exit_code = red._shutdown_mode if red is not None else ExitCodes.CRITICAL
     sys.exit(exit_code)
 
 
