@@ -7,23 +7,6 @@ name = "grief"
 description = "A highly customisable Discord bot"
 readme = "README.md"
 authors = [{ name = "sin -- <damon@slit.sh>" }]
-classifiers = [
-    "Development Status :: 5 - Production",
-    "Framework :: AsyncIO",
-    "Intended Audience :: Developers",
-    "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: MIT",
-    "Natural Language :: English",
-    "Operating System :: MacOS :: MacOS X",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: POSIX :: Linux",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-]
-dynamic = ["version", "requires-python", "dependencies", "optional-dependencies"]
 
 [project.scripts]
 grief = "grief.__main__:main"
