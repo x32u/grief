@@ -36,6 +36,7 @@ from typing import (
 from types import MappingProxyType
 
 import discord
+from discord import Activity, ActivityType
 from discord.ext import commands as dpy_commands
 from discord.ext.commands import when_mentioned_or
 
@@ -111,7 +112,6 @@ class Red(
         self.rpc_port = cli_flags.rpc_port
         self._last_exception = None
         self._config.register_global(
-            activity=discord.Activity(name=";help", type=5),
             token=None,
             prefix=[],
             packages=[],
@@ -196,7 +196,7 @@ class Red(
         self._whiteblacklist_cache = WhitelistBlacklistManager(self._config)
         self._i18n_cache = I18nManager(self._config)
         self._bypass_cooldowns = False
-
+        
         async def prefix_manager(bot, message) -> List[str]:
             prefixes = await self._prefix_cache.get_prefixes(message.guild)
             if cli_flags.mentionable:
