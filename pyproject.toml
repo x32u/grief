@@ -6,18 +6,25 @@ build-backend = "setuptools.build_meta"
 name = "grief"
 description = "a highly customisable Discord bot"
 readme = "README.md"
-authors = "sin <damon@slit.sh>
+authors = "sin <damon@slit.sh>"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
-    "License :: MIT",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Natural Language :: English",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Communications :: Chat",
 ]
-
-[project.scripts]
-grief = "grief.__main__:main"
-grief-setup = "grief.setup:run_cli"
+dynamic = ["version", "requires-python", "dependencies", "optional-dependencies"]
 
 [tool.black]
 line-length = 99
@@ -29,3 +36,6 @@ force-exclude = '''
     grief\/vendored
 )/
 '''
+
+[tool.pytest.ini_options]
+asyncio_mode = 'auto'
