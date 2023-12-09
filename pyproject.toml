@@ -90,6 +90,6 @@ six==1.16.0
 typing-extensions==4.7.1
 yarl==1.9.2
 zipp==3.16.2
-colorama==0.4.6; sys_platform == "win32"
-distro==1.8.0; sys_platform == "linux" and sys_platform == "linux"
-uvloop==0.17.0; (sys_platform != "win32" and platform_python_implementation == "CPython") and sys_platform != "win32"
+colorama==0.4.6
+distro==1.8.0
+uvloop==0.17.0
