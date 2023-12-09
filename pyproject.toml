@@ -49,9 +49,6 @@ asyncio_mode = 'auto'
 [tool.dependencies]
 aiodns==3.0.0
 aiohttp==3.8.5
-aiohttp-json-rpc
-discord-py
-red-lavalink
 aiohttp-json-rpc==0.13.3
 aiosignal==1.3.1
 apsw==3.42.0.1
