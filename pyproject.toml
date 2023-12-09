@@ -3,24 +3,27 @@ requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "Grief"
-description = "a highly customisable Discord bot"
-authors = [{ name = "sin <damon@slit.sh>" }]
+name = "grief"
+description = "A highly customisable Discord bot"
+readme = "README.md"
+authors = [{ name = "sin -- <damon@slit.sh>" }]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 5 - Production",
     "Framework :: AsyncIO",
     "Intended Audience :: Developers",
     "Intended Audience :: End Users/Desktop",
-    "License :: MIT",
+    "License :: OSI Approved :: MIT",
+    "Natural Language :: English",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
 ]
 dynamic = ["version", "requires-python", "dependencies", "optional-dependencies"]
-
-[project]
-authors     = ["sin <damon@slit.sh>"]
-description = "a premium discord bot"
-license     = "MIT  "
-name        = "grief"
-version     = "1.3.2"
 
 [project.scripts]
 grief = "grief.__main__:main"
