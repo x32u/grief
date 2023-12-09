@@ -32,7 +32,7 @@ unfixable                  = ["B", "D203", "RET", "RUF", "SIM", "TCH", "TRY", "U
 
 [tool.poetry.dependencies]
 aiodns                    = "3.0.0"
-aiohttp                   = "3.8.5"
+aiohttp                   = "3.9.0"
 aiohttp-json-rpc          = "0.13.3"
 aiosignal                 = "1.3.1"
 apsw                      = "3.42.0.1"
