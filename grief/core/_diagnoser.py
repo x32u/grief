@@ -20,7 +20,7 @@ from grief.core.utils.chat_formatting import (
 )
 
 if TYPE_CHECKING:
-    from grief import grief
+    from grief import Grief
 
 _ = Translator("IssueDiagnoser", __file__)
 
@@ -36,7 +36,7 @@ class CheckResult:
 class IssueDiagnoserBase:
     def __init__(
         self,
-        bot: grief,
+        bot: Grief,
         original_ctx: commands.Context,
         channel: Union[
             discord.TextChannel, discord.VoiceChannel, discord.StageChannel, discord.Thread

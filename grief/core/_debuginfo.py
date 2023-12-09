@@ -12,7 +12,7 @@ import psutil
 
 from grief import __version__
 from grief.core import data_manager
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import box
 
 
@@ -47,7 +47,7 @@ class DebugInfoSection:
 
 
 class DebugInfo:
-    def __init__(self, bot: Optional[grief] = None) -> None:
+    def __init__(self, bot: Optional[Grief] = None) -> None:
         self.bot = bot
 
     @property

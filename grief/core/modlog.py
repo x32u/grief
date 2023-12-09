@@ -23,7 +23,7 @@ from .generic_casetypes import all_generics
 if TYPE_CHECKING:
     from grief.core.bot import Red
 
-log = logging.getLogger("red.core.modlog")
+log = logging.getLogger("grief.core.modlog")
 
 __all__ = (
     "Case",
