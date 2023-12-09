@@ -7,6 +7,12 @@ name = "grief"
 description = "A highly customisable Discord bot"
 readme = "README.md"
 authors = [{ name = "sin -- <damon@slit.sh>" }]
+classifiers = [
+    "License :: MIT",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+]
 
 [project.scripts]
 grief = "grief.__main__:main"
