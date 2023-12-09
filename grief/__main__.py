@@ -451,7 +451,7 @@ def global_exception_handler(grief, loop, context):
     loop.default_exception_handler(context)
 
 
-def red_exception_handler(grief, red_task: asyncio.Future):
+def grief_exception_handler(grief, grief_task: asyncio.Future):
     """
     This is set as a done callback for Red
 
@@ -461,7 +461,7 @@ def red_exception_handler(grief, red_task: asyncio.Future):
     we don't want to swallow the exception and hang.
     """
     try:
-        red_task.result()
+        grief_task.result()
     except (SystemExit, KeyboardInterrupt, asyncio.CancelledError):
         pass  # Handled by the global_exception_handler, or cancellation
     except Exception as exc:
@@ -510,12 +510,12 @@ def main():
         # We probably could if we didn't support windows, but we might run into
         # a scenario where this isn't true if anyone works on RPC more in the future
         fut = loop.create_task(run_bot(grief, cli_flags))
-        r_exc_handler = functools.partial(red_exception_handler, grief)
+        r_exc_handler = functools.partial(grief_exception_handler, grief)
         fut.add_done_callback(r_exc_handler)
         loop.run_forever()
     except KeyboardInterrupt:
         # We still have to catch this here too. (*joy*)
-        log.warning("Please do not use Ctrl+C to Shutdown Red! (attempting to die gracefully...)")
+        log.warning("Please do not use Ctrl+C to Shutdown Grief! (attempting to die gracefully...)")
         log.error("Received KeyboardInterrupt, treating as interrupt")
         if grief is not None:
             loop.run_until_complete(shutdown_handler(grief, signal.SIGINT))
