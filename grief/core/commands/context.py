@@ -13,7 +13,7 @@ from grief.core.utils.__init__ import can_user_react_in
 
 if TYPE_CHECKING:
     from .commands import Command
-    from grief.core.bot import Red
+    from grief.core.bot import Grief
 
 TICK = "\<:grief_check:1107472942830456892>"
 
@@ -47,7 +47,7 @@ class Context(DPYContext):
 
     command: "Command"
     invoked_subcommand: "Optional[Command]"
-    bot: "grief"
+    bot: "Grief"
 
     def __init__(self, **attrs):
         self.assume_yes = attrs.pop("assume_yes", False)

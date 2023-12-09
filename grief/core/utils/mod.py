@@ -5,7 +5,7 @@ from typing import List, Iterable, Union, TYPE_CHECKING, Dict, Optional
 import discord
 
 if TYPE_CHECKING:
-    from ..bot import Red
+    from ..bot import Grief
     from ..commands import Context
 
 __all__ = (
@@ -114,7 +114,7 @@ def get_audit_reason(author: discord.Member, reason: str = None, *, shorten: boo
 
 
 async def is_mod_or_superior(
-    bot: "Red", obj: Union[discord.Message, discord.Member, discord.Role]
+    bot: "Grief", obj: Union[discord.Message, discord.Member, discord.Role]
 ):
     """Check if an object has mod or superior permissions.
 
@@ -196,7 +196,7 @@ def strfdelta(delta: timedelta):
 
 
 async def is_admin_or_superior(
-    bot: "Red", obj: Union[discord.Message, discord.Member, discord.Role]
+    bot: "Grief", obj: Union[discord.Message, discord.Member, discord.Role]
 ):
     """Same as `is_mod_or_superior` except for admin permissions.
 

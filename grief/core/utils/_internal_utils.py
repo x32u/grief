@@ -42,7 +42,7 @@ from grief.core import data_manager
 from grief.core.utils.chat_formatting import box
 
 if TYPE_CHECKING:
-    from grief.core.bot import Red
+    from grief.core.bot import Grief
     from grief.core.commands import Command, Context
 
 main_log = logging.getLogger("grief")
@@ -263,11 +263,11 @@ async def create_backup(dest: Path = Path.home()) -> Optional[Path]:
 
 
 async def send_to_owners_with_preprocessor(
-    bot: Red,
+    bot: Grief,
     content: str,
     *,
     content_preprocessor: Optional[
-        Callable[[Red, discord.abc.Messageable, str], Awaitable[str]]
+        Callable[[Grief, discord.abc.Messageable, str], Awaitable[str]]
     ] = None,
     **kwargs,
 ):
@@ -303,7 +303,7 @@ async def send_to_owners_with_preprocessor(
     await asyncio.gather(*sends)
 
 
-async def send_to_owners_with_prefix_replaced(bot: Red, content: str, **kwargs):
+async def send_to_owners_with_prefix_replaced(bot: Grief, content: str, **kwargs):
     """
     This sends something to all owners and their configured extra destinations.
 
@@ -311,7 +311,7 @@ async def send_to_owners_with_prefix_replaced(bot: Red, content: str, **kwargs):
     is replaced with a clean prefix for each specific destination.
     """
 
-    async def preprocessor(bot: Red, destination: discord.abc.Messageable, content: str) -> str:
+    async def preprocessor(bot: Grief, destination: discord.abc.Messageable, content: str) -> str:
         prefixes = await bot.get_valid_prefixes(getattr(destination, "guild", None))
         prefix = re.sub(
             rf"<@!?{bot.user.id}>", f"@{bot.user.name}".replace("\\", r"\\"), prefixes[0]

@@ -10,7 +10,7 @@ from collections import defaultdict
 
 import discord
 from grief.core import commands, Config, version_info as red_version_info
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.data_manager import cog_data_path
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils import can_user_react_in
@@ -48,7 +48,7 @@ class Downloader(commands.Cog):
     cogs from the creator.
     """
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         super().__init__()
         self.bot = bot
 

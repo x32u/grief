@@ -6,7 +6,7 @@ from typing import Callable, List, Optional, Set, Union
 import discord
 
 from grief.core import commands, Config
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import positive_int, RawUserIdConverter
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.chat_formatting import humanize_number
@@ -25,15 +25,11 @@ class Cleanup(commands.Cog):
     """This cog contains commands used for deleting messages.
     """
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         super().__init__()
         self.bot = bot
         self.config = Config.get_conf(self, 8927348724, force_registration=True)
         self.config.register_guild(notify=True)
-
-    async def red_delete_data_for_user(self, **kwargs):
-        """Nothing to delete"""
-        return
 
     @staticmethod
     async def check_100_plus(ctx: commands.Context, number: int) -> bool:
