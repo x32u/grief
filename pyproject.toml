@@ -3,10 +3,11 @@ requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
+"Development Status :: 5 - Production/Stable",
 name = "grief"
-description = "A highly customisable Discord bot"
+description = "a highly customisable Discord bot"
 readme = "README.md"
-authors = [{ name = "sin -- <damon@slit.sh>" }]
+authors = "sin <damon@slit.sh>"
 classifiers = [
     "License :: MIT",
     "Operating System :: POSIX :: Linux",
