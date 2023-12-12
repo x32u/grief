@@ -4,7 +4,6 @@ description = "a premium discord bot "
 license     = "MIT"
 name        = "grief"
 readme      = "README.md"
-version     = "1.3.2"
 
 [tool.black]
 line-length    = 160
