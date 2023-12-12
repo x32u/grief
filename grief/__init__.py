@@ -40,7 +40,7 @@ class VersionInfo:
         r"(?:(?P<releaselevel>a|b|rc)(?P<serial>0|[1-9]\d*))?"
         r"(?:\.post(?P<post_release>0|[1-9]\d*))?"
         r"(?:\.dev(?P<dev_release>0|[1-9]\d*))?"
-        r"(?:\+(?P<local_version>g[a-z0-9]+(?:\.dirty)?))?"
+        r"(?:\+(?P<local_version>)?))?"
         r"$",
         flags=_re.IGNORECASE,
     )
