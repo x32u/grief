@@ -49,7 +49,6 @@ from . import (
     commands,
     errors,
     i18n,
-    modlog,
 )
 from ._diagnoser import IssueDiagnoser
 from .utils import AsyncIter, can_user_send_messages_in
