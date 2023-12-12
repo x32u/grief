@@ -42,31 +42,6 @@ class CogLoadError(RedError):
     pass
 
 
-class BankError(RedError):
-    """Base error class for bank-related errors."""
-
-
-class BalanceTooHigh(BankError, OverflowError):
-    """Raised when trying to set a user's balance to higher than the maximum."""
-
-    def __init__(
-        self, user: discord.abc.User, max_balance: int, currency_name: str, *args, **kwargs
-    ):
-        super().__init__(*args, **kwargs)
-        self.user = user
-        self.max_balance = max_balance
-        self.currency_name = currency_name
-
-    def __str__(self) -> str:
-        return _("{user}'s balance cannot rise above {max} {currency}.").format(
-            user=self.user, max=humanize_number(self.max_balance), currency=self.currency_name
-        )
-
-
-class BankPruneError(BankError):
-    """Raised when trying to prune a local bank and no server is specified."""
-
-
 class MissingExtraRequirements(RedError):
     """Raised when an extra requirement is missing but required."""
 
