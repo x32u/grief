@@ -148,22 +148,22 @@ class SimpleMenu(discord.ui.View):
 
         self.forward_button = _NavigateButton(
             discord.ButtonStyle.grey,
-            "\N{BLACK RIGHT-POINTING TRIANGLE}\N{VARIATION SELECTOR-16}",
+            "<:grief_arrow_R:1107472965580365836>",
             direction=1,
         )
         self.backward_button = _NavigateButton(
             discord.ButtonStyle.grey,
-            "\N{BLACK LEFT-POINTING TRIANGLE}\N{VARIATION SELECTOR-16}",
+            "<:grief_force_arrow_L:1107472953362370650>",
             direction=-1,
         )
         self.first_button = _NavigateButton(
             discord.ButtonStyle.grey,
-            "\N{BLACK LEFT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}\N{VARIATION SELECTOR-16}",
+            "<:grief_arrow_L:1107472938069921852>",
             direction=0,
         )
         self.last_button = _NavigateButton(
             discord.ButtonStyle.grey,
-            "\N{BLACK RIGHT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}\N{VARIATION SELECTOR-16}",
+            "<:grief_force_arrow_R:1107472947758780456>",
             direction=self.source.get_max_pages(),
         )
         self.select_options = [
@@ -171,7 +171,7 @@ class SimpleMenu(discord.ui.View):
             for num, x in enumerate(pages)
         ]
         self.stop_button = _StopButton(
-            discord.ButtonStyle.red, "\N{HEAVY MULTIPLICATION X}\N{VARIATION SELECTOR-16}"
+            discord.ButtonStyle.grey, "<:grief_x:1107472962333978655>"
         )
         self.select_menu = self._get_select_menu()
         self.add_item(self.stop_button)

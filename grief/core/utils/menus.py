@@ -335,8 +335,8 @@ def start_adding_reactions(
 #: previous page, closing menu, and next page.
 DEFAULT_CONTROLS: Mapping[str, _ControlCallable] = MappingProxyType(
     {
-        "\N{LEFTWARDS BLACK ARROW}\N{VARIATION SELECTOR-16}": prev_page,
-        "\N{CROSS MARK}": close_menu,
-        "\N{BLACK RIGHTWARDS ARROW}\N{VARIATION SELECTOR-16}": next_page,
+        "<:grief_arrow_L:1107472938069921852>": prev_page,
+        "<:grief_x:1107472962333978655>": close_menu,
+        "<:grief_arrow_R:1107472965580365836>": next_page,
     }
 )
