@@ -153,12 +153,12 @@ class SimpleMenu(discord.ui.View):
         )
         self.backward_button = _NavigateButton(
             discord.ButtonStyle.grey,
-            "<:grief_force_arrow_L:1107472953362370650>",
+            "<:grief_arrow_L:1107472938069921852> ",
             direction=-1,
         )
         self.first_button = _NavigateButton(
             discord.ButtonStyle.grey,
-            "<:grief_arrow_L:1107472938069921852>",
+            "<:grief_force_arrow_L:1107472953362370650>",
             direction=0,
         )
         self.last_button = _NavigateButton(
