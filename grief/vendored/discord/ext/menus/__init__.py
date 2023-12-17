@@ -991,7 +991,7 @@ class MenuPages(Menu):
         # The call here is safe because it's guarded by skip_if
         await self.show_page(self._source.get_max_pages() - 1)
 
-    @button('\N{BLACK SQUARE FOR STOP}\ufe0f', position=Last(2))
+    @button('<:grief_x:1107472962333978655>\ufe0f', position=Last(2))
     async def stop_pages(self, payload):
         """stops the pagination session."""
         self.stop()
