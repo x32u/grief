@@ -164,24 +164,6 @@ class CoreLogic:
 
         pkg_specs = []
 
-        for name in pkg_names:
-            if not name.isidentifier() or keyword.iskeyword(name):
-                invalid_pkg_names.append(name)
-                continue
-            try:
-                spec = await bot._cog_mgr.find_cog(name)
-                if spec:
-                    pkg_specs.append((spec, name))
-                else:
-                    notfound_packages.append(name)
-            except Exception as e:
-                log.exception("Package import failed", exc_info=e)
-
-                exception_log = "Exception during import of package\n"
-                exception_log += "".join(traceback.format_exception(type(e), e, e.__traceback__))
-                bot._last_exception = exception_log
-                failed_packages.append(name)
-
         async for spec, name in AsyncIter(pkg_specs, steps=10):
             try:
                 self._cleanup_and_refresh_modules(spec.name)
