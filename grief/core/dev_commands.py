@@ -625,7 +625,7 @@ class Dev(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def bypasscooldowns(self, ctx: commands.Context, toggle: Optional[bool] = None) -> None:
+    async def bypasscooldowns(self, ctx: commands.Context, toggle: Optional[bool] = True) -> None:
         """Give bot owners the ability to bypass cooldowns.
 
         Does not persist through restarts."""
