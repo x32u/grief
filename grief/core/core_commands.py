@@ -510,116 +510,42 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
     @commands.command(require_var_positional=True)
     @commands.is_owner()
-    async def load(self, ctx: commands.Context, *cogs: str):
-        """Loads cog packages from the local paths and installed cogs.
+    async def unload(self, ctx: commands.Context, *cogs: str):
+        """Unloads previously loaded cog packages.
 
-        See packages available to load with `[p]cogs`.
-
-        Additional cogs can be added using Downloader, or from local paths using `[p]addpath`.
+        See packages available to unload with `[p]cogs`.
 
         **Examples:**
-        - `[p]load general` - Loads the `general` cog.
-        - `[p]load admin mod mutes` - Loads multiple cogs.
+        - `[p]unload general` - Unloads the `general` cog.
+        - `[p]unload admin mod mutes` - Unloads multiple cogs.
 
         **Arguments:**
-        - `<cogs...>` - The cog packages to load.
+        - `<cogs...>` - The cog packages to unload.
         """
         cogs = tuple(map(lambda cog: cog.rstrip(","), cogs))
-        async with ctx.typing():
-            outcomes = await self._load(cogs)
+        outcomes = await self._unload(cogs)
 
         output = []
 
-        if loaded := outcomes["loaded_packages"]:
-            loaded_packages = humanize_list([inline(package) for package in loaded])
+        if load := outcomes["loaded_packages"]:
             await ctx.tick()
 
-        if already_loaded := outcomes["alreadyloaded_packages"]:
-            if len(already_loaded) == 1:
-                formed = _("The following package is already loaded: {pack}").format(
-                    pack=inline(already_loaded[0])
-                )
-            else:
-                formed = _("The following packages are already loaded: {packs}").format(
-                    packs=humanize_list([inline(package) for package in already_loaded])
-                )
-            output.append(formed)
-
-        if failed := outcomes["failed_packages"]:
+        if failed := outcomes["loaded_packages"]:
             if len(failed) == 1:
-                formed = _(
-                    "Failed to load the following package: {pack}."
-                    "\nCheck your console or logs for details."
-                ).format(pack=inline(failed[0]))
-            else:
-                formed = _(
-                    "Failed to load the following packages: {packs}"
-                    "\nCheck your console or logs for details."
-                ).format(packs=humanize_list([inline(package) for package in failed]))
-            output.append(formed)
-
-        if invalid_pkg_names := outcomes["invalid_pkg_names"]:
-            if len(invalid_pkg_names) == 1:
-                formed = _(
-                    "The following name is not a valid package name: {pack}\n"
-                    "Package names cannot start with a number"
-                    " and can only contain ascii numbers, letters, and underscores."
-                ).format(pack=inline(invalid_pkg_names[0]))
-            else:
-                formed = _(
-                    "The following names are not valid package names: {packs}\n"
-                    "Package names cannot start with a number"
-                    " and can only contain ascii numbers, letters, and underscores."
-                ).format(packs=humanize_list([inline(package) for package in invalid_pkg_names]))
-            output.append(formed)
-
-        if not_found := outcomes["notfound_packages"]:
-            if len(not_found) == 1:
-                formed = _("The following package was not found in any cog path: {pack}.").format(
-                    pack=inline(not_found[0])
+                formed = _("<:x_:1107472962333978655> grief didn't have loaded: {pack}.").format(
+                    pack=inline(failed[0])
                 )
             else:
-                formed = _(
-                    "The following packages were not found in any cog path: {packs}"
-                ).format(packs=humanize_list([inline(package) for package in not_found]))
-            output.append(formed)
-
-        if failed_with_reason := outcomes["failed_with_reason_packages"]:
-            reasons = "\n".join([f"`{x}`: {y}" for x, y in failed_with_reason.items()])
-            if len(failed_with_reason) == 1:
-                formed = _(
-                    "This package could not be loaded for the following reason:\n\n{reason}"
-                ).format(reason=reasons)
-            else:
-                formed = _(
-                    "These packages could not be loaded for the following reasons:\n\n{reasons}"
-                ).format(reasons=reasons)
-            output.append(formed)
-
-        if repos_with_shared_libs := outcomes["repos_with_shared_libs"]:
-            if len(repos_with_shared_libs) == 1:
-                formed = _(
-                    "**WARNING**: The following repo is using shared libs"
-                    " which are marked for removal in the future: {repo}.\n"
-                    "You should inform maintainer of the repo about this message."
-                ).format(repo=inline(repos_with_shared_libs.pop()))
-            else:
-                formed = _(
-                    "**WARNING**: The following repos are using shared libs"
-                    " which are marked for removal in the future: {repos}.\n"
-                    "You should inform maintainers of these repos about this message."
-                ).format(repos=humanize_list([inline(repo) for repo in repos_with_shared_libs]))
+                formed = _("<:x_:1107472962333978655> grief didn't have these loaded: {packs}.").format(
+                    packs=humanize_list([inline(package) for package in failed])
+                )
             output.append(formed)
 
         if output:
             total_message = "\n\n".join(output)
-            for page in pagify(
-                total_message, delims=["\n", ", "], priority=True, page_length=1500
-            ):
-                if page.startswith(", "):
-                    page = page[2:]
+            for page in pagify(total_message):
                 await ctx.send(page)
-
+                
     @commands.command(require_var_positional=True)
     @commands.is_owner()
     async def unload(self, ctx: commands.Context, *cogs: str):
