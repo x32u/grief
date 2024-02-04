@@ -22,8 +22,9 @@ def get_requirements(fp):
         if line.strip() and not line.strip().startswith("#")
     ]
 
-with open(REQUIREMENTS_FOLDER / "base.txt", encoding="utf-8") as fp:
-    install_requires = get_requirements(fp)
+requirements = []
+with open("requirements.txt") as f:
+    requirements = f.read().splitlines()
 
 
 python_requires = ">=3.8.1"
