@@ -33,6 +33,8 @@ if not os.getenv("TOX_RED", False) or sys.version_info < (3, 12):
 
 # Metadata and options defined in pyproject.toml
 setup(
+    name="grief",
+    author="resent",
     version=version,
     python_requires=python_requires,
     # TODO: use [tool.setuptools.dynamic] table once this feature gets out of beta
