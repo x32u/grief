@@ -2,9 +2,9 @@
 authors     = ["Damon Brown <damon@slit.sh>"]
 description = "a premium discord bot "
 license     = "MIT"
-name        = "grief"
+name        = "Grief_DiscordBot"
 readme      = "README.md"
-version     = "1.1.1"
+version     = "3.5.6.dev286+g7af53832.dirty"
 
 [tool.black]
 line-length    = 160
