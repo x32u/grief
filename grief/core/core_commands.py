@@ -510,7 +510,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
     @commands.command(require_var_positional=True)
     @commands.is_owner()
-    async def unload(self, ctx: commands.Context, *cogs: str):
+    async def load(self, ctx: commands.Context, *cogs: str):
         """Unloads previously loaded cog packages.
 
         See packages available to unload with `[p]cogs`.
@@ -545,7 +545,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             total_message = "\n\n".join(output)
             for page in pagify(total_message):
                 await ctx.send(page)
-                
+
     @commands.command(require_var_positional=True)
     @commands.is_owner()
     async def unload(self, ctx: commands.Context, *cogs: str):
