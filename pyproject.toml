@@ -18,10 +18,6 @@ grief-setup    = "grief.setup:run_cli"
 [tool.setuptools]
 include-package-data = true
 
-[build-system]
-build-backend = "poetry.core.masonry.api"
-requires      = ["poetry-core"]
-
 [tool.ruff]
 fix-only                   = true
 ignore                     = ["D211", "D212", "E501", "TID"]
