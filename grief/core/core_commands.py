@@ -661,8 +661,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
         if loaded := outcomes["loaded_packages"]:
             loaded_packages = humanize_list([inline(package) for package in loaded])
-            formed = _("Loaded {packs}.").format(packs=loaded_packages)
-            output.append(formed)
+            await ctx.tick()
 
         if already_loaded := outcomes["alreadyloaded_packages"]:
             if len(already_loaded) == 1:
@@ -771,9 +770,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
         if unloaded := outcomes["unloaded_packages"]:
             if len(unloaded) == 1:
-                formed = _("The following package was unloaded: {pack}.").format(
-                    pack=inline(unloaded[0])
-                )
+                await ctx.tick()
             else:
                 formed = _("The following packages were unloaded: {packs}.").format(
                     packs=humanize_list([inline(package) for package in unloaded])
@@ -820,8 +817,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
 
         if loaded := outcomes["loaded_packages"]:
             loaded_packages = humanize_list([inline(package) for package in loaded])
-            formed = _("Reloaded {packs}.").format(packs=loaded_packages)
-            output.append(formed)
+            await ctx.tick()
 
         if failed := outcomes["failed_packages"]:
             if len(failed) == 1:
