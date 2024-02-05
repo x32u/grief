@@ -1644,334 +1644,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         await self._set_my_status(ctx, discord.Status.invisible)
 
     # -- End Bot Status Commands -- ###
-    # -- Bot Roles Commands -- ###
-
-    @_set.group(name="roles")
-    @commands.guildowner()
-    @commands.guild_only()
-    async def _set_roles(self, ctx: commands.Context):
-        """Set server's admin and mod roles for [botname]."""
-
-    @_set_roles.command(name="addadminrole")
-    @commands.guildowner()
-    @commands.guild_only()
-    async def _set_roles_addadminrole(self, ctx: commands.Context, *, role: discord.Role):
-        """
-        Adds an admin role for this server.
-
-        Admins have the same access as Mods, plus additional admin level commands like:
-         - `[p]set serverprefix`
-         - `[p]addrole`
-         - `[p]ban`
-         - `[p]ignore guild`
-
-         And more.
-
-        **Examples:**
-        - `[p]set roles addadminrole @Admins`
-        - `[p]set roles addadminrole Super Admins`
-
-        **Arguments:**
-        - `<role>` - The role to add as an admin.
-        """
-        async with ctx.bot._config.guild(ctx.guild).admin_role() as roles:
-            if role.id in roles:
-                return await ctx.send(_("This role is already an admin role."))
-            roles.append(role.id)
-        await ctx.send(_("That role is now considered an admin role."))
-
-    @_set_roles.command(name="addmodrole")
-    @commands.guildowner()
-    @commands.guild_only()
-    async def _set_roles_addmodrole(self, ctx: commands.Context, *, role: discord.Role):
-        """
-        Adds a moderator role for this server.
-
-        This grants access to moderator level commands like:
-         - `[p]mute`
-         - `[p]cleanup`
-         - `[p]customcommand create`
-
-         And more.
-
-        **Examples:**
-        - `[p]set roles addmodrole @Mods`
-        - `[p]set roles addmodrole Loyal Helpers`
-
-        **Arguments:**
-        - `<role>` - The role to add as a moderator.
-        """
-        async with ctx.bot._config.guild(ctx.guild).mod_role() as roles:
-            if role.id in roles:
-                return await ctx.send(_("This role is already a mod role."))
-            roles.append(role.id)
-        await ctx.send(_("That role is now considered a mod role."))
-
-    @_set_roles.command(
-        name="removeadminrole", aliases=["remadmindrole", "deladminrole", "deleteadminrole"]
-    )
-    @commands.guildowner()
-    @commands.guild_only()
-    async def _set_roles_removeadminrole(self, ctx: commands.Context, *, role: discord.Role):
-        """
-        Removes an admin role for this server.
-
-        **Examples:**
-        - `[p]set roles removeadminrole @Admins`
-        - `[p]set roles removeadminrole Super Admins`
-
-        **Arguments:**
-        - `<role>` - The role to remove from being an admin.
-        """
-        async with ctx.bot._config.guild(ctx.guild).admin_role() as roles:
-            if role.id not in roles:
-                return await ctx.send(_("That role was not an admin role to begin with."))
-            roles.remove(role.id)
-        await ctx.send(_("That role is no longer considered an admin role."))
-
-    @_set_roles.command(
-        name="removemodrole", aliases=["remmodrole", "delmodrole", "deletemodrole"]
-    )
-    @commands.guildowner()
-    @commands.guild_only()
-    async def _set_roles_removemodrole(self, ctx: commands.Context, *, role: discord.Role):
-        """
-        Removes a mod role for this server.
-
-        **Examples:**
-        - `[p]set roles removemodrole @Mods`
-        - `[p]set roles removemodrole Loyal Helpers`
-
-        **Arguments:**
-        - `<role>` - The role to remove from being a moderator.
-        """
-        async with ctx.bot._config.guild(ctx.guild).mod_role() as roles:
-            if role.id not in roles:
-                return await ctx.send(_("That role was not a mod role to begin with."))
-            roles.remove(role.id)
-        await ctx.send(_("That role is no longer considered a mod role."))
-
-    # -- End Set Roles Commands -- ###
-    # -- Set Locale Commands -- ###
-
-    @_set.group(name="locale", invoke_without_command=True)
-    @commands.guildowner_or_permissions(manage_guild=True)
-    async def _set_locale(self, ctx: commands.Context, language_code: str):
-        """
-        Changes [botname]'s locale in this server.
-
-        Go to [Grief's Crowdin page](https://translate.discord.Grief) to see locales that are available with translations.
-
-        Use "default" to return to the bot's default set language.
-
-        If you want to change bot's global locale, see `[p]set locale global` command.
-
-        **Examples:**
-        - `[p]set locale en-US`
-        - `[p]set locale de-DE`
-        - `[p]set locale fr-FR`
-        - `[p]set locale pl-PL`
-        - `[p]set locale default` - Resets to the global default locale.
-
-        **Arguments:**
-        - `<language_code>` - The default locale to use for the bot. This can be any language code with country code included.
-        """
-        if ctx.guild is None:
-            await ctx.send_help()
-            return
-        await ctx.invoke(self._set_locale_local, language_code)
-
-    @_set_locale.command(name="global")
-    @commands.is_owner()
-    async def _set_locale_global(self, ctx: commands.Context, language_code: str):
-        """
-        Changes [botname]'s default locale.
-
-        This will be used when a server has not set a locale, or in DMs.
-
-        Go to [Grief's Crowdin page](https://translate.discord.Grief) to see locales that are available with translations.
-
-        To reset to English, use "en-US".
-
-        **Examples:**
-        - `[p]set locale global en-US`
-        - `[p]set locale global de-DE`
-        - `[p]set locale global fr-FR`
-        - `[p]set locale global pl-PL`
-
-        **Arguments:**
-        - `<language_code>` - The default locale to use for the bot. This can be any language code with country code included.
-        """
-        try:
-            locale = BabelLocale.parse(language_code, sep="-")
-        except (ValueError, UnknownLocaleError):
-            await ctx.send(_("Invalid language code. Use format: `en-US`"))
-            return
-        if locale.territory is None:
-            await ctx.send(
-                _("Invalid format - language code has to include country code, e.g. `en-US`")
-            )
-            return
-        standardized_locale_name = f"{locale.language}-{locale.territory}"
-        i18n.set_locale(standardized_locale_name)
-        await self.bot._i18n_cache.set_locale(None, standardized_locale_name)
-        await i18n.set_contextual_locales_from_guild(self.bot, ctx.guild)
-        await ctx.send(_("Global locale has been set."))
-
-    @_set_locale.command(name="server", aliases=["local", "guild"])
-    @commands.guild_only()
-    @commands.guildowner_or_permissions(manage_guild=True)
-    async def _set_locale_local(self, ctx: commands.Context, language_code: str):
-        """
-        Changes [botname]'s locale in this server.
-
-        Go to [Grief's Crowdin page](https://translate.discord.Grief) to see locales that are available with translations.
-
-        Use "default" to return to the bot's default set language.
-
-        **Examples:**
-        - `[p]set locale server en-US`
-        - `[p]set locale server de-DE`
-        - `[p]set locale server fr-FR`
-        - `[p]set locale server pl-PL`
-        - `[p]set locale server default` - Resets to the global default locale.
-
-        **Arguments:**
-        - `<language_code>` - The default locale to use for the bot. This can be any language code with country code included.
-        """
-        if language_code.lower() == "default":
-            global_locale = await self.bot._config.locale()
-            i18n.set_contextual_locale(global_locale)
-            await self.bot._i18n_cache.set_locale(ctx.guild, None)
-            await ctx.send(_("Locale has been set to the default."))
-            return
-        try:
-            locale = BabelLocale.parse(language_code, sep="-")
-        except (ValueError, UnknownLocaleError):
-            await ctx.send(_("Invalid language code. Use format: `en-US`"))
-            return
-        if locale.territory is None:
-            await ctx.send(
-                _("Invalid format - language code has to include country code, e.g. `en-US`")
-            )
-            return
-        standardized_locale_name = f"{locale.language}-{locale.territory}"
-        i18n.set_contextual_locale(standardized_locale_name)
-        await self.bot._i18n_cache.set_locale(ctx.guild, standardized_locale_name)
-        await ctx.send(_("Locale has been set."))
-
-    @_set.group(name="regionalformat", aliases=["region"], invoke_without_command=True)
-    @commands.guildowner_or_permissions(manage_guild=True)
-    async def _set_regional_format(self, ctx: commands.Context, language_code: str):
-        """
-        Changes the bot's regional format in this server. This is used for formatting date, time and numbers.
-
-        `language_code` can be any language code with country code included, e.g. `en-US`, `de-DE`, `fr-FR`, `pl-PL`, etc.
-        Pass "reset" to `language_code` to base regional formatting on bot's locale in this server.
-
-        If you want to change bot's global regional format, see `[p]set regionalformat global` command.
-
-        **Examples:**
-        - `[p]set regionalformat en-US`
-        - `[p]set region de-DE`
-        - `[p]set regionalformat reset` - Resets to the locale.
-
-        **Arguments:**
-        - `[language_code]` - The region format to use for the bot in this server.
-        """
-        if ctx.guild is None:
-            await ctx.send_help()
-            return
-        await ctx.invoke(self._set_regional_format_local, language_code)
-
-    @_set_regional_format.command(name="global")
-    @commands.is_owner()
-    async def _set_regional_format_global(self, ctx: commands.Context, language_code: str):
-        """
-        Changes the bot's regional format. This is used for formatting date, time and numbers.
-
-        `language_code` can be any language code with country code included, e.g. `en-US`, `de-DE`, `fr-FR`, `pl-PL`, etc.
-        Pass "reset" to `language_code` to base regional formatting on bot's locale.
-
-        **Examples:**
-        - `[p]set regionalformat global en-US`
-        - `[p]set region global de-DE`
-        - `[p]set regionalformat global reset` - Resets to the locale.
-
-        **Arguments:**
-        - `[language_code]` - The default region format to use for the bot.
-        """
-        if language_code.lower() == "reset":
-            i18n.set_regional_format(None)
-            await self.bot._i18n_cache.set_regional_format(None, None)
-            await ctx.send(_("Global regional formatting will now be based on bot's locale."))
-            return
-
-        try:
-            locale = BabelLocale.parse(language_code, sep="-")
-        except (ValueError, UnknownLocaleError):
-            await ctx.send(_("Invalid language code. Use format: `en-US`"))
-            return
-        if locale.territory is None:
-            await ctx.send(
-                _("Invalid format - language code has to include country code, e.g. `en-US`")
-            )
-            return
-        standardized_locale_name = f"{locale.language}-{locale.territory}"
-        i18n.set_regional_format(standardized_locale_name)
-        await self.bot._i18n_cache.set_regional_format(None, standardized_locale_name)
-        await ctx.send(
-            _("Global regional formatting will now be based on `{language_code}` locale.").format(
-                language_code=standardized_locale_name
-            )
-        )
-
-    @_set_regional_format.command(name="server", aliases=["local", "guild"])
-    @commands.guild_only()
-    @commands.guildowner_or_permissions(manage_guild=True)
-    async def _set_regional_format_local(self, ctx: commands.Context, language_code: str):
-        """
-        Changes the bot's regional format in this server. This is used for formatting date, time and numbers.
-
-        `language_code` can be any language code with country code included, e.g. `en-US`, `de-DE`, `fr-FR`, `pl-PL`, etc.
-        Pass "reset" to `language_code` to base regional formatting on bot's locale in this server.
-
-        **Examples:**
-        - `[p]set regionalformat server en-US`
-        - `[p]set region local de-DE`
-        - `[p]set regionalformat server reset` - Resets to the locale.
-
-        **Arguments:**
-        - `[language_code]` - The region format to use for the bot in this server.
-        """
-        if language_code.lower() == "reset":
-            i18n.set_contextual_regional_format(None)
-            await self.bot._i18n_cache.set_regional_format(ctx.guild, None)
-            await ctx.send(
-                _("Regional formatting will now be based on bot's locale in this server.")
-            )
-            return
-
-        try:
-            locale = BabelLocale.parse(language_code, sep="-")
-        except (ValueError, UnknownLocaleError):
-            await ctx.send(_("Invalid language code. Use format: `en-US`"))
-            return
-        if locale.territory is None:
-            await ctx.send(
-                _("Invalid format - language code has to include country code, e.g. `en-US`")
-            )
-            return
-        standardized_locale_name = f"{locale.language}-{locale.territory}"
-        i18n.set_contextual_regional_format(standardized_locale_name)
-        await self.bot._i18n_cache.set_regional_format(ctx.guild, standardized_locale_name)
-        await ctx.send(
-            _("Regional formatting will now be based on `{language_code}` locale.").format(
-                language_code=standardized_locale_name
-            )
-        )
-
-    # -- End Set Locale Commands -- ###
     # -- Set Api Commands -- ###
 
     @_set.group(name="api", invoke_without_command=True)
@@ -2665,6 +2337,76 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             return
         issue_diagnoser = IssueDiagnoser(self.bot, ctx, channel, member, command)
         await ctx.send(await issue_diagnoser.diagnose())
+
+    @commands.group()
+    @commands.is_owner()
+    async def blacklist(self, ctx: commands.Context):
+        """
+        Commands to manage the blacklist.
+        Use `[p]blacklist clear` to disable the blacklist
+        """
+        pass
+
+    @blacklist.command(name="add", require_var_positional=True)
+    async def blacklist_add(self, ctx: commands.Context, *users: Union[discord.Member, int]):
+        """
+        Adds users to the blacklist.
+        """
+        for user in users:
+            if isinstance(user, int):
+                user_obj = discord.Object(id=user)
+            else:
+                user_obj = user
+            
+            if await ctx.bot.is_owner(user_obj):
+                embed = discord.Embed(description=f"> {ctx.author.mention}: you may not blacklist another bot owner.", color=0x313338)
+                return await ctx.send(embed=embed, mention_author=False)
+        
+        await self.bot.add_to_blacklist(users)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: added **{users}** to the blacklist.", color=0x313338)
+        await ctx.send(embed=embed, mention_author=False)
+
+    @blacklist.command(name="list")
+    async def blacklist_list(self, ctx: commands.Context):
+        """
+        Lists users on the blacklist.
+        """
+        curr_list = await self.bot.get_blacklist()
+
+        if not curr_list:
+            await ctx.send("Blocklist is empty.")
+            return
+        if len(curr_list) > 1:
+            msg = _("Users on the blacklist:")
+        else:
+            msg = _("User on the blacklist:")
+        for user_id in curr_list:
+            user = self.bot.get_user(user_id)
+            if not user:
+                user = _("Unknown or Deleted User")
+            msg += f"\n\t- {user_id} ({user})"
+
+        for page in pagify(msg):
+            await ctx.send(box(page))
+
+    @blacklist.command(name="remove", require_var_positional=True)
+    async def blacklist_remove(self, ctx: commands.Context, *users: Union[discord.Member, int]):
+        """
+        Removes users from the blacklist.
+        """
+        await self.bot.remove_from_blacklist(users)
+        if len(users) > 1:
+            await ctx.send(_("Users have been removed from the blacklist."))
+        else:
+            await ctx.send(_("User has been removed from the blacklist."))
+
+    @blacklist.command(name="clear")
+    async def blacklist_clear(self, ctx: commands.Context):
+        """
+        Clears the blacklist.
+        """
+        await self.bot.clear_blacklist()
+        await ctx.send(_("Blocklist has been cleared."))
 
     @commands.guildowner_or_permissions(administrator=True)
     @commands.group(name="command")
