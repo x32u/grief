@@ -2119,7 +2119,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         else:
             await ctx.send(_("Prefixes set."))
     
-    @_set.command(name="server_prefix", require_var_positional=True,)
+    @_set.command(name="serverprefix")
     @commands.has_permissions(manage_guild=True)
     async def _server_prefix(self, ctx: commands.Context, server: Optional[discord.Guild], *prefixes: str):
         """Sets Grief's server prefix."""
