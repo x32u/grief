@@ -2348,23 +2348,18 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         pass
 
     @blacklist.command(name="add", require_var_positional=True)
-    async def blacklist_add(self, ctx: commands.Context, *users: Union[discord.Member, int]):
+    async def blacklist_add(self, ctx: commands.Context, *member: Union[discord.Member, int]):
         """
         Adds users to the blacklist.
         """
-        users = await self.bot.fetch_user(users.id)
+        user = await self.bot.fetch_user(member.id)
         
-        for user in users:
-            if isinstance(user, int):
-                user_obj = discord.Object(id=user)
-            else:
-                user_obj = user
-            if await ctx.bot.is_owner(user_obj):
+        if await ctx.bot.is_owner():
                 embed = discord.Embed(description=f"> {ctx.author.mention}: you may not blacklist another bot owner.", color=0x313338)
                 return await ctx.send(embed=embed, mention_author=False)
 
-        await self.bot.add_to_blacklist(users)
-        embed = discord.Embed(description=f"> {ctx.author.mention}: added **{user}** to the blacklist.", color=0x313338)
+        await self.bot.add_to_blacklist(user)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: added **{member}** to the blacklist.", color=0x313338)
         await ctx.send(embed=embed, mention_author=False)
 
     @blacklist.command(name="list")
