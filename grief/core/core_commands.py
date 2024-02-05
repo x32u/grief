@@ -2348,34 +2348,24 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         pass
 
     @blacklist.command(name="add", require_var_positional=True)
-    async def blacklist_add(self, ctx: commands.Context, user_id: discord.User):
+    async def blacklist_add(self, ctx: commands.Context, *users: Union[discord.Member, int]):
         """
         Adds users to the blacklist.
         """
-        
-        async with ctx.typing():
-            if isinstance(user_id, int):
-                try:
-                    user_id = await self.bot.fetch_user(user_id)
-                except AttributeError:
-                    user_id = await self.bot.get_user_info(user_id)
-                except discord.errors.NotFound:
-                    await ctx.send(str(user_id) + _(" doesn't seem to be a discord user."))
-                    return
-        
-        for user in user_id:
+        for user in users:
             if isinstance(user, int):
                 user_obj = discord.Object(id=user)
             else:
                 user_obj = user
-            
             if await ctx.bot.is_owner(user_obj):
                 embed = discord.Embed(description=f"> {ctx.author.mention}: you may not blacklist another bot owner.", color=0x313338)
-                return await ctx.reply(embed=embed, mention_author=False)
-        
-        await self.bot.add_to_blacklist(user_id)
-        embed = discord.Embed(description=f"> {ctx.author.mention}: added **{user_id}** to the blacklist.", color=0x313338)
-        await ctx.reply(embed=embed, mention_author=False)
+                return await ctx.send(embed=embed, mention_author=False)
+                return
+
+        await self.bot.add_to_blacklist(users)
+        if await ctx.bot.is_owner(user_obj):
+                embed = discord.Embed(description=f"> {ctx.author.mention}: added **{user}** to the blacklist.", color=0x313338)
+                return await ctx.send(embed=embed, mention_author=False)
 
     @blacklist.command(name="list")
     async def blacklist_list(self, ctx: commands.Context):
