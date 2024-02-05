@@ -2352,6 +2352,8 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         """
         Adds users to the blacklist.
         """
+        users = await self.bot.fetch_user(users.id)
+        
         for user in users:
             if isinstance(user, int):
                 user_obj = discord.Object(id=user)
@@ -2362,7 +2364,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
                 return await ctx.send(embed=embed, mention_author=False)
 
         await self.bot.add_to_blacklist(users)
-        embed = discord.Embed(description=f"> {ctx.author.mention}: added **{user.name}** to the blacklist.", color=0x313338)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: added **{user}** to the blacklist.", color=0x313338)
         await ctx.send(embed=embed, mention_author=False)
 
     @blacklist.command(name="list")
