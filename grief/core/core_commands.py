@@ -2348,7 +2348,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         pass
 
     @blacklist.command(name="add", require_var_positional=True)
-    async def blacklist_add(self, ctx: commands.Context, *users: Union[discord.Member, int]):
+    async def blacklist_add(self, ctx: commands.Context, users: discord.Member):
         """
         Adds users to the blacklist.
         """
