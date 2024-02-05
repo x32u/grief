@@ -2118,9 +2118,10 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             await ctx.send(_("Prefix set."))
         else:
             await ctx.send(_("Prefixes set."))
-
+    
+    @_set.command(name="server_prefix", require_var_positional=True,)
     @commands.admin_or_permissions(manage_guild=True)
-    async def prefix(self, ctx: commands.Context, server: Optional[discord.Guild], *prefixes: str):
+    async def server_prefix(self, ctx: commands.Context, server: Optional[discord.Guild], *prefixes: str):
         """Sets Grief's server prefix."""
         if server is None:
             server = ctx.guild
