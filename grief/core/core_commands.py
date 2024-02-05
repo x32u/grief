@@ -2545,10 +2545,6 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
         await self.bot.clear_blacklist()
         await ctx.send(_("Blocklist has been cleared."))
 
-    @commands.command(name="test")
-    async def test(self, ctx: commands.Context):
-        await ctx.send("test")
-
     async def rpc_load(self, request):
         cog_name = request.params[0]
 
