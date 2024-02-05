@@ -2360,12 +2360,10 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
             if await ctx.bot.is_owner(user_obj):
                 embed = discord.Embed(description=f"> {ctx.author.mention}: you may not blacklist another bot owner.", color=0x313338)
                 return await ctx.send(embed=embed, mention_author=False)
-                return
 
         await self.bot.add_to_blacklist(users)
-        if await ctx.bot.is_owner(user_obj):
-                embed = discord.Embed(description=f"> {ctx.author.mention}: added **{user}** to the blacklist.", color=0x313338)
-                return await ctx.send(embed=embed, mention_author=False)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: added **{user}** to the blacklist.", color=0x313338)
+        await ctx.send(embed=embed, mention_author=False)
 
     @blacklist.command(name="list")
     async def blacklist_list(self, ctx: commands.Context):
