@@ -2362,7 +2362,7 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
                 return await ctx.send(embed=embed, mention_author=False)
 
         await self.bot.add_to_blacklist(users)
-        embed = discord.Embed(description=f"> {ctx.author.mention}: added **{user}** to the blacklist.", color=0x313338)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: added **{user.name}** to the blacklist.", color=0x313338)
         await ctx.send(embed=embed, mention_author=False)
 
     @blacklist.command(name="list")
