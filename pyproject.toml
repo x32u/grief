@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "Grief-DiscordBot"
 description = "A highly customisable Discord bot"
 readme = "README.md"
-authors = [{ name = "Cog Creators" }]
+authors = [{ name = "Sin" }]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Framework :: AsyncIO",
