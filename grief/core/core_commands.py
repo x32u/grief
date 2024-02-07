@@ -402,6 +402,9 @@ class Core(commands.commands._RuleDropper, commands.Cog, CoreLogic):
                 time_quantity=uptime_str, timestamp=discord.utils.format_dt(uptime, "f")
             )
         )
+    @commands.command()
+    async def test(self, ctx:commands.Context):
+        await ctx.send("Test")
 
     @commands.command()
     @commands.is_owner()
